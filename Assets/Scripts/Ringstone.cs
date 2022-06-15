@@ -21,6 +21,7 @@ public class Ringstone
     public float baseDMG;
     public float baseSPD;
     public float baseEFF;
+    public int range;
     public int baseNumTarget;
     public float baseRP;
 
@@ -30,8 +31,7 @@ public class Ringstone
     //설명
     public string description;
 
-    //시너지 타입
-    public int range;
+    //시너지
     public string identical;
     public string different;
 

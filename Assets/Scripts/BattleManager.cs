@@ -51,7 +51,7 @@ public class BattleManager : MonoBehaviour
 
         //카메라를 해당하는 전장으로 이동
         Camera.main.transform.position = GameManager.instance.monsterPaths[pathID].transform.position;
-        Camera.main.transform.Translate(0, 0, -10);
+        Camera.main.transform.Translate(0, -2, -10);
 
         phase = 1;
         StartPhase();
@@ -104,6 +104,10 @@ public class BattleManager : MonoBehaviour
             for (int i = 0; i < monsters.Count; i++)
                 GameManager.instance.ReturnMonsterToPool(monsters[i]);
             monsters.Clear();
+
+            for (int i = 0; i < DeckManager.instance.rings.Count; i++)
+                GameManager.instance.ReturnRingToPool(DeckManager.instance.rings[i]);
+            DeckManager.instance.rings.Clear();
         }
     }
 }

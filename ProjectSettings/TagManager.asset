@@ -7,6 +7,9 @@ TagManager:
   - Monster
   - Bullet
   - Endline
+  - Monster Path
+  - Land
+  - Ring
   layers:
   - Default
   - TransparentFX
@@ -18,8 +21,8 @@ TagManager:
   - Bullet
   - Endline
   - Monster Path
-  - 
-  - 
+  - Land
+  - Ring
   - 
   - 
   - 
