@@ -32,6 +32,10 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+        DeckManager.instance = FindObjectOfType<DeckManager>();
+        BattleManager.instance = FindObjectOfType<BattleManager>();
+        UIManager.instance = FindObjectOfType<UIManager>();
+        //while (GameManager.instance == null || BattleManager.instance == null || DeckManager.instance == null || UIManager.instance == null) continue;
 
         //DB읽기
         ReadDB();
@@ -42,6 +46,7 @@ public class GameManager : MonoBehaviour
         ringPool = new Queue<Ring>();
 
         //덱 초기화
+        if (DeckManager.instance == null) Debug.Log("Wrong");
         DeckManager.instance.InitializeDeck();
     }
 
