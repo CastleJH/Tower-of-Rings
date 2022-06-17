@@ -57,6 +57,11 @@ public class Ring : MonoBehaviour
         //기타 변수 초기화
         isInBattle = false;
         shootCoolTime = ringBase.baseSPD - 0.2f;
+
+
+        //실제 scene에 넣기 위해 준비
+        transform.localScale = Vector3.one;
+        collider.enabled = false;
     }
 
     public void Attack()
@@ -67,16 +72,31 @@ public class Ring : MonoBehaviour
     //배치 가능 범위인지 확인한다.
     public bool CheckArragePossible()
     {
-        bool ret = false;
+        int ret = 3;
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.75f);
         for (int i = 0; i < colliders.Length; i++)
         {
-            if (colliders[i].tag == "Monster Path" || colliders[i].tag == "Ring") break;
-            else if (colliders[i].tag == "Land") ret = true;
+            if (colliders[i].tag == "Land") ret = 1;
+            else
+            {
+                if (colliders[i].tag == "Ring") ret = 2;
+                else ret = 3;
+                break;
+            }
         }
-        if (ret) rangeRenderer.color = new Color32(0, 255, 0, 50);
-        else rangeRenderer.color = new Color32(255, 0, 0, 50);
-        return ret;
+        if (ret == 1)
+        {
+            rangeRenderer.color = new Color32(0, 255, 0, 50);
+            UIManager.instance.SetBattleArrangeFail(null);
+            return true;
+        }
+        else
+        {
+            if (ret == 2) UIManager.instance.SetBattleArrangeFail("다른 링과 너무 가깝습니다.");
+            else UIManager.instance.SetBattleArrangeFail("올바르지 않은 위치입니다.");
+            rangeRenderer.color = new Color32(255, 0, 0, 50);
+            return false;
+        }
     }
 
     //공격 타겟들을 얻는다.

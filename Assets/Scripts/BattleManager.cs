@@ -15,6 +15,7 @@ public class BattleManager : MonoBehaviour
     public bool isBattlePlaying;  //게임 진행 중인지 여부
     public bool isBattleOver;       //게임 오버의 여부(몬스터가 엔드라인에 닿았음)
     public int pathID;
+    public float rp;
 
     //페이즈 별 변수
     public int phase;   //현재 페이즈
@@ -48,6 +49,15 @@ public class BattleManager : MonoBehaviour
         isBattlePlaying = true;
         isBattleOver = false;
         pathID = 0;
+        ChangeCurrentRP(500);
+
+        //덱의 UI(링 스프라이트 및 소모 RP)변경
+        for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)
+        {
+            UIManager.instance.SetBattleDeckRingImage(i);
+            if (i < DeckManager.instance.deck.Count) UIManager.instance.SetBattleDeckRingRPText(i, (int)GameManager.instance.ringstoneDB[DeckManager.instance.deck[i]].baseRP);
+            else UIManager.instance.SetBattleDeckRingRPText(i, 0);
+        }
 
         //카메라를 해당하는 전장으로 이동
         Camera.main.transform.position = GameManager.instance.monsterPaths[pathID].transform.position;
@@ -108,5 +118,20 @@ public class BattleManager : MonoBehaviour
                 GameManager.instance.ReturnRingToPool(DeckManager.instance.rings[i]);
             DeckManager.instance.rings.Clear();
         }
+    }
+
+    //현재 RP량을 바꾼다.
+    public void ChangeCurrentRP(float _rp)
+    {
+        rp = _rp;
+        UIManager.instance.battleRPText.text = ((int)rp).ToString();
+        for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)
+        {
+            if (i < DeckManager.instance.deck.Count && int.Parse(UIManager.instance.battleDeckRingRPText[i].text) <= rp)
+                UIManager.instance.battleRPNotEnough[i].SetActive(false);
+            else UIManager.instance.battleRPNotEnough[i].SetActive(true);
+        }
+        if (rp < 10) UIManager.instance.battleRPNotEnough[DeckManager.instance.maxDeckLength].SetActive(true);
+        else UIManager.instance.battleRPNotEnough[DeckManager.instance.maxDeckLength].SetActive(false);
     }
 }
