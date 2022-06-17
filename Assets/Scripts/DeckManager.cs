@@ -21,11 +21,13 @@ public class DeckManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        //while (GameManager.instance == null || BattleManager.instance == null || DeckManager.instance == null || UIManager.instance == null) continue;
+
         Debug.Log("Set!");
         if (instance == null) Debug.Log("What's wrong?!");
         deck = new List<int>();
         rings = new List<Ring>();
+        
+        InitializeDeck();
     }
 
     void Update()

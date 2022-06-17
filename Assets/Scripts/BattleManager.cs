@@ -24,7 +24,6 @@ public class BattleManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        //while (GameManager.instance == null || BattleManager.instance == null || DeckManager.instance == null || UIManager.instance == null) continue;
         monsters = new List<Monster>();
     }
 

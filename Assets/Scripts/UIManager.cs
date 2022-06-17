@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        //while (GameManager.instance == null || BattleManager.instance == null || DeckManager.instance == null || UIManager.instance == null) continue;
+
         checkBattleRingDetailOn = false;
         battleRingDetailLongClickTime = 0.0f;
     }
