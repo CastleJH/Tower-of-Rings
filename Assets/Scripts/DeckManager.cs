@@ -23,7 +23,6 @@ public class DeckManager : MonoBehaviour
     {
         instance = this;
 
-        Debug.Log("Set!");
         if (instance == null) Debug.Log("What's wrong?!");
         deck = new List<int>();
         rings = new List<Ring>();
@@ -54,7 +53,7 @@ public class DeckManager : MonoBehaviour
         RemoveFromDeck(0);
         RemoveFromDeck(0);
         AddToDeck(7);
-        AddToDeck(30);
+        AddToDeck(10);
     }
 
     //사용자 입력을 받는다.

@@ -18,6 +18,7 @@ public class Ring : MonoBehaviour
     //그래픽
     public SpriteRenderer spriteRenderer;   //링 자체 렌더러
     public SpriteRenderer rangeRenderer;    //공격 범위 표시 렌더러
+    public Animator anim;
 
     //기타 변수들
     public bool isInBattle;         //전투 중인지 체크용
@@ -66,7 +67,8 @@ public class Ring : MonoBehaviour
 
     public void Attack()
     {
-        Debug.Log("Attack!");
+        anim.SetTrigger("isAttack");
+        Debug.Log("Ring " + ringBase.id.ToString() + ": Attack");
     }
 
     //배치 가능 범위인지 확인한다.

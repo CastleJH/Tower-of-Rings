@@ -6,10 +6,9 @@ public class Endline : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Triggered");
         if (collision.tag == "Monster")
         {
-            Debug.Log("Monster!");
+            Debug.Log("Over");
             BattleManager.instance.isBattleOver = true;
         }
     }

@@ -98,7 +98,6 @@ public class GameManager : MonoBehaviour
             Debug.LogError("already enqueued monster");
             return;
         }
-        Debug.Log("Clear!");
         monster.gameObject.SetActive(false);
         monsterPool.Enqueue(monster);
     }
