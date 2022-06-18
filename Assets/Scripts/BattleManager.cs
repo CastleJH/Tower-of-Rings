@@ -114,9 +114,14 @@ public class BattleManager : MonoBehaviour
                 GameManager.instance.ReturnMonsterToPool(monsters[i]);
             monsters.Clear();
 
+            //덱 정리
             for (int i = 0; i < DeckManager.instance.rings.Count; i++)
                 GameManager.instance.ReturnRingToPool(DeckManager.instance.rings[i]);
             DeckManager.instance.rings.Clear();
+
+            //링 생성 중이었다면 이것도 정리
+            if (DeckManager.instance.isGenRing && DeckManager.instance.genRing != null)
+                GameManager.instance.ReturnRingToPool(DeckManager.instance.genRing);
         }
     }
 

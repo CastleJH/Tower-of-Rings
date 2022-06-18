@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     //프리팹
     public GameObject ringPrefab;
     public GameObject monsterPrefab;
+    public GameObject damageTextPrefab;
 
     //스프라이트
     public Sprite[] ringSprites;
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
     //오브젝트 풀
     private Queue<Ring> ringPool;
     private Queue<Monster> monsterPool;
+    private Queue<DamageText> damageTextPool;
 
     void Awake()
     {
@@ -38,8 +40,9 @@ public class GameManager : MonoBehaviour
         if (monsterDB.Count != monsterSprites.Length) Debug.LogError("num of monster sprites does not match");
 
         //오브젝트 풀 초기화
-        monsterPool = new Queue<Monster>();
         ringPool = new Queue<Ring>();
+        monsterPool = new Queue<Monster>();
+        damageTextPool = new Queue<DamageText>();
     }
 
     //"*_db.csv"를 읽어온다.
@@ -122,5 +125,28 @@ public class GameManager : MonoBehaviour
         Debug.Log("Clear!");
         ring.gameObject.SetActive(false);
         ringPool.Enqueue(ring);
+    }
+
+
+    //데미지 표시기를 오브젝트 풀에서 받아온다. disabled 상태로 준다.
+    public DamageText GetDamageTextFromPool()
+    {
+        if (damageTextPool.Count > 0) return damageTextPool.Dequeue();
+        else return Instantiate(damageTextPrefab).GetComponent<DamageText>();
+    }
+
+
+    //데미지 표시기를 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
+    public void ReturnDamageTextToPool(DamageText damageText)
+    {
+        /*추가 구현 필요 - 예외처리 제거할 것*/
+        if (damageTextPool.Contains(damageText))
+        {
+            Debug.LogError("already enqueued damageText");
+            return;
+        }
+        Debug.Log("Clear!");
+        damageText.gameObject.SetActive(false);
+        damageTextPool.Enqueue(damageText);
     }
 }

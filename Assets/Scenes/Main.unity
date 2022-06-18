@@ -1856,6 +1856,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ringPrefab: {fileID: 671390583966524708, guid: 485b518439648114fa5cb4919d015a23, type: 3}
   monsterPrefab: {fileID: 5298284985273157095, guid: cfdc1a0c85563be479a62cfbe72b58af, type: 3}
+  damageTextPrefab: {fileID: 0}
   ringSprites:
   - {fileID: 21300000, guid: 6a0faaca74be83846b9c5606ce3a43a7, type: 3}
   - {fileID: 21300000, guid: 8ce1c1bdd372da140afa6226a9658e50, type: 3}
