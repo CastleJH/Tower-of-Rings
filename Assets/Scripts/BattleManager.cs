@@ -101,7 +101,8 @@ public class BattleManager : MonoBehaviour
     //배틀이 종료되었는지 확인한다.
     void CheckBattleOver()
     {
-        if (isBattleOver)
+        //현재는 클리어든 오버든 같은 동작을 하도록 한 상태임.
+        if ((monsters.Count == 0 && newMonsterID == numGenMonster) || isBattleOver)
         {
             //배틀을 종료한다.
             isBattlePlaying = false;

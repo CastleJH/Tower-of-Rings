@@ -7,7 +7,6 @@ public class DamageText : MonoBehaviour
     float speed;
     float lifetime;
     TextMesh text;
-    public Color color;
 
     void Awake()
     {
@@ -31,10 +30,11 @@ public class DamageText : MonoBehaviour
         GameManager.instance.ReturnDamageTextToPool(this);
     }
 
-    //인자 값으로 텍스트/위치를 수정한다.
-    public void InitializeDamageText(string dmgText, Vector2 pos)
+    //인자 값으로 텍스트/위치/색깔을 수정한다.
+    public void InitializeDamageText(string dmgText, Vector2 pos, Color32 color)
     {
         text.text = dmgText;
+        text.color = color;
         transform.position = pos;
         transform.Translate(Vector3.back * 9);
     }
