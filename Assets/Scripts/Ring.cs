@@ -38,7 +38,7 @@ public class Ring : MonoBehaviour
             shootCoolTime += Time.deltaTime;
             if (shootCoolTime > ringBase.baseSPD)
             {
-                Attack();
+                Shoot();
                 shootCoolTime = 0.0f;
             }
         }
@@ -65,10 +65,14 @@ public class Ring : MonoBehaviour
         collider.enabled = false;
     }
 
-    public void Attack()
+    public void Shoot()
     {
-        anim.SetTrigger("isAttack");
-        Debug.Log("Ring " + ringBase.id.ToString() + ": Attack");
+        anim.SetTrigger("isShoot");
+    }
+
+    public void AttackEffect(Monster monster)
+    {
+
     }
 
     //배치 가능 범위인지 확인한다.

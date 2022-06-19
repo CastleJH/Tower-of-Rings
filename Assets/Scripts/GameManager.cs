@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     //프리팹
     public GameObject ringPrefab;
     public GameObject monsterPrefab;
+    public GameObject[] bulletPrefabs;
+    public GameObject[] particlePrefabs;
     public GameObject damageTextPrefab;
 
     //스프라이트
@@ -29,6 +31,8 @@ public class GameManager : MonoBehaviour
     //오브젝트 풀
     private Queue<Ring> ringPool;
     private Queue<Monster> monsterPool;
+    private Queue<Bullet>[] bulletPool;
+    private Queue<ParticleSystem>[] particlePool;
     private Queue<DamageText> damageTextPool;
 
     void Awake()
@@ -42,7 +46,15 @@ public class GameManager : MonoBehaviour
         //오브젝트 풀 초기화
         ringPool = new Queue<Ring>();
         monsterPool = new Queue<Monster>();
+        bulletPool = new Queue<Bullet>[ringstoneDB.Count];
+        particlePool = new Queue<ParticleSystem>[ringstoneDB.Count];
         damageTextPool = new Queue<DamageText>();
+
+        for (int i = 0; i < ringstoneDB.Count; i++)
+        {
+            bulletPool[i] = new Queue<Bullet>();
+            particlePool[i] = new Queue<ParticleSystem>();
+        }
     }
 
     //"*_db.csv"를 읽어온다.
@@ -122,11 +134,56 @@ public class GameManager : MonoBehaviour
             Debug.LogError("already enqueued ring");
             return;
         }
-        Debug.Log("Clear!");
         ring.gameObject.SetActive(false);
         ringPool.Enqueue(ring);
     }
 
+
+
+    //불렛을 오브젝트 풀에서 받아온다. disabled 상태로 준다.
+    public Bullet GetBulletFromPool(int id)
+    {
+        if (bulletPool[id].Count > 0) return bulletPool[id].Dequeue();
+        else
+        {
+            Bullet bullet = Instantiate(bulletPrefabs[id]).GetComponent<Bullet>();
+            bullet.destroyID = id;
+            return bullet;
+        }
+    }
+
+    //불렛을 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
+    public void ReturnBulletToPool(Bullet bullet)
+    {
+        /*추가 구현 필요 - 예외처리 제거할 것*/
+        if (bulletPool[bullet.destroyID].Contains(bullet))
+        {
+            Debug.LogError("already enqueued bullet");
+            return;
+        }
+        bullet.gameObject.SetActive(false);
+        bulletPool[bullet.destroyID].Enqueue(bullet);
+    }
+
+    //파티클을 오브젝트 풀에서 받아온다. disabled 상태로 준다.
+    public ParticleSystem GetParticleFromPool(int id)
+    {
+        if (particlePool[id].Count > 0) return particlePool[id].Dequeue();
+        else return Instantiate(particlePrefabs[id]).GetComponent<ParticleSystem>();
+    }
+
+    //파티클을 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
+    public void ReturnParticleToPool(ParticleSystem particle, int id)
+    {
+        /*추가 구현 필요 - 예외처리 제거할 것*/
+        if (particlePool[id].Contains(particle))
+        {
+            Debug.LogError("already enqueued particle");
+            return;
+        }
+        particle.gameObject.SetActive(false);
+        particlePool[id].Enqueue(particle);
+    }
 
     //데미지 표시기를 오브젝트 풀에서 받아온다. disabled 상태로 준다.
     public DamageText GetDamageTextFromPool()
@@ -134,7 +191,6 @@ public class GameManager : MonoBehaviour
         if (damageTextPool.Count > 0) return damageTextPool.Dequeue();
         else return Instantiate(damageTextPrefab).GetComponent<DamageText>();
     }
-
 
     //데미지 표시기를 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
     public void ReturnDamageTextToPool(DamageText damageText)
@@ -145,7 +201,6 @@ public class GameManager : MonoBehaviour
             Debug.LogError("already enqueued damageText");
             return;
         }
-        Debug.Log("Clear!");
         damageText.gameObject.SetActive(false);
         damageTextPool.Enqueue(damageText);
     }
