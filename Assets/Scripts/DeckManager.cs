@@ -23,7 +23,6 @@ public class DeckManager : MonoBehaviour
     {
         instance = this;
 
-        if (instance == null) Debug.Log("What's wrong?!");
         deck = new List<int>();
         rings = new List<Ring>();
         
@@ -55,6 +54,7 @@ public class DeckManager : MonoBehaviour
         RemoveFromDeck(0);
         AddToDeck(0);
         AddToDeck(1);
+        AddToDeck(2);
     }
 
     //사용자 입력을 받는다.
@@ -99,9 +99,7 @@ public class DeckManager : MonoBehaviour
                 if (hit.collider != null && hit.collider.tag == "Ring" && BattleManager.instance.rp >= 10)//마지막 터치 지점에 링이 있다면 제거한다.
                 {
                     ring = hit.collider.gameObject.GetComponent<Ring>();
-                    ring.RemoveSynergy();
-                    rings.Remove(ring);
-                    GameManager.instance.ReturnRingToPool(ring);
+                    RemoveRing(ring);
                     BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - 10);
                 }
                 ringRemover.transform.position = new Vector3(100, 100, 0);
@@ -138,7 +136,27 @@ public class DeckManager : MonoBehaviour
         else GameManager.instance.ReturnRingToPool(genRing);
     }
 
-    //덱에서 링을 제거한다.
+    //링을 전투에서 제거한다.
+    public void RemoveRing(Ring ring)
+    {
+        ring.RemoveSynergy();
+        rings.Remove(ring);
+        GameManager.instance.ReturnRingToPool(ring);
+    }
+
+    //덱에 링스톤을 넣는다.
+    public bool AddToDeck(int ringID)
+    {
+        if (deck.Count >= maxDeckLength) return false;
+        if (deck.Contains(ringID)) return false;
+        if (ringID < 0 || ringID >= GameManager.instance.ringstoneDB.Count) return false;
+        GameManager.instance.ringstoneDB[ringID].level = 0;
+        GameManager.instance.ringstoneDB[ringID].Upgrade();
+        deck.Add(ringID);
+        return true;
+    }
+
+    //덱에서 링스톤을 제거한다.
     public bool RemoveFromDeck(int index)
     {
         if (deck.Count > index)
@@ -150,17 +168,5 @@ public class DeckManager : MonoBehaviour
             return true;
         }
         return false;
-    }
-
-    //덱에 링을 넣는다.
-    public bool AddToDeck(int ringID)
-    {
-        if (deck.Count >= maxDeckLength) return false;
-        if (deck.Contains(ringID)) return false;
-        if (ringID < 0 || ringID >= GameManager.instance.ringstoneDB.Count) return false;
-        GameManager.instance.ringstoneDB[ringID].level = 0;
-        GameManager.instance.ringstoneDB[ringID].Upgrade();
-        deck.Add(ringID);
-        return true;
     }
 }

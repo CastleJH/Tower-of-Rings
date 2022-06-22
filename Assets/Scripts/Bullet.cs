@@ -20,18 +20,15 @@ public class Bullet : MonoBehaviour
         if (parent.ringBase != null && target.curHP > 0 && target.movedDistance > 0.05f)
         {
             Move();   //부모링이 있고 타겟이 살아있으면 이동
-            Debug.Log("Move");
         }
         else if (parent.ringBase != null)   //타겟만 잃은거라면 다시 발사
         {
             parent.shootCoolTime = parent.curSPD - 0.1f;
             RemoveFromScene(0.0f);
-            Debug.Log("relaunch");
         }
         else
         {
             RemoveFromScene(0.0f); //제거
-            Debug.Log("remove");
         }
     }
 

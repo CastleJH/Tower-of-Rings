@@ -1,4 +1,5 @@
 * Ring.cs
+	0) PutRingIntoScene()
 	1) TryShoot()
 	3) AttackEffct()
 	4) ApplySynergy() - 두군데 둘다

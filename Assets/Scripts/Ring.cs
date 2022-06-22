@@ -33,6 +33,7 @@ public class Ring : MonoBehaviour
     public bool isInBattle;         //전투 중인지 체크용
     public float shootCoolTime;    //발사 쿨타임 체크용
     public CircleCollider2D collider; //자신의 콜라이더
+    int id2RemoveCount;     //산화 링의 소멸 카운트
 
     void Awake()
     {
@@ -71,6 +72,15 @@ public class Ring : MonoBehaviour
     //실제로 게임에 넣는다.
     public void PutRingIntoScene()
     {
+        switch (ringBase.id)
+        {
+            case 0:
+            case 1:
+                break;
+            case 2:
+                id2RemoveCount = 20;
+                break;
+        }
         isInBattle = true;
         shootCoolTime = ringBase.baseSPD - 0.2f;
         rangeRenderer.color = new Color(0, 0, 0, 0);
@@ -112,6 +122,20 @@ public class Ring : MonoBehaviour
                     bullet.InitializeBullet(this, targets[idx]);
                     bullet.gameObject.SetActive(true);
                     break;
+                case 2: //산화 링의 소멸 카운팅
+                    if (id2RemoveCount-- == 0)
+                    {
+                        DeckManager.instance.RemoveRing(this);
+                        break;
+                    }
+                    targets = targets.OrderByDescending(x => x.movedDistance).ToList();
+                    for (int i = 0; i < numTarget; i++)
+                    {
+                        bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
+                        bullet.InitializeBullet(this, targets[i]);
+                        bullet.gameObject.SetActive(true);
+                    }
+                    break;
                 default:
                     Debug.Log(string.Format("Not implemented yet. {0} TryShoot", ringBase.id.ToString()));
                     break;
@@ -125,7 +149,8 @@ public class Ring : MonoBehaviour
     {
         switch (ringBase.id)
         {
-            case 0:
+            case 0: //단순 공격
+            case 2:
                 monster.AE_DecreaseHP(curDMG, Color.red);
                 monster.PlayParticleCollision(ringBase.id);
                 break;
@@ -133,17 +158,13 @@ public class Ring : MonoBehaviour
                 GetTargets();
                 targets = targets.OrderByDescending(x => x.movedDistance).ToList();
                 int numTarget = Mathf.Min(targets.Count, (int)curNumTarget) - 1;
-                Debug.Log("num: " + numTarget.ToString());
                 for (int i = 0; i < targets.Count && numTarget != 0; i++)
                     if (targets[i] != monster)
                     {
-                        Debug.Log("1");
                         targets[i].AE_DecreaseHP(curDMG, Color.blue);
                         targets[i].PlayParticleCollision(ringBase.id);
                         numTarget--;
                     }
-                    else
-                        Debug.Log("0");
                 monster.AE_DecreaseHP(curDMG, Color.blue);
                 monster.PlayParticleCollision(ringBase.id);
                 break;
@@ -168,42 +189,51 @@ public class Ring : MonoBehaviour
         ChangeCurSPD(0.0f);
         ChangeCurEFF(0.0f);
 
-        GetNearRings();
-
-        //다른 링에 대하여
-        switch (ringBase.id)
+        //다른 링에 대하여 나의 효과를 적용
+        for (int i = 0; i < DeckManager.instance.rings.Count; i++)
         {
-            case 0:
-                for (int i = 0; i < nearRings.Count; i++)
-                {
-                    ring = nearRings[i];
-                    ring.ChangeCurDMG(0.05f);
-                    if (ring.ringBase.id == ringBase.id) ring.ChangeCurDMG(0.1f);
-                }
-                break;
-            case 1:
-                for (int i = 0; i < nearRings.Count; i++)
-                {
-                    ring = nearRings[i];
-                    ring.ChangeCurNumTarget(0.5f);
-                    if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(1.0f);
-                }
-                break;
-        }
-
-        //다른 링으로부터
-        for (int i = 0; i < nearRings.Count; i++)
-            switch (nearRings[i].ringBase.id)
+            ring = DeckManager.instance.rings[i];
+            if (ring == this) continue;
+            if (Vector2.Distance(ring.transform.position, transform.position) <= ringBase.range + ring.collider.radius)
             {
-                case 0:
-                    ChangeCurDMG(0.05f);
-                    if (nearRings[i].ringBase.id == ringBase.id) ChangeCurDMG(0.1f);
-                    break;
-                case 1:
-                    ChangeCurNumTarget(0.5f);
-                    if (nearRings[i].ringBase.id == ringBase.id) ChangeCurNumTarget(1.0f);
-                    break;
+                switch (ringBase.id)
+                {
+                    case 0:
+                        ring.ChangeCurDMG(0.05f);
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurDMG(0.1f);
+                        break;
+                    case 1:
+                        ring.ChangeCurNumTarget(0.5f);
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(1.0f);
+                        break;
+                    case 2: //아무 효과 없음
+                        break;
+                }
             }
+        }
+        
+
+        //다른 링으로부터 나에게 효과를 적용
+        for (int i = 0; i < DeckManager.instance.rings.Count; i++)
+        {
+            ring = DeckManager.instance.rings[i];
+            if (ring == this) continue;
+            if (Vector2.Distance(ring.transform.position, transform.position) <= ring.ringBase.range + collider.radius)
+                switch (ring.ringBase.id)
+                {
+                    case 0:
+                        ChangeCurDMG(0.05f);
+                        if (ring.ringBase.id == ringBase.id) ChangeCurDMG(0.1f);
+                        break;
+                    case 1:
+                        ChangeCurNumTarget(0.5f);
+                        if (ring.ringBase.id == ringBase.id) ChangeCurNumTarget(1.0f);
+                        break;
+                    case 2: //아무 효과 없음
+                        break;
+                }
+
+        }
     }
 
     //시너지를 제거한다.
@@ -211,26 +241,27 @@ public class Ring : MonoBehaviour
     {
         Ring ring;
 
-        GetNearRings();
-
-        switch (ringBase.id)
+        //내가 적용했던 시너지들만 제거
+        for (int i = 0; i < DeckManager.instance.rings.Count; i++)
         {
-            case 0:
-                for (int i = 0; i < nearRings.Count; i++)
+            ring = DeckManager.instance.rings[i];
+            if (ring == this) continue;
+            if (Vector2.Distance(ring.transform.position, transform.position) <= ringBase.range + ring.collider.radius)
+            {
+                switch (ringBase.id)
                 {
-                    ring = nearRings[i];
-                    ring.ChangeCurDMG(-0.05f);
-                    if (ring.ringBase.id == ringBase.id) ring.ChangeCurDMG(-0.1f);
+                    case 0:
+                        ring.ChangeCurDMG(-0.05f);
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurDMG(-0.1f);
+                        break;
+                    case 1:
+                        ring.ChangeCurNumTarget(-0.5f);
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
+                        break;
+                    case 2: //아무 효과 없음
+                        break;
                 }
-                break;
-            case 1:
-                for (int i = 0; i < nearRings.Count; i++)
-                {
-                    ring = nearRings[i];
-                    ring.ChangeCurNumTarget(-0.5f);
-                    if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
-                }
-                break;
+            }
         }
     }
 
@@ -279,15 +310,6 @@ public class Ring : MonoBehaviour
             }
     }
 
-    public void GetNearRings()
-    {
-        nearRings.Clear();
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, ringBase.range);
-
-        for (int i = 0; i < colliders.Length; i++)
-            if (colliders[i].tag == "Ring" && colliders[i].gameObject != gameObject)
-                nearRings.Add(colliders[i].GetComponent<Ring>());
-    }
     public void ChangeCurNumTarget(float buff)
     {
         buffNumTarget += buff;
