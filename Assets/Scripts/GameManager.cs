@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour
     public Sprite[] monsterSprites;
     public Sprite emptyRingSprite;
 
+    //사운드
+    public AudioClip[] ringAttackAudios;
+
     //몬스터 이동 경로
     public PathCreator[] monsterPaths;
 
@@ -42,6 +45,8 @@ public class GameManager : MonoBehaviour
         //DB읽기
         ReadDB();
         if (monsterDB.Count != monsterSprites.Length) Debug.LogError("num of monster sprites does not match");
+        if (ringstoneDB.Count != ringSprites.Length) Debug.LogError("num of ring sprites does not match");
+        if (ringstoneDB.Count != ringAttackAudios.Length) Debug.LogError("num of audios does not match");
 
         //오브젝트 풀 초기화
         ringPool = new Queue<Ring>();
@@ -134,6 +139,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("already enqueued ring");
             return;
         }
+        ring.isInBattle = false;
         ring.gameObject.SetActive(false);
         ringPool.Enqueue(ring);
     }

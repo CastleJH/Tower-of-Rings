@@ -21,6 +21,9 @@ public class Ring : MonoBehaviour
     public List<Monster> targets; //공격범위 내의 몬스터들
     public List<Ring> nearRings; //공격범위 내의 링들(시너지 적용 대상)
 
+    //사운드
+    public AudioSource audioSource;     //공격 사운드
+
     //그래픽
     public SpriteRenderer spriteRenderer;   //링 자체 렌더러
     public SpriteRenderer rangeRenderer;    //공격 범위 표시 렌더러
@@ -81,11 +84,9 @@ public class Ring : MonoBehaviour
     {
         GetTargets();
         int numTarget = Mathf.Min(targets.Count, (int)curNumTarget);
-        Debug.Log("numTarget: " + numTarget.ToString());
-        Debug.Log("targets.Count: " + targets.Count.ToString());
-        Debug.Log("curNumTarget: " + curNumTarget.ToString());
         if (numTarget != 0)
         {
+            audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[ringBase.id]);
             Bullet bullet;
             switch (ringBase.id)
             {
@@ -98,8 +99,23 @@ public class Ring : MonoBehaviour
                         bullet.gameObject.SetActive(true);
                     }
                     break;
+                case 1: //리스트의 가장 앞쪽 한 개만 쏨
+                    float maxDist = 0.0f;
+                    int idx = -1;
+                    for (int i = 0; i < targets.Count; i++)
+                        if (maxDist < targets[i].movedDistance)
+                        {
+                            maxDist = targets[i].movedDistance;
+                            idx = i;
+                        }
+                    bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
+                    bullet.InitializeBullet(this, targets[idx]);
+                    bullet.gameObject.SetActive(true);
+                    break;
+                default:
+                    Debug.Log(string.Format("Not implemented yet. {0} TryShoot", ringBase.id.ToString()));
+                    break;
             }
-            anim.SetTrigger("isShoot");
             shootCoolTime = 0.0f;
         }
     }
@@ -112,6 +128,27 @@ public class Ring : MonoBehaviour
             case 0:
                 monster.AE_DecreaseHP(curDMG, Color.red);
                 monster.PlayParticleCollision(ringBase.id);
+                break;
+            case 1:
+                GetTargets();
+                targets = targets.OrderByDescending(x => x.movedDistance).ToList();
+                int numTarget = Mathf.Min(targets.Count, (int)curNumTarget) - 1;
+                Debug.Log("num: " + numTarget.ToString());
+                for (int i = 0; i < targets.Count && numTarget != 0; i++)
+                    if (targets[i] != monster)
+                    {
+                        Debug.Log("1");
+                        targets[i].AE_DecreaseHP(curDMG, Color.blue);
+                        targets[i].PlayParticleCollision(ringBase.id);
+                        numTarget--;
+                    }
+                    else
+                        Debug.Log("0");
+                monster.AE_DecreaseHP(curDMG, Color.blue);
+                monster.PlayParticleCollision(ringBase.id);
+                break;
+            default:
+                Debug.Log(string.Format("Not implemented yet. {0} AttackEffect", ringBase.id.ToString()));
                 break;
         }
     }
@@ -140,8 +177,16 @@ public class Ring : MonoBehaviour
                 for (int i = 0; i < nearRings.Count; i++)
                 {
                     ring = nearRings[i];
-                    ring.ChangeCurDMG(0.02f);
-                    if (ring.ringBase.id == ringBase.id) ring.ChangeCurDMG(0.05f);
+                    ring.ChangeCurDMG(0.05f);
+                    if (ring.ringBase.id == ringBase.id) ring.ChangeCurDMG(0.1f);
+                }
+                break;
+            case 1:
+                for (int i = 0; i < nearRings.Count; i++)
+                {
+                    ring = nearRings[i];
+                    ring.ChangeCurNumTarget(0.5f);
+                    if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(1.0f);
                 }
                 break;
         }
@@ -151,8 +196,12 @@ public class Ring : MonoBehaviour
             switch (nearRings[i].ringBase.id)
             {
                 case 0:
-                    ChangeCurDMG(0.02f);
-                    if (nearRings[i].ringBase.id == ringBase.id) ChangeCurDMG(0.05f);
+                    ChangeCurDMG(0.05f);
+                    if (nearRings[i].ringBase.id == ringBase.id) ChangeCurDMG(0.1f);
+                    break;
+                case 1:
+                    ChangeCurNumTarget(0.5f);
+                    if (nearRings[i].ringBase.id == ringBase.id) ChangeCurNumTarget(1.0f);
                     break;
             }
     }
@@ -170,8 +219,16 @@ public class Ring : MonoBehaviour
                 for (int i = 0; i < nearRings.Count; i++)
                 {
                     ring = nearRings[i];
-                    ring.ChangeCurDMG(-0.02f);
-                    if (ring.ringBase.id == ringBase.id) ring.ChangeCurDMG(-0.05f);
+                    ring.ChangeCurDMG(-0.05f);
+                    if (ring.ringBase.id == ringBase.id) ring.ChangeCurDMG(-0.1f);
+                }
+                break;
+            case 1:
+                for (int i = 0; i < nearRings.Count; i++)
+                {
+                    ring = nearRings[i];
+                    ring.ChangeCurNumTarget(-0.5f);
+                    if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
                 }
                 break;
         }
@@ -219,11 +276,6 @@ public class Ring : MonoBehaviour
             {
                 monster = colliders[i].GetComponent<Monster>();
                 if (monster.curHP > 0) targets.Add(monster);
-                Debug.Log("Monster");
-            }
-            else
-            {
-                Debug.Log("Not Monster");
             }
     }
 

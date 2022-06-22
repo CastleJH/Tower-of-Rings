@@ -1,0 +1,11 @@
+* Ring.cs
+	1) TryShoot()
+	3) AttackEffct()
+	4) ApplySynergy() - 두군데 둘다
+	5) RemoveSynergy()
+
+* Monster.cs
+	2) 기타 피격 효과 함수들
+
+* DeckManager.cs
+	3) InitializeDeck()
