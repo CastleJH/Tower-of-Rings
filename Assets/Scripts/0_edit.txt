@@ -9,4 +9,4 @@
 	2) InitializeMonster(), 기타 피격 효과 함수들
 
 * DeckManager.cs
-	3) InitializeDeck()
+	6) InitializeDeck()

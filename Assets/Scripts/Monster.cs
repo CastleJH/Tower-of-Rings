@@ -211,11 +211,31 @@ public class Monster : MonoBehaviour
     }
 
     //°ø°Ý ÀÌÆåÆ®: ´«²É
-    public void AE_Snow(float time)
+    public void AE_Snow(float dmg, float time)
     {
+        AE_DecreaseHP(dmg, Color.cyan);
         //ÀÌ¹Ì ¹Þ°íÀÖ´Â ´«²É ¸µÀÇ µÐÈ­ È¿°ú°¡ ´õ ¿À·¡ °£´Ù¸é Àû¿ë Ãë¼Ò
         if (snowEndTime - snowTime > time) return;
         snowEndTime = time;
         snowTime = 0;
+    }
+
+    //°ø°Ý ÀÌÆåÆ®: Æø¹ß
+    public void AE_Explosion(float dmg, float splash)
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);
+
+        Monster monster;
+        for (int i = 0; i < colliders.Length; i++)
+            if (colliders[i].tag == "Monster")
+            {
+                monster = colliders[i].GetComponent<Monster>();
+                if (monster.curHP > 0 && monster != this)
+                {
+                    Debug.Log("Explode to " + i);
+                    monster.AE_DecreaseHP(dmg * splash, new Color32(150, 30, 30, 255));
+                }
+            }
+        AE_DecreaseHP(dmg, new Color32(150, 30, 30, 255));
     }
 }

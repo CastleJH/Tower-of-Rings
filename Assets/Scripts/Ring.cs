@@ -34,6 +34,7 @@ public class Ring : MonoBehaviour
     public float shootCoolTime;    //발사 쿨타임 체크용
     public CircleCollider2D collider; //자신의 콜라이더
     int id2RemoveCount;     //산화 링의 소멸 카운트
+    float id4Splash;        //폭발 링의 스플래쉬 데미지(비율)
 
     void Awake()
     {
@@ -74,12 +75,13 @@ public class Ring : MonoBehaviour
     {
         switch (ringBase.id)
         {
-            case 0:
-            case 1:
-            case 3:
-                break;
             case 2:
                 id2RemoveCount = 20;
+                break;
+            case 4:
+                id4Splash = 0.5f;
+                break;
+            default:
                 break;
         }
         isInBattle = true;
@@ -112,6 +114,7 @@ public class Ring : MonoBehaviour
                     }
                     break;
                 case 1: //리스트의 가장 앞쪽 한 개만 쏨
+                case 4:
                     float maxDist = 0.0f;
                     int idx = -1;
                     for (int i = 0; i < targets.Count; i++)
@@ -171,9 +174,12 @@ public class Ring : MonoBehaviour
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
             case 3:
-                monster.AE_DecreaseHP(curATK, Color.cyan);
-                monster.AE_Snow(curEFF);
+                monster.AE_Snow(curATK, curEFF);
                 monster.PlayParticleCollision(ringBase.id, curEFF);
+                break;
+            case 4:
+                monster.AE_Explosion(curATK, id4Splash);
+                monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
             default:
                 Debug.Log(string.Format("Not implemented yet. {0} AttackEffect", ringBase.id.ToString()));
@@ -206,18 +212,22 @@ public class Ring : MonoBehaviour
                 switch (ringBase.id)
                 {
                     case 0:
-                        ring.ChangeCurATK(0.05f);
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(0.1f);
+                        ring.ChangeCurATK(0.05f);
                         break;
                     case 1:
-                        ring.ChangeCurNumTarget(0.5f);
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(1.0f);
+                        ring.ChangeCurNumTarget(0.5f);
                         break;
                     case 3:
-                        ring.ChangeCurEFF(0.1f);
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(0.5f);
+                        ring.ChangeCurEFF(0.1f);
                         break;
-                    case 2: //아무 효과 없음
+                    case 4:
+                        if (ring.ringBase.id == ringBase.id) ring.id4Splash += 0.05f;
+                        ring.ChangeCurATK(0.05f);
+                        break;
+                    default: //아무 효과 없음
                         break;
                 }
             }
@@ -233,21 +243,24 @@ public class Ring : MonoBehaviour
                 switch (ring.ringBase.id)
                 {
                     case 0:
-                        ChangeCurATK(0.05f);
                         if (ring.ringBase.id == ringBase.id) ChangeCurATK(0.1f);
+                        ChangeCurATK(0.05f);
                         break;
                     case 1:
-                        ChangeCurNumTarget(0.5f);
                         if (ring.ringBase.id == ringBase.id) ChangeCurNumTarget(1.0f);
+                        ChangeCurNumTarget(0.5f);
                         break;
                     case 3:
-                        ChangeCurEFF(0.1f);
                         if (ring.ringBase.id == ringBase.id) ChangeCurEFF(0.5f);
+                        ChangeCurEFF(0.1f);
                         break;
-                    case 2: //아무 효과 없음
+                    case 4:
+                        if (ring.ringBase.id == ringBase.id) id4Splash += 0.05f;
+                        ChangeCurATK(0.05f);
+                        break;
+                    default: //아무 효과 없음
                         break;
                 }
-
         }
     }
 
@@ -266,16 +279,20 @@ public class Ring : MonoBehaviour
                 switch (ringBase.id)
                 {
                     case 0:
-                        ring.ChangeCurATK(-0.05f);
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(-0.1f);
+                        ring.ChangeCurATK(-0.05f);
                         break;
                     case 1:
-                        ring.ChangeCurNumTarget(-0.5f);
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
+                        ring.ChangeCurNumTarget(-0.5f);
                         break;
                     case 3:
-                        ring.ChangeCurEFF(-0.1f);
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(-0.5f);
+                        ring.ChangeCurEFF(-0.1f);
+                        break;
+                    case 4:
+                        if (ring.ringBase.id == ringBase.id) ring.id4Splash -= 0.05f;
+                        ring.ChangeCurATK(-0.05f);
                         break;
                     case 2: //아무 효과 없음
                         break;

@@ -54,8 +54,8 @@ public class DeckManager : MonoBehaviour
         RemoveFromDeck(0);
         AddToDeck(0);
         AddToDeck(1);
-        AddToDeck(2);
         AddToDeck(3);
+        AddToDeck(4);
     }
 
     //사용자 입력을 받는다.
