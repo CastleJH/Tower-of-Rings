@@ -6,7 +6,7 @@
 	5) RemoveSynergy()
 
 * Monster.cs
-	2) 기타 피격 효과 함수들
+	2) InitializeMonster(), 기타 피격 효과 함수들
 
 * DeckManager.cs
 	3) InitializeDeck()

@@ -27,6 +27,10 @@ public class Monster : MonoBehaviour
     public List<ParticleSystem> particles; //본인의 피격 파티클
     public List<int> particlesID;   //본인의 피격 파티클 종류
 
+    //기타 변수
+    float snowTime;         //눈꽃의 슬로우 효과가 지속된 시간
+    float snowEndTime;      //눈꽃의 슬로우 효과가 끝나는 시간
+
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -37,10 +41,16 @@ public class Monster : MonoBehaviour
         if (curHP > 0)  //살아있는 경우에만 동작할 수 있음.
         {
             curSPD = baseSPD;
-            /*
-            추후 구현: 이동 속도 조절
-            */
+
             spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
+
+            //이동방해는 약한순->강한순으로 적용되어야 한다.
+            if (snowTime < snowEndTime) //눈꽃 링의 둔화가 적용중이라면
+            {
+                curSPD = baseSPD * 0.5f;
+                snowTime += Time.deltaTime;
+                spriteRenderer.color = Color.cyan;
+            }
 
             if (noBarrierBlock) //결계에 막히지 않으면 이동
             {
@@ -69,40 +79,31 @@ public class Monster : MonoBehaviour
 
         //그래픽
         spriteRenderer.sprite = GameManager.instance.monsterSprites[baseMonster.type];
+        spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
         SetHPText();
         InvokeParticleOff();
+
+        //기타 변수
+        snowEndTime = -1.0f;
     }
 
-    public void PlayParticleCollision(int id)
+    //파티클을 플레이한다.
+    public void PlayParticleCollision(int id, float time)
     {
         //피격 파티클을 가져와 저장한다.
         ParticleSystem par = GameManager.instance.GetParticleFromPool(id);
-        particles.Add(par);
-        particlesID.Add(id);
 
-        //위치를 설정한다.
-        par.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -0.1f);
-        par.gameObject.transform.parent = gameObject.transform;
-
-        //플레이한다.
-        par.gameObject.SetActive(true);
-        par.Play();
-    }
-
-    //파티클을 time초 플레이한다.
-    public void PlayParticleCollisionForSec(int id, float time)
-    {
-
-        //피격 파티클을 가져오고, 기존에 재생중이던 것을 멈춘다.
-        ParticleSystem par = GameManager.instance.GetParticleFromPool(id);
-        ParticleSystem[] pars = par.GetComponentsInChildren<ParticleSystem>();
-        par.Stop(true);
-
-        //파티클들의 지속시간을 지정한다.
-        for (int i = 0; i < pars.Length; i++)
+        //지속 시간을 지정해야 한다면 설정한다.
+        if (time != 0.0f)
         {
-            var main = pars[i].main;
-            main.duration = time;
+            ParticleSystem[] pars = par.GetComponentsInChildren<ParticleSystem>();
+            par.Stop(true);
+
+            for (int i = 0; i < pars.Length; i++)
+            {
+                var main = pars[i].main;
+                main.duration = time;
+            }
         }
 
         //저장한다.
@@ -118,25 +119,23 @@ public class Monster : MonoBehaviour
         par.Play();
     }
 
-    //공격 이펙트: HP감소
-    public void AE_DecreaseHP(float dmg, Color32 color)
+    //제거해야 하는 파티클들을 확인하고 제거한다.
+    public void InvokeParticleOff()
     {
-        if (dmg != -1)
+        for (int i = particles.Count - 1; i >= 0; i--)
         {
-            curHP -= dmg;
-            DamageText t = GameManager.instance.GetDamageTextFromPool();
-            t.InitializeDamageText((Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
-            t.gameObject.SetActive(true);
+            if (!particles[i].IsAlive(true) || !BattleManager.instance.isBattlePlaying)   //파티클 재생이 끝났거나 게임이 끝난 경우
+            {
+                //재생을 한번 더 멈추고 제거한다(게임 종료에 의해 제거해야 하는 것일 수 있으므로).
+                particles[i].Stop(true);
+                GameManager.instance.ReturnParticleToPool(particles[i], particlesID[i]);
+                particles.RemoveAt(i);
+                particlesID.RemoveAt(i);
+            }
         }
-        else
-        {
-            curHP = 0;
-            DamageText t = GameManager.instance.GetDamageTextFromPool();
-            t.InitializeDamageText("X", transform.position, Color.black);
-            t.gameObject.SetActive(true);
-        }
-        SetHPText();
-        CheckDead();
+
+        if (BattleManager.instance.isBattlePlaying && curHP > 0)  //게임이 아직 진행중이고 자신이 아직 HP가 남아있다면 다음에 이 함수를 또 부른다.
+            Invoke("InvokeParticleOff", 1f);
     }
 
     //HP 텍스트를 갱신한다.
@@ -190,22 +189,33 @@ public class Monster : MonoBehaviour
         GameManager.instance.ReturnMonsterToPool(this);
     }
 
-    //제거해야 하는 파티클들을 확인하고 제거한다.
-    public void InvokeParticleOff()
+    //공격 이펙트: HP감소
+    public void AE_DecreaseHP(float dmg, Color32 color)
     {
-        for (int i = particles.Count - 1; i >= 0; i--)
+        if (dmg != -1)
         {
-            if (!particles[i].IsAlive(true) || !BattleManager.instance.isBattlePlaying)   //파티클 재생이 끝났거나 게임이 끝난 경우
-            {
-                //재생을 한번 더 멈추고 제거한다(게임 종료에 의해 제거해야 하는 것일 수 있으므로).
-                particles[i].Stop(true);
-                GameManager.instance.ReturnParticleToPool(particles[i], particlesID[i]);
-                particles.RemoveAt(i);
-                particlesID.RemoveAt(i);
-            }
+            curHP -= dmg;
+            DamageText t = GameManager.instance.GetDamageTextFromPool();
+            t.InitializeDamageText((Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
+            t.gameObject.SetActive(true);
         }
+        else
+        {
+            curHP = 0;
+            DamageText t = GameManager.instance.GetDamageTextFromPool();
+            t.InitializeDamageText("X", transform.position, Color.black);
+            t.gameObject.SetActive(true);
+        }
+        SetHPText();
+        CheckDead();
+    }
 
-        if (BattleManager.instance.isBattlePlaying && curHP > 0)  //게임이 아직 진행중이고 자신이 아직 HP가 남아있다면 다음에 이 함수를 또 부른다.
-            Invoke("InvokeParticleOff", 1f);
+    //공격 이펙트: 눈꽃
+    public void AE_Snow(float time)
+    {
+        //이미 받고있는 눈꽃 링의 둔화 효과가 더 오래 간다면 적용 취소
+        if (snowEndTime - snowTime > time) return;
+        snowEndTime = time;
+        snowTime = 0;
     }
 }

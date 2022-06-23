@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
             r.id = (int)dataRing[i]["id"];
             r.rarity = (int)dataRing[i]["rarity"];
             r.name = (string)dataRing[i]["name"];
-            r.dbDMG = (int)dataRing[i]["dmg"];
+            r.dbATK = (int)dataRing[i]["atk"];
             r.dbSPD = float.Parse(dataRing[i]["spd"].ToString());
             r.baseNumTarget = (int)dataRing[i]["target"];
             r.baseRP = (int)dataRing[i]["rp"];

@@ -9,13 +9,13 @@ public class Ring : MonoBehaviour
 
     //스탯
     public float curNumTarget;  //타겟 수
-    public float curDMG;   //현재 데미지
+    public float curATK;   //현재 데미지
     public float curSPD;   //현재 공격 쿨타임
     public float curEFF;   //현재 효과 지속 시간
     public float buffNumTarget; //타겟 수 변화량(그대로 더하기 한다. 0.0f로 시작)
-    public float buffDMG;       //데미지 변화율(그대로 곱하기 한다. 1.0f로 시작)
+    public float buffATK;       //데미지 변화율(그대로 곱하기 한다. 1.0f로 시작)
     public float buffSPD;       //공격 쿨타임 변화율(그대로 곱하기 한다. 1.0f로 시작. 0.2f보다 작아도 0.2f를 곱함)
-    public float buffEFF;       //효과 지속시간 변화율(그대로 곱하기한다. 1.0f로 시작)
+    public float buffEFF;       //효과 지속시간 변화율(그대로 더하기 한다. 0.0f로 시작)
 
     //타겟
     public List<Monster> targets; //공격범위 내의 몬스터들
@@ -76,6 +76,7 @@ public class Ring : MonoBehaviour
         {
             case 0:
             case 1:
+            case 3:
                 break;
             case 2:
                 id2RemoveCount = 20;
@@ -101,6 +102,7 @@ public class Ring : MonoBehaviour
             switch (ringBase.id)
             {
                 case 0: //리스트의 가장 앞쪽부터 타겟 만큼 쏨
+                case 3:
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
                     for (int i = 0; i < numTarget; i++)
                     {
@@ -151,8 +153,8 @@ public class Ring : MonoBehaviour
         {
             case 0: //단순 공격
             case 2:
-                monster.AE_DecreaseHP(curDMG, Color.red);
-                monster.PlayParticleCollision(ringBase.id);
+                monster.AE_DecreaseHP(curATK, Color.red);
+                monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
             case 1:
                 GetTargets();
@@ -161,12 +163,17 @@ public class Ring : MonoBehaviour
                 for (int i = 0; i < targets.Count && numTarget != 0; i++)
                     if (targets[i] != monster)
                     {
-                        targets[i].AE_DecreaseHP(curDMG, Color.blue);
-                        targets[i].PlayParticleCollision(ringBase.id);
+                        targets[i].AE_DecreaseHP(curATK, Color.yellow);
+                        targets[i].PlayParticleCollision(ringBase.id, 0.0f);
                         numTarget--;
                     }
-                monster.AE_DecreaseHP(curDMG, Color.blue);
-                monster.PlayParticleCollision(ringBase.id);
+                monster.AE_DecreaseHP(curATK, Color.yellow);
+                monster.PlayParticleCollision(ringBase.id, 0.0f);
+                break;
+            case 3:
+                monster.AE_DecreaseHP(curATK, Color.cyan);
+                monster.AE_Snow(curEFF);
+                monster.PlayParticleCollision(ringBase.id, curEFF);
                 break;
             default:
                 Debug.Log(string.Format("Not implemented yet. {0} AttackEffect", ringBase.id.ToString()));
@@ -180,12 +187,12 @@ public class Ring : MonoBehaviour
         Ring ring;
 
         buffNumTarget = 0.0f;
-        buffDMG = 1.0f;
+        buffATK = 1.0f;
         buffSPD = 1.0f;
-        buffEFF = 1.0f;
+        buffEFF = 0.0f;
         
         ChangeCurNumTarget(0.0f);
-        ChangeCurDMG(0.0f);
+        ChangeCurATK(0.0f);
         ChangeCurSPD(0.0f);
         ChangeCurEFF(0.0f);
 
@@ -199,12 +206,16 @@ public class Ring : MonoBehaviour
                 switch (ringBase.id)
                 {
                     case 0:
-                        ring.ChangeCurDMG(0.05f);
-                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurDMG(0.1f);
+                        ring.ChangeCurATK(0.05f);
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(0.1f);
                         break;
                     case 1:
                         ring.ChangeCurNumTarget(0.5f);
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(1.0f);
+                        break;
+                    case 3:
+                        ring.ChangeCurEFF(0.1f);
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(0.5f);
                         break;
                     case 2: //아무 효과 없음
                         break;
@@ -222,12 +233,16 @@ public class Ring : MonoBehaviour
                 switch (ring.ringBase.id)
                 {
                     case 0:
-                        ChangeCurDMG(0.05f);
-                        if (ring.ringBase.id == ringBase.id) ChangeCurDMG(0.1f);
+                        ChangeCurATK(0.05f);
+                        if (ring.ringBase.id == ringBase.id) ChangeCurATK(0.1f);
                         break;
                     case 1:
                         ChangeCurNumTarget(0.5f);
                         if (ring.ringBase.id == ringBase.id) ChangeCurNumTarget(1.0f);
+                        break;
+                    case 3:
+                        ChangeCurEFF(0.1f);
+                        if (ring.ringBase.id == ringBase.id) ChangeCurEFF(0.5f);
                         break;
                     case 2: //아무 효과 없음
                         break;
@@ -251,12 +266,16 @@ public class Ring : MonoBehaviour
                 switch (ringBase.id)
                 {
                     case 0:
-                        ring.ChangeCurDMG(-0.05f);
-                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurDMG(-0.1f);
+                        ring.ChangeCurATK(-0.05f);
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(-0.1f);
                         break;
                     case 1:
                         ring.ChangeCurNumTarget(-0.5f);
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
+                        break;
+                    case 3:
+                        ring.ChangeCurEFF(-0.1f);
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(-0.5f);
                         break;
                     case 2: //아무 효과 없음
                         break;
@@ -310,18 +329,23 @@ public class Ring : MonoBehaviour
             }
     }
 
+    //타겟 개수를 증감한다.
     public void ChangeCurNumTarget(float buff)
     {
         buffNumTarget += buff;
         curNumTarget = ringBase.baseNumTarget + buffNumTarget;
+        if (curNumTarget < 0) curNumTarget = 0;
     }
 
-    public void ChangeCurDMG(float buff)
+    //공격력을 증감한다.
+    public void ChangeCurATK(float buff)
     {
-        buffDMG += buff;
-        curDMG = ringBase.baseDMG * buffDMG;
+        buffATK += buff;
+        if (buffATK > 0) curATK = ringBase.baseATK * buffATK;
+        else curATK = 0;
     }
 
+    //공격 쿨타임을 증감한다.
     public void ChangeCurSPD(float buff)
     {
         buffSPD += buff;
@@ -329,9 +353,11 @@ public class Ring : MonoBehaviour
         else curSPD = ringBase.baseSPD * 0.2f;
     }
 
+    //효과 지속시간을 증감한다.
     public void ChangeCurEFF(float buff)
     {
         buffEFF += buff;
-        curEFF = ringBase.baseEFF * buffEFF;
+        curEFF = ringBase.baseEFF + buffEFF;
+        if (curEFF < 0) curEFF = 0;
     }
 }

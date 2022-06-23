@@ -14,11 +14,11 @@ public class Ringstone
     public string name;
 
     //DB의 스탯
-    public float dbDMG;
+    public float dbATK;
     public float dbSPD;
 
     //실제 게임에서의 기본 스탯
-    public float baseDMG;
+    public float baseATK;
     public float baseSPD;
     public float baseEFF;
     public int range;
@@ -41,10 +41,10 @@ public class Ringstone
     {
         if (level == 10) return false;
         level++;
-        baseDMG = dbDMG;
+        baseATK = dbATK;
         baseSPD = dbSPD;
         for (int i = 2; i <= level; i++)
-            if (i % 2 == 0) baseDMG += dbDMG * 0.1f;
+            if (i % 2 == 0) baseATK += dbATK * 0.1f;
             else baseSPD *= 0.95f;
         return true;
     }
@@ -52,10 +52,10 @@ public class Ringstone
     public void Downgrade()
     {
         if (level > 1) level--;
-        baseDMG = dbDMG;
+        baseATK = dbATK;
         baseSPD = dbSPD;
         for (int i = 2; i <= level; i++)
-            if (i % 2 == 0) baseDMG += dbDMG * 0.1f;
+            if (i % 2 == 0) baseATK += dbATK * 0.1f;
             else baseSPD *= 0.95f;
     }
 }
