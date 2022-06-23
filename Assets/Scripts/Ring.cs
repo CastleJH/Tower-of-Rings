@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Ring : MonoBehaviour
 {
+    int number;    //링 구분에 쓰임
     public Ringstone ringBase;  //링의 기본 정보
 
     //스탯
@@ -33,8 +34,9 @@ public class Ring : MonoBehaviour
     public bool isInBattle;         //전투 중인지 체크용
     public float shootCoolTime;    //발사 쿨타임 체크용
     public CircleCollider2D collider; //자신의 콜라이더
-    int id2RemoveCount;     //산화 링의 소멸 카운트
-    float id4Splash;        //폭발 링의 스플래쉬 데미지(비율)
+    int oxyRemoveCount;     //산화 링의 소멸 카운트
+    float explosionSplash;        //폭발 링의 스플래쉬 데미지(비율)
+    int poisonStack;
 
     void Awake()
     {
@@ -71,15 +73,19 @@ public class Ring : MonoBehaviour
     }
 
     //실제로 게임에 넣는다.
-    public void PutRingIntoScene()
+    public void PutRingIntoScene(int _number)
     {
+        number = _number;
         switch (ringBase.id)
         {
             case 2:
-                id2RemoveCount = 20;
+                oxyRemoveCount = 20;
                 break;
             case 4:
-                id4Splash = 0.5f;
+                explosionSplash = 0.5f;
+                break;
+            case 5:
+                poisonStack = 1;
                 break;
             default:
                 break;
@@ -105,6 +111,8 @@ public class Ring : MonoBehaviour
             {
                 case 0: //리스트의 가장 앞쪽부터 타겟 만큼 쏨
                 case 3:
+                case 6:
+                case 9:
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
                     for (int i = 0; i < numTarget; i++)
                     {
@@ -116,24 +124,42 @@ public class Ring : MonoBehaviour
                 case 1: //리스트의 가장 앞쪽 한 개만 쏨
                 case 4:
                     float maxDist = 0.0f;
-                    int idx = -1;
+                    int mIdx = -1;
                     for (int i = 0; i < targets.Count; i++)
                         if (maxDist < targets[i].movedDistance)
                         {
                             maxDist = targets[i].movedDistance;
-                            idx = i;
+                            mIdx = i;
                         }
                     bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
-                    bullet.InitializeBullet(this, targets[idx]);
+                    bullet.InitializeBullet(this, targets[mIdx]);
                     bullet.gameObject.SetActive(true);
                     break;
                 case 2: //산화 링의 소멸 카운팅
-                    if (id2RemoveCount-- == 0)
+                    if (oxyRemoveCount-- == 0)
                     {
                         DeckManager.instance.RemoveRing(this);
                         break;
                     }
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
+                    for (int i = 0; i < numTarget; i++)
+                    {
+                        bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
+                        bullet.InitializeBullet(this, targets[i]);
+                        bullet.gameObject.SetActive(true);
+                    }
+                    break;
+                case 5: //랜덤한 갯수만큼 공격
+                    for (int i = 0; i < numTarget; i++)
+                    {
+                        int tar = Random.Range(0, targets.Count);
+                        bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
+                        bullet.InitializeBullet(this, targets[tar]);
+                        targets.RemoveAt(tar);
+                    }
+                    break;
+                case 10: //HP 낮은 순으로 타겟만큼 공격
+                    targets = targets.OrderBy(x => x.curHP).ToList();
                     for (int i = 0; i < numTarget; i++)
                     {
                         bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
@@ -156,7 +182,9 @@ public class Ring : MonoBehaviour
         {
             case 0: //단순 공격
             case 2:
-                monster.AE_DecreaseHP(curATK, Color.red);
+            case 9:
+            case 10:
+                monster.AE_DecreaseHP(curATK, new Color32(100, 0, 0, 255));
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
             case 1:
@@ -178,8 +206,14 @@ public class Ring : MonoBehaviour
                 monster.PlayParticleCollision(ringBase.id, curEFF);
                 break;
             case 4:
-                monster.AE_Explosion(curATK, id4Splash);
+                monster.AE_Explosion(curATK, explosionSplash);
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
+                break;
+            case 5:
+                monster.AE_Poison(number, curATK * poisonStack);
+                break;
+            case 6:
+                monster.AE_DecreaseHP(Random.Range(0.0f, curATK), new Color32(255, 0, 100, 255));
                 break;
             default:
                 Debug.Log(string.Format("Not implemented yet. {0} AttackEffect", ringBase.id.ToString()));
@@ -212,10 +246,12 @@ public class Ring : MonoBehaviour
                 switch (ringBase.id)
                 {
                     case 0:
+                    case 6:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(0.1f);
                         ring.ChangeCurATK(0.05f);
                         break;
                     case 1:
+                    case 10:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(1.0f);
                         ring.ChangeCurNumTarget(0.5f);
                         break;
@@ -224,10 +260,21 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurEFF(0.1f);
                         break;
                     case 4:
-                        if (ring.ringBase.id == ringBase.id) ring.id4Splash += 0.05f;
+                        if (ring.ringBase.id == ringBase.id) ring.explosionSplash += 0.05f;
                         ring.ChangeCurATK(0.05f);
                         break;
-                    default: //아무 효과 없음
+                    case 5:
+                        if (ring.ringBase.id == ringBase.id) ring.poisonStack++;
+                        ring.ChangeCurSPD(-0.08f);
+                        break;
+                    case 9:
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(0.2f);
+                        ring.ChangeCurATK(0.05f);
+                        break;
+                    case 2: //효과 없음
+                        break;
+                    default: //구현 안됨
+                        Debug.LogError("no synergy");
                         break;
                 }
             }
@@ -243,10 +290,12 @@ public class Ring : MonoBehaviour
                 switch (ring.ringBase.id)
                 {
                     case 0:
+                    case 6:
                         if (ring.ringBase.id == ringBase.id) ChangeCurATK(0.1f);
                         ChangeCurATK(0.05f);
                         break;
                     case 1:
+                    case 10:
                         if (ring.ringBase.id == ringBase.id) ChangeCurNumTarget(1.0f);
                         ChangeCurNumTarget(0.5f);
                         break;
@@ -255,10 +304,21 @@ public class Ring : MonoBehaviour
                         ChangeCurEFF(0.1f);
                         break;
                     case 4:
-                        if (ring.ringBase.id == ringBase.id) id4Splash += 0.05f;
+                        if (ring.ringBase.id == ringBase.id) explosionSplash += 0.05f;
                         ChangeCurATK(0.05f);
                         break;
-                    default: //아무 효과 없음
+                    case 5:
+                        if (ring.ringBase.id == ringBase.id) poisonStack++;
+                        ChangeCurSPD(-0.08f);
+                        break;
+                    case 9:
+                        if (ring.ringBase.id == ringBase.id) ChangeCurATK(0.2f);
+                        ChangeCurATK(0.05f);
+                        break;
+                    case 2: //효과 없음
+                        break;
+                    default: //구현 안됨
+                        Debug.LogError("no synergy");
                         break;
                 }
         }
@@ -279,10 +339,12 @@ public class Ring : MonoBehaviour
                 switch (ringBase.id)
                 {
                     case 0:
+                    case 6:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(-0.1f);
                         ring.ChangeCurATK(-0.05f);
                         break;
                     case 1:
+                    case 10:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
                         ring.ChangeCurNumTarget(-0.5f);
                         break;
@@ -291,10 +353,21 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurEFF(-0.1f);
                         break;
                     case 4:
-                        if (ring.ringBase.id == ringBase.id) ring.id4Splash -= 0.05f;
+                        if (ring.ringBase.id == ringBase.id) ring.explosionSplash -= 0.05f;
                         ring.ChangeCurATK(-0.05f);
                         break;
-                    case 2: //아무 효과 없음
+                    case 5:
+                        if (ring.ringBase.id == ringBase.id) ring.poisonStack--;
+                        ring.ChangeCurSPD(0.08f);
+                        break;
+                    case 9:
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(-0.2f);
+                        ring.ChangeCurATK(-0.05f);
+                        break;
+                    case 2: //효과 없음
+                        break;
+                    default: //구현 안됨
+                        Debug.LogError("no synergy");
                         break;
                 }
             }

@@ -18,6 +18,7 @@ public class DeckManager : MonoBehaviour
     public List<Ring> rings;    //전투 중인 링들
     public Ring genRing = null;    //생성 중인 링
     public bool isGenRing;  //링 생성버튼이 눌렸는지 여부
+    int ringNumber;    //링 생성시 부여하는 구분 번호
 
     void Awake()
     {
@@ -52,11 +53,22 @@ public class DeckManager : MonoBehaviour
         RemoveFromDeck(0);
         RemoveFromDeck(0);
         RemoveFromDeck(0);
-        AddToDeck(0);
-        AddToDeck(1);
         AddToDeck(3);
         AddToDeck(4);
+        AddToDeck(5);
+        AddToDeck(6);
+        AddToDeck(9);
+        AddToDeck(10);
     }
+
+    //전투 준비한다. 필요한 변수들을 초기화한다.
+    public void PrepareBattle()
+    {
+        rings.Clear();
+        genRing = null;
+        isGenRing = false;
+        ringNumber = 0;
+}
 
     //사용자 입력을 받는다.
     void GetInput()
@@ -128,7 +140,7 @@ public class DeckManager : MonoBehaviour
         //충분한 rp가 있다면 생성. 아니면 취소
         if (rpCost <= BattleManager.instance.rp)
         {
-            genRing.PutRingIntoScene();
+            genRing.PutRingIntoScene(ringNumber++);
             rings.Add(genRing);
             //RenewAllRingsStat();
             UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));

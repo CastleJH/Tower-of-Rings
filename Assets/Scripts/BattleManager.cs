@@ -59,6 +59,9 @@ public class BattleManager : MonoBehaviour
             else UIManager.instance.SetBattleDeckRingRPText(i, 0);
         }
 
+        //덱 매니저의 전투 관련 변수들을 초기화
+        DeckManager.instance.PrepareBattle();
+
         //카메라를 해당하는 전장으로 이동
         Camera.main.transform.position = GameManager.instance.monsterPaths[pathID].transform.position;
         Camera.main.transform.Translate(0, -2, -10);
@@ -79,7 +82,7 @@ public class BattleManager : MonoBehaviour
     {
         while (newMonsterID < numGenMonster)
         {
-            float scale = 1.0f;
+            float scale = 10.0f;
             /*if (GameManager.instance.floor == 7) scale = 4.0f;
             else scale = 0.5f * (GameManager.instance.floor + 1);
             scale += 0.05f * (GameManager.instance.stage - 1);*/

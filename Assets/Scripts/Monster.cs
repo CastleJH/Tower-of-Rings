@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using PathCreation;
 
 public class Monster : MonoBehaviour
@@ -19,21 +20,29 @@ public class Monster : MonoBehaviour
     //이동 변수
     public PathCreator path;    //이동 경로
     public float movedDistance; //맵에서의 이동 거리
-    public bool noBarrierBlock; //결계로부터 이동을 방해받지 않는지 여부
 
     //그래픽
     SpriteRenderer spriteRenderer;  //몬스터 이미지
     public TextMesh hpText;   //HP 텍스트
-    public List<ParticleSystem> particles; //본인의 피격 파티클
-    public List<int> particlesID;   //본인의 피격 파티클 종류
+    List<ParticleSystem> particles; //본인의 피격 파티클
+    List<int> particlesID;   //본인의 피격 파티클 종류
 
     //기타 변수
     float snowTime;         //눈꽃의 슬로우 효과가 지속된 시간
     float snowEndTime;      //눈꽃의 슬로우 효과가 끝나는 시간
+    Dictionary<int, float> poisonDmg;   //맹독의 데미지
+    Dictionary<int, float> poisonTime;  //맹독의 데미지 쿨타임
+    bool barrierBlock; //결계로부터 이동을 방해받지 않는지 여부
 
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        particles = new List<ParticleSystem>();
+        particlesID = new List<int>();
+        
+        poisonTime = new Dictionary<int, float>();
+        poisonDmg = new Dictionary<int, float>();
     }
 
     void Update()
@@ -52,7 +61,24 @@ public class Monster : MonoBehaviour
                 spriteRenderer.color = Color.cyan;
             }
 
-            if (noBarrierBlock) //결계에 막히지 않으면 이동
+            if (poisonDmg.Count > 0)  //맹독 중첩이 하나라도 있다면
+            {
+                spriteRenderer.color = Color.green;
+                List<int> list = poisonDmg.Keys.ToList();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    int key = list[i];
+                    poisonTime[key] += Time.deltaTime;
+                    if (poisonTime[key] > 1.0f)
+                    {
+                        AE_DecreaseHP(poisonDmg[key], new Color32(0, 100, 0, 255));
+                        PlayParticleCollision(5, 0.0f);
+                        poisonTime[key] = 0.0f;
+                    }
+                }
+            }
+
+            if (!barrierBlock) //결계에 막히지 않으면 이동
             {
                 movedDistance += curSPD * Time.deltaTime;
                 transform.position = path.path.GetPointAtDistance(movedDistance);
@@ -75,7 +101,6 @@ public class Monster : MonoBehaviour
         //이동 변수
         path = GameManager.instance.monsterPaths[pathID];
         movedDistance = 0.0f;
-        noBarrierBlock = true;
 
         //그래픽
         spriteRenderer.sprite = GameManager.instance.monsterSprites[baseMonster.type];
@@ -85,6 +110,9 @@ public class Monster : MonoBehaviour
 
         //기타 변수
         snowEndTime = -1.0f;
+        poisonDmg.Clear();
+        poisonTime.Clear();
+        barrierBlock = false;
     }
 
     //파티클을 플레이한다.
@@ -230,12 +258,23 @@ public class Monster : MonoBehaviour
             if (colliders[i].tag == "Monster")
             {
                 monster = colliders[i].GetComponent<Monster>();
-                if (monster.curHP > 0 && monster != this)
-                {
-                    Debug.Log("Explode to " + i);
-                    monster.AE_DecreaseHP(dmg * splash, new Color32(150, 30, 30, 255));
-                }
+                if (monster.curHP > 0 && monster != this) monster.AE_DecreaseHP(dmg * splash, new Color32(150, 30, 30, 255));
+                
             }
         AE_DecreaseHP(dmg, new Color32(150, 30, 30, 255));
+    }
+
+    public void AE_Poison(int ringNumber, float dmg)
+    {
+
+        if (poisonDmg.ContainsKey(ringNumber))
+        {
+            poisonDmg[ringNumber] += dmg;
+        }
+        else
+        {
+            poisonDmg.Add(ringNumber, dmg);
+            poisonTime.Add(ringNumber, 1.0f);
+        }
     }
 }
