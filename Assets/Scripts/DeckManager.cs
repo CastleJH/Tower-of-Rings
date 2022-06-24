@@ -102,7 +102,7 @@ public class DeckManager : MonoBehaviour
             {
                 //플레이어의 마지막 터치 지점에 해당하는 곳에 가능하다면 링을 생성한다.
                 genRing.transform.position = Camera.main.ScreenToWorldPoint(touchPos);
-                genRing.transform.Translate(Vector3.forward * 3);
+                genRing.transform.Translate(Vector3.forward * 11);
                 TryPutRingIntoScene();
             }
             else //링 제거의 경우

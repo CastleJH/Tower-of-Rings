@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("already enqueued ring");
             return;
         }
+        ring.ringBase = null;
         ring.isInBattle = false;
         ring.gameObject.SetActive(false);
         ringPool.Enqueue(ring);

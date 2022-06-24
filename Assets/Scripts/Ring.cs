@@ -172,6 +172,7 @@ public class Ring : MonoBehaviour
                     break;
             }
             shootCoolTime = 0.0f;
+            anim.SetTrigger("isShoot");
         }
     }
 
