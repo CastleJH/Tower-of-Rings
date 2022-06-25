@@ -37,6 +37,7 @@ public class Ring : MonoBehaviour
     int oxyRemoveCount;     //산화 링의 소멸 카운트
     float explosionSplash;        //폭발 링의 스플래쉬 데미지(비율)
     int poisonStack;            //맹독 링의 공격 당 쌓는 스택
+    ParticleSystem rpGenerationParticle; //RP 생산시 링 위치에서 재생할 파티클
     public Monster commanderTarget; //사령관 링의 타겟
     public Ring commanderNearest;   //가장 근처의 사령관 링
 
@@ -53,7 +54,16 @@ public class Ring : MonoBehaviour
             shootCoolTime += Time.deltaTime;
             if (shootCoolTime > curSPD)
             {
-                TryShoot();
+                switch (ringBase.id)
+                {
+                    case 7:
+                        GenerateRP(curATK);
+                        shootCoolTime = 0.0f;
+                        break;
+                    default:
+                        TryShoot();
+                        break;
+                }
             }
         }
     }
@@ -128,6 +138,7 @@ public class Ring : MonoBehaviour
                 case 0: //리스트의 가장 앞쪽부터 타겟 만큼 쏨
                 case 3:
                 case 6:
+                case 8:
                 case 9:
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
                     for (int i = 0; i < numTarget; i++)
@@ -202,6 +213,8 @@ public class Ring : MonoBehaviour
                         if (commanderTarget == null || commanderTarget.movedDistance < targets[i].movedDistance)
                             commanderTarget = targets[i];
                     break;
+                case 7: //발사 안함
+                    break;
                 default:
                     Debug.Log(string.Format("Not implemented yet. {0} TryShoot", ringBase.id.ToString()));
                     break;
@@ -251,6 +264,11 @@ public class Ring : MonoBehaviour
             case 6:
                 monster.AE_DecreaseHP(Random.Range(0.0f, curATK), new Color32(255, 0, 100, 255));
                 break;
+            case 8:
+                monster.AE_DecreaseHP(curATK, new Color32(100, 0, 0, 255));
+                monster.PlayParticleCollision(ringBase.id, 0.0f);
+                GenerateRP(curATK);
+                break;
             case 19:    //아무것도 없음
                 break;
             default:
@@ -283,15 +301,20 @@ public class Ring : MonoBehaviour
             {
                 switch (ringBase.id)
                 {
-                    case 0:
+                    case 0: //공 10 공 5
                     case 6:
+                    case 7:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(0.1f);
                         ring.ChangeCurATK(0.05f);
                         break;
-                    case 1:
+                    case 1: //타 1 타 0.5
                     case 10:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(1.0f);
                         ring.ChangeCurNumTarget(0.5f);
+                        break;
+                    case 8: //속 -15 속 -8
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurSPD(-0.15f);
+                        ring.ChangeCurSPD(-0.08f);
                         break;
                     case 3:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(0.5f);
@@ -328,15 +351,20 @@ public class Ring : MonoBehaviour
             if (Vector2.Distance(ring.transform.position, transform.position) <= ring.ringBase.range + collider.radius)
                 switch (ring.ringBase.id)
                 {
-                    case 0:
+                    case 0: //공 10 공 5
                     case 6:
+                    case 7:
                         if (ring.ringBase.id == ringBase.id) ChangeCurATK(0.1f);
                         ChangeCurATK(0.05f);
                         break;
-                    case 1:
+                    case 1: //타 1 타 0.5
                     case 10:
                         if (ring.ringBase.id == ringBase.id) ChangeCurNumTarget(1.0f);
                         ChangeCurNumTarget(0.5f);
+                        break;
+                    case 8: //속 -15 속 -8
+                        if (ring.ringBase.id == ringBase.id) ChangeCurSPD(-0.15f);
+                        ChangeCurSPD(-0.08f);
                         break;
                     case 3:
                         if (ring.ringBase.id == ringBase.id) ChangeCurEFF(0.5f);
@@ -378,15 +406,20 @@ public class Ring : MonoBehaviour
             {
                 switch (ringBase.id)
                 {
-                    case 0:
+                    case 0: //공 10 공 5
                     case 6:
+                    case 7:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(-0.1f);
                         ring.ChangeCurATK(-0.05f);
                         break;
-                    case 1:
+                    case 1: //타 1 타 0.5
                     case 10:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
                         ring.ChangeCurNumTarget(-0.5f);
+                        break;
+                    case 8: //속 -15 속 -8
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurSPD(0.15f);
+                        ring.ChangeCurSPD(0.08f);
                         break;
                     case 3:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(-0.5f);
@@ -520,5 +553,27 @@ public class Ring : MonoBehaviour
         buffEFF += buff;
         curEFF = ringBase.baseEFF + buffEFF;
         if (curEFF < 0) curEFF = 0;
+    }
+
+    void GenerateRP(float genRP)
+    {
+        if (rpGenerationParticle != null)   //이미 있던 파티클은 돌려준다.
+        {
+            rpGenerationParticle.Stop();
+            GameManager.instance.ReturnParticleToPool(rpGenerationParticle, 7);
+        }
+
+        //RP를 생산하고 UI를 업데이트 한다.
+        BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp + genRP);
+
+        //파티클을 생성한다.
+        rpGenerationParticle = GameManager.instance.GetParticleFromPool(7);
+
+        //위치를 설정한다.
+        rpGenerationParticle.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.1f);
+
+        //플레이한다.
+        rpGenerationParticle.gameObject.SetActive(true);
+        rpGenerationParticle.Play();
     }
 }

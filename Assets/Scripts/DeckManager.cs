@@ -53,11 +53,12 @@ public class DeckManager : MonoBehaviour
         RemoveFromDeck(0);
         RemoveFromDeck(0);
         RemoveFromDeck(0);
-        AddToDeck(3);
-        AddToDeck(4);
+        //AddToDeck(0);
+        AddToDeck(1); ;
         AddToDeck(5);
-        AddToDeck(6);
-        AddToDeck(9);
+        //AddToDeck(5);
+        AddToDeck(7);
+        AddToDeck(8);
         AddToDeck(19);
     }
 
@@ -142,7 +143,6 @@ public class DeckManager : MonoBehaviour
         {
             genRing.PutIntoBattle(ringNumber++);
             rings.Add(genRing);
-            //RenewAllRingsStat();
             UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));
             BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - rpCost);
         }
