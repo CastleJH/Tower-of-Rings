@@ -36,7 +36,9 @@ public class Ring : MonoBehaviour
     public CircleCollider2D collider; //자신의 콜라이더
     int oxyRemoveCount;     //산화 링의 소멸 카운트
     float explosionSplash;        //폭발 링의 스플래쉬 데미지(비율)
-    int poisonStack;
+    int poisonStack;            //맹독 링의 공격 당 쌓는 스택
+    public Monster commanderTarget; //사령관 링의 타겟
+    public Ring commanderNearest;   //가장 근처의 사령관 링
 
     void Awake()
     {
@@ -73,9 +75,13 @@ public class Ring : MonoBehaviour
     }
 
     //실제로 게임에 넣는다.
-    public void PutRingIntoScene(int _number)
+    public void PutIntoBattle(int _number)
     {
         number = _number;
+        
+        commanderTarget = null;
+        commanderNearest = null;
+
         switch (ringBase.id)
         {
             case 2:
@@ -87,9 +93,19 @@ public class Ring : MonoBehaviour
             case 5:
                 poisonStack = 1;
                 break;
+            case 19:
+                Ring dRing;
+                for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--)
+                {
+                    dRing = DeckManager.instance.rings[i];
+                    if (dRing.commanderNearest == null || Vector2.Distance(dRing.transform.position, transform.position) <= Vector2.Distance(dRing.transform.position, dRing.commanderNearest.transform.position)) //첫 사령관 링이거나 기존 사령관 링보다 더 가까운지 확인
+                        dRing.commanderNearest = this;
+                }
+                break;
             default:
                 break;
         }
+
         isInBattle = true;
         shootCoolTime = ringBase.baseSPD - 0.2f;
         rangeRenderer.color = new Color(0, 0, 0, 0);
@@ -105,7 +121,7 @@ public class Ring : MonoBehaviour
         int numTarget = Mathf.Min(targets.Count, (int)curNumTarget);
         if (numTarget != 0)
         {
-            audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[ringBase.id]);
+            if (ringBase.id != 19) audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[ringBase.id]);
             Bullet bullet;
             switch (ringBase.id)
             {
@@ -150,11 +166,24 @@ public class Ring : MonoBehaviour
                     }
                     break;
                 case 5: //랜덤한 갯수만큼 공격
+                    if (Random.Range(0.0f, 1.0f) < 0.8f && commanderNearest != null && commanderNearest.commanderTarget != null) //사령관 대상인 경우
+                    {
+                        Debug.Log("commander attack");
+                        bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
+                        bullet.InitializeBullet(this, commanderNearest.commanderTarget);
+                        bullet.gameObject.SetActive(true);
+                        if (targets.Contains(commanderNearest.commanderTarget))
+                        {
+                            targets.Remove(commanderNearest.commanderTarget); //앞으로의 공격대상에서 해당 대상은 뺀다.
+                            if (numTarget == targets.Count) numTarget--;
+                        }
+                    }
                     for (int i = 0; i < numTarget; i++)
                     {
                         int tar = Random.Range(0, targets.Count);
                         bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
                         bullet.InitializeBullet(this, targets[tar]);
+                        bullet.gameObject.SetActive(true);
                         targets.RemoveAt(tar);
                     }
                     break;
@@ -167,12 +196,18 @@ public class Ring : MonoBehaviour
                         bullet.gameObject.SetActive(true);
                     }
                     break;
+                case 19: //사령관의 대상 고르기
+                    commanderTarget = null;
+                    for (int i = 0; i < targets.Count; i++)
+                        if (commanderTarget == null || commanderTarget.movedDistance < targets[i].movedDistance)
+                            commanderTarget = targets[i];
+                    break;
                 default:
                     Debug.Log(string.Format("Not implemented yet. {0} TryShoot", ringBase.id.ToString()));
                     break;
             }
             shootCoolTime = 0.0f;
-            anim.SetTrigger("isShoot");
+            if (ringBase.id != 19) anim.SetTrigger("isShoot");
         }
     }
 
@@ -215,6 +250,8 @@ public class Ring : MonoBehaviour
                 break;
             case 6:
                 monster.AE_DecreaseHP(Random.Range(0.0f, curATK), new Color32(255, 0, 100, 255));
+                break;
+            case 19:    //아무것도 없음
                 break;
             default:
                 Debug.Log(string.Format("Not implemented yet. {0} AttackEffect", ringBase.id.ToString()));
@@ -273,6 +310,7 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurATK(0.05f);
                         break;
                     case 2: //효과 없음
+                    case 19:
                         break;
                     default: //구현 안됨
                         Debug.LogError("no synergy");
@@ -317,6 +355,7 @@ public class Ring : MonoBehaviour
                         ChangeCurATK(0.05f);
                         break;
                     case 2: //효과 없음
+                    case 19:
                         break;
                     default: //구현 안됨
                         Debug.LogError("no synergy");
@@ -366,12 +405,43 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurATK(-0.05f);
                         break;
                     case 2: //효과 없음
+                    case 19:
                         break;
                     default: //구현 안됨
                         Debug.LogError("no synergy");
                         break;
                 }
             }
+        }
+    }
+
+
+    //전투에서 제거한다.
+    public void RemoveFromBattle()
+    {
+        RemoveSynergy();
+        DeckManager.instance.rings.Remove(this);
+        switch (ringBase.id)
+        {
+            case 19:
+                Ring dRing;
+                List<Ring> commanderList = new List<Ring>();
+                for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) //모든 링에 대하여 이 링이 가장 가까운 사령관 링이었던 경우 삭제하고, 같은 사령관 링이면 저장한다.
+                {
+                    dRing = DeckManager.instance.rings[i];
+                    if (dRing.commanderNearest == this) dRing.commanderNearest = null;
+                    if (dRing.ringBase.id == ringBase.id) commanderList.Add(dRing);
+                }
+                for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) //모든 링에 대하여 새롭게 사령관 링을 찾아준다.
+                {
+                    dRing = DeckManager.instance.rings[i];
+                    for (int j = commanderList.Count - 1; j >= 0; j--) 
+                        if (dRing.commanderNearest == null || Vector2.Distance(dRing.transform.position, commanderList[j].transform.position) <= Vector2.Distance(dRing.transform.position, dRing.commanderNearest.transform.position)) //기존 사령관 링보다 더 가까운지 확인
+                            dRing.commanderNearest = commanderList[j];
+                }
+                break;
+            default:
+                break;
         }
     }
 

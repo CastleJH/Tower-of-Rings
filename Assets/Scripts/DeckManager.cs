@@ -58,7 +58,7 @@ public class DeckManager : MonoBehaviour
         AddToDeck(5);
         AddToDeck(6);
         AddToDeck(9);
-        AddToDeck(10);
+        AddToDeck(19);
     }
 
     //전투 준비한다. 필요한 변수들을 초기화한다.
@@ -140,7 +140,7 @@ public class DeckManager : MonoBehaviour
         //충분한 rp가 있다면 생성. 아니면 취소
         if (rpCost <= BattleManager.instance.rp)
         {
-            genRing.PutRingIntoScene(ringNumber++);
+            genRing.PutIntoBattle(ringNumber++);
             rings.Add(genRing);
             //RenewAllRingsStat();
             UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));
@@ -152,8 +152,7 @@ public class DeckManager : MonoBehaviour
     //링을 전투에서 제거한다.
     public void RemoveRing(Ring ring)
     {
-        ring.RemoveSynergy();
-        rings.Remove(ring);
+        ring.RemoveFromBattle();
         GameManager.instance.ReturnRingToPool(ring);
     }
 
