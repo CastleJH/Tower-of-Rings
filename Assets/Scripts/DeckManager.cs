@@ -53,12 +53,11 @@ public class DeckManager : MonoBehaviour
         RemoveFromDeck(0);
         RemoveFromDeck(0);
         RemoveFromDeck(0);
-        //AddToDeck(0);
+        AddToDeck(0);
         AddToDeck(1); ;
+        AddToDeck(3);
         AddToDeck(5);
-        //AddToDeck(5);
-        AddToDeck(7);
-        AddToDeck(8);
+        AddToDeck(18);
         AddToDeck(19);
     }
 

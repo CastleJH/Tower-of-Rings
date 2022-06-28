@@ -179,7 +179,6 @@ public class Ring : MonoBehaviour
                 case 5: //랜덤한 갯수만큼 공격
                     if (Random.Range(0.0f, 1.0f) < 0.8f && commanderNearest != null && commanderNearest.commanderTarget != null) //사령관 대상인 경우
                     {
-                        Debug.Log("commander attack");
                         bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
                         bullet.InitializeBullet(this, commanderNearest.commanderTarget);
                         bullet.gameObject.SetActive(true);
@@ -205,6 +204,28 @@ public class Ring : MonoBehaviour
                         bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
                         bullet.InitializeBullet(this, targets[i]);
                         bullet.gameObject.SetActive(true);
+                    }
+                    break;
+                case 18: //랜덤한 갯수만큼 결계 생성
+                    Barrier barrier;
+                    if (Random.Range(0.0f, 1.0f) < 0.8f && commanderNearest != null && commanderNearest.commanderTarget != null) //사령관 대상인 경우
+                    {
+                        barrier = GameManager.instance.GetBarrierFromPool();
+                        barrier.InitializeBarrier(curEFF, commanderNearest.commanderTarget.transform.position);
+                        barrier.gameObject.SetActive(true);
+                        if (targets.Contains(commanderNearest.commanderTarget))
+                        {
+                            targets.Remove(commanderNearest.commanderTarget); //앞으로의 공격대상에서 해당 대상은 뺀다.
+                            if (numTarget == targets.Count) numTarget--;
+                        }
+                    }
+                    for (int i = 0; i < numTarget; i++)
+                    {
+                        int tar = Random.Range(0, targets.Count);
+                        barrier = GameManager.instance.GetBarrierFromPool();
+                        barrier.InitializeBarrier(curEFF, targets[tar].transform.position);
+                        barrier.gameObject.SetActive(true);
+                        targets.RemoveAt(tar);
                     }
                     break;
                 case 19: //사령관의 대상 고르기
@@ -269,7 +290,8 @@ public class Ring : MonoBehaviour
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 GenerateRP(curATK);
                 break;
-            case 19:    //아무것도 없음
+            case 18:    //아무것도 없음
+            case 19:    
                 break;
             default:
                 Debug.Log(string.Format("Not implemented yet. {0} AttackEffect", ringBase.id.ToString()));
@@ -290,7 +312,7 @@ public class Ring : MonoBehaviour
         ChangeCurNumTarget(0.0f);
         ChangeCurATK(0.0f);
         ChangeCurSPD(0.0f);
-        ChangeCurEFF(0.0f);
+        ChangeCurEFF(0.0f, true);
 
         //다른 링에 대하여 나의 효과를 적용
         for (int i = 0; i < DeckManager.instance.rings.Count; i++)
@@ -316,9 +338,10 @@ public class Ring : MonoBehaviour
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurSPD(-0.15f);
                         ring.ChangeCurSPD(-0.08f);
                         break;
-                    case 3:
-                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(0.5f);
-                        ring.ChangeCurEFF(0.1f);
+                    case 3: //효 +0.5 효 +*0.05
+                    case 18:
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(0.5f, false);
+                        ring.ChangeCurEFF(0.05f, true);
                         break;
                     case 4:
                         if (ring.ringBase.id == ringBase.id) ring.explosionSplash += 0.05f;
@@ -366,9 +389,10 @@ public class Ring : MonoBehaviour
                         if (ring.ringBase.id == ringBase.id) ChangeCurSPD(-0.15f);
                         ChangeCurSPD(-0.08f);
                         break;
-                    case 3:
-                        if (ring.ringBase.id == ringBase.id) ChangeCurEFF(0.5f);
-                        ChangeCurEFF(0.1f);
+                    case 3: //효 +0.5 효 +*0.05
+                    case 18:
+                        if (ring.ringBase.id == ringBase.id) ChangeCurEFF(0.5f, false);
+                        ChangeCurEFF(0.05f, true);
                         break;
                     case 4:
                         if (ring.ringBase.id == ringBase.id) explosionSplash += 0.05f;
@@ -406,24 +430,25 @@ public class Ring : MonoBehaviour
             {
                 switch (ringBase.id)
                 {
-                    case 0: //공 10 공 5
+                    case 0: //공 -10 공 -5
                     case 6:
                     case 7:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(-0.1f);
                         ring.ChangeCurATK(-0.05f);
                         break;
-                    case 1: //타 1 타 0.5
+                    case 1: //타 -1 타 -0.5
                     case 10:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
                         ring.ChangeCurNumTarget(-0.5f);
                         break;
-                    case 8: //속 -15 속 -8
+                    case 8: //속 +15 속 +8
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurSPD(0.15f);
                         ring.ChangeCurSPD(0.08f);
                         break;
-                    case 3:
-                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(-0.5f);
-                        ring.ChangeCurEFF(-0.1f);
+                    case 3: //효 -0.5 효 -*0.05
+                    case 18:
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(-0.5f, false);
+                        ring.ChangeCurEFF(-0.05f, true);
                         break;
                     case 4:
                         if (ring.ringBase.id == ringBase.id) ring.explosionSplash -= 0.05f;
@@ -547,10 +572,11 @@ public class Ring : MonoBehaviour
         else curSPD = ringBase.baseSPD * 0.2f;
     }
 
-    //효과 지속시간을 증감한다.
-    public void ChangeCurEFF(float buff)
+    //효과 지속시간/확률을 증감한다. (isMul인경우 베이스*buff, 아니면 buff자체를 더해준다)
+    public void ChangeCurEFF(float buff, bool isMul)
     {
-        buffEFF += buff;
+        if (isMul) buffEFF += ringBase.baseEFF * buff;
+        else buffEFF += buff;
         curEFF = ringBase.baseEFF + buffEFF;
         if (curEFF < 0) curEFF = 0;
     }

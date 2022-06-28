@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public GameObject monsterPrefab;
     public GameObject[] bulletPrefabs;
     public GameObject[] particlePrefabs;
+    public GameObject barrierPrefab;
     public GameObject damageTextPrefab;
 
     //스프라이트
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
     private Queue<Monster> monsterPool;
     private Queue<Bullet>[] bulletPool;
     private Queue<ParticleSystem>[] particlePool;
+    private Queue<Barrier> barrierPool;
     private Queue<DamageText> damageTextPool;
 
     void Awake()
@@ -53,6 +55,7 @@ public class GameManager : MonoBehaviour
         monsterPool = new Queue<Monster>();
         bulletPool = new Queue<Bullet>[ringstoneDB.Count];
         particlePool = new Queue<ParticleSystem>[ringstoneDB.Count];
+        barrierPool = new Queue<Barrier>();
         damageTextPool = new Queue<DamageText>();
 
         for (int i = 0; i < ringstoneDB.Count; i++)
@@ -190,6 +193,27 @@ public class GameManager : MonoBehaviour
         }
         particle.gameObject.SetActive(false);
         particlePool[id].Enqueue(particle);
+    }
+
+    //결계를 오브젝트 풀에서 받아온다. disabled 상태로 준다.
+    public Barrier GetBarrierFromPool()
+    {
+        if (barrierPool.Count > 0) return barrierPool.Dequeue();
+        else return Instantiate(barrierPrefab).GetComponent<Barrier>();
+    }
+
+
+    //결계를 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
+    public void ReturnBarrierToPool(Barrier barrier)
+    {
+        /*추가 구현 필요 - 예외처리 제거할 것*/
+        if (barrierPool.Contains(barrier))
+        {
+            Debug.LogError("already enqueued barrier");
+            return;
+        }
+        barrier.gameObject.SetActive(false);
+        barrierPool.Enqueue(barrier);
     }
 
     //데미지 표시기를 오브젝트 풀에서 받아온다. disabled 상태로 준다.

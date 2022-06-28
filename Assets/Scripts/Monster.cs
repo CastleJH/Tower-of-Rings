@@ -32,7 +32,7 @@ public class Monster : MonoBehaviour
     float snowEndTime;      //눈꽃의 슬로우 효과가 끝나는 시간
     Dictionary<int, float> poisonDmg;   //맹독의 데미지
     Dictionary<int, float> poisonTime;  //맹독의 데미지 쿨타임
-    bool barrierBlock; //결계로부터 이동을 방해받지 않는지 여부
+    public bool barrierBlock; //결계로부터 이동을 방해받지 않는지 여부
 
     void Awake()
     {
