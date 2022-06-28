@@ -32,6 +32,7 @@ public class Monster : MonoBehaviour
     float snowEndTime;      //눈꽃의 슬로우 효과가 끝나는 시간
     Dictionary<int, float> poisonDmg;   //맹독의 데미지
     Dictionary<int, float> poisonTime;  //맹독의 데미지 쿨타임
+    public bool isInBlizzard; //눈보라 속에 있는지 여부
     public bool barrierBlock; //결계로부터 이동을 방해받지 않는지 여부
 
     void Awake()
@@ -53,7 +54,14 @@ public class Monster : MonoBehaviour
 
             spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
 
+
             //이동방해는 약한순->강한순으로 적용되어야 한다.
+            if (isInBlizzard) //눈보라 속이라면
+            {
+                curSPD = baseSPD * 0.7f;
+                spriteRenderer.color = Color.cyan;
+            }
+
             if (snowTime < snowEndTime) //눈꽃 링의 둔화가 적용중이라면
             {
                 curSPD = baseSPD * 0.5f;

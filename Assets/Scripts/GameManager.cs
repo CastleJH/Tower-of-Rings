@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] bulletPrefabs;
     public GameObject[] particlePrefabs;
     public GameObject barrierPrefab;
+    public GameObject blizzardPrefab;
     public GameObject damageTextPrefab;
 
     //스프라이트
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
     private Queue<Bullet>[] bulletPool;
     private Queue<ParticleSystem>[] particlePool;
     private Queue<Barrier> barrierPool;
+    private Queue<Blizzard> blizzardPool;
     private Queue<DamageText> damageTextPool;
 
     void Awake()
@@ -56,6 +58,7 @@ public class GameManager : MonoBehaviour
         bulletPool = new Queue<Bullet>[ringstoneDB.Count];
         particlePool = new Queue<ParticleSystem>[ringstoneDB.Count];
         barrierPool = new Queue<Barrier>();
+        blizzardPool = new Queue<Blizzard>();
         damageTextPool = new Queue<DamageText>();
 
         for (int i = 0; i < ringstoneDB.Count; i++)
@@ -214,6 +217,27 @@ public class GameManager : MonoBehaviour
         }
         barrier.gameObject.SetActive(false);
         barrierPool.Enqueue(barrier);
+    }
+
+    //눈보라를 오브젝트 풀에서 받아온다. disabled 상태로 준다.
+    public Blizzard GetBlizzardFromPool()
+    {
+        if (blizzardPool.Count > 0) return blizzardPool.Dequeue();
+        else return Instantiate(blizzardPrefab).GetComponent<Blizzard>();
+    }
+
+
+    //눈보라를 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
+    public void ReturnBlizzardToPool(Blizzard blizzard)
+    {
+        /*추가 구현 필요 - 예외처리 제거할 것*/
+        if (blizzardPool.Contains(blizzard))
+        {
+            Debug.LogError("already enqueued blizzard");
+            return;
+        }
+        blizzard.gameObject.SetActive(false);
+        blizzardPool.Enqueue(blizzard);
     }
 
     //데미지 표시기를 오브젝트 풀에서 받아온다. disabled 상태로 준다.

@@ -38,6 +38,7 @@ public class Ring : MonoBehaviour
     float explosionSplash;        //폭발 링의 스플래쉬 데미지(비율)
     int poisonStack;            //맹독 링의 공격 당 쌓는 스택
     ParticleSystem rpGenerationParticle; //RP 생산시 링 위치에서 재생할 파티클
+    Blizzard blizzard;
     public Monster commanderTarget; //사령관 링의 타겟
     public Ring commanderNearest;   //가장 근처의 사령관 링
 
@@ -59,6 +60,8 @@ public class Ring : MonoBehaviour
                     case 7:
                         GenerateRP(curATK);
                         shootCoolTime = 0.0f;
+                        break;
+                    case 11:
                         break;
                     default:
                         TryShoot();
@@ -102,6 +105,11 @@ public class Ring : MonoBehaviour
                 break;
             case 5:
                 poisonStack = 1;
+                break;
+            case 11:
+                blizzard = GameManager.instance.GetBlizzardFromPool();
+                blizzard.InitializeBlizzard(this);
+                blizzard.gameObject.SetActive(true);
                 break;
             case 19:
                 Ring dRing;
@@ -235,6 +243,7 @@ public class Ring : MonoBehaviour
                             commanderTarget = targets[i];
                     break;
                 case 7: //발사 안함
+                case 11:
                     break;
                 default:
                     Debug.Log(string.Format("Not implemented yet. {0} TryShoot", ringBase.id.ToString()));
@@ -326,6 +335,7 @@ public class Ring : MonoBehaviour
                     case 0: //공 10 공 5
                     case 6:
                     case 7:
+                    case 11:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(0.1f);
                         ring.ChangeCurATK(0.05f);
                         break;
@@ -377,6 +387,7 @@ public class Ring : MonoBehaviour
                     case 0: //공 10 공 5
                     case 6:
                     case 7:
+                    case 11:
                         if (ring.ringBase.id == ringBase.id) ChangeCurATK(0.1f);
                         ChangeCurATK(0.05f);
                         break;
@@ -433,6 +444,7 @@ public class Ring : MonoBehaviour
                     case 0: //공 -10 공 -5
                     case 6:
                     case 7:
+                    case 11:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(-0.1f);
                         ring.ChangeCurATK(-0.05f);
                         break;
@@ -481,6 +493,10 @@ public class Ring : MonoBehaviour
         DeckManager.instance.rings.Remove(this);
         switch (ringBase.id)
         {
+            case 11:
+                blizzard.RemoveBlizzard();
+                blizzard = null;
+                break;
             case 19:
                 Ring dRing;
                 List<Ring> commanderList = new List<Ring>();
@@ -510,7 +526,7 @@ public class Ring : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.75f);
         for (int i = 0; i < colliders.Length; i++)
         {
-            if (colliders[i].tag == "Land") ret = 1;
+            if (colliders[i].tag == "Land" || colliders[i].tag == "Barrier") ret = 1;
             else
             {
                 if (colliders[i].tag == "Ring") ret = 2;

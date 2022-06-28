@@ -53,12 +53,8 @@ public class DeckManager : MonoBehaviour
         RemoveFromDeck(0);
         RemoveFromDeck(0);
         RemoveFromDeck(0);
-        AddToDeck(0);
-        AddToDeck(1); ;
-        AddToDeck(3);
-        AddToDeck(5);
+        AddToDeck(11);
         AddToDeck(18);
-        AddToDeck(19);
     }
 
     //전투 준비한다. 필요한 변수들을 초기화한다.
