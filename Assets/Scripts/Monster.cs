@@ -33,6 +33,8 @@ public class Monster : MonoBehaviour
     Dictionary<int, float> poisonDmg;   //맹독의 데미지
     Dictionary<int, float> poisonTime;  //맹독의 데미지 쿨타임
     public bool isInBlizzard; //눈보라 속에 있는지 여부
+    float paralyzeTime;         //마비의 마비 효과가 지속된 시간
+    float paralyzeEndTime;      //마비의 마비 효과가 끝나는 시간
     public bool barrierBlock; //결계로부터 이동을 방해받지 않는지 여부
 
     void Awake()
@@ -67,6 +69,13 @@ public class Monster : MonoBehaviour
                 curSPD = baseSPD * 0.5f;
                 snowTime += Time.deltaTime;
                 spriteRenderer.color = Color.cyan;
+            }
+
+            if (paralyzeTime < paralyzeEndTime) //마비 링의 마비가 적용중이라면
+            {
+                curSPD = 0;
+                paralyzeTime += Time.deltaTime;
+                spriteRenderer.color = Color.yellow;
             }
 
             if (poisonDmg.Count > 0)  //맹독 중첩이 하나라도 있다면
@@ -120,6 +129,7 @@ public class Monster : MonoBehaviour
         snowEndTime = -1.0f;
         poisonDmg.Clear();
         poisonTime.Clear();
+        paralyzeEndTime = -1.0f;
         barrierBlock = false;
     }
 
@@ -249,7 +259,7 @@ public class Monster : MonoBehaviour
     //공격 이펙트: 눈꽃
     public void AE_Snow(float dmg, float time)
     {
-        AE_DecreaseHP(dmg, Color.cyan);
+        AE_DecreaseHP(dmg, new Color32(0, 0, 180, 255));
         //이미 받고있는 눈꽃 링의 둔화 효과가 더 오래 간다면 적용 취소
         if (snowEndTime - snowTime > time) return;
         snowEndTime = time;
@@ -272,6 +282,7 @@ public class Monster : MonoBehaviour
         AE_DecreaseHP(dmg, new Color32(150, 30, 30, 255));
     }
 
+    //공격 이펙트: 맹독
     public void AE_Poison(int ringNumber, float dmg)
     {
 
@@ -284,5 +295,15 @@ public class Monster : MonoBehaviour
             poisonDmg.Add(ringNumber, dmg);
             poisonTime.Add(ringNumber, 1.0f);
         }
+    }
+
+    //공격 이펙트: 마비
+    public void AE_Paralyze(float dmg, float time)
+    {
+        AE_DecreaseHP(dmg, new Color32(150, 150, 0, 255));
+        //이미 받고있는 마비 링의 마비 효과가 더 오래 간다면 적용 취소
+        if (paralyzeEndTime - paralyzeTime > time) return;
+        paralyzeEndTime = time;
+        paralyzeTime = 0;
     }
 }

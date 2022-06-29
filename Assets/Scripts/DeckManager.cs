@@ -57,10 +57,10 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
-        AddRingToDeck(12);
         AddRingToDeck(7);
-        AddRingToDeck(11);
-        AddRingToDeck(18);
+        AddRingToDeck(14);
+        AddRingToDeck(10);
+        AddRingToDeck(19);
     }
 
     //전투 준비한다. 필요한 변수들을 초기화한다.

@@ -96,6 +96,8 @@ public class Ring : MonoBehaviour
     //실제로 게임에 넣는다.
     public void PutIntoBattle(int _number)
     {
+        Ring dRing;
+
         number = _number;
         
         commanderTarget = null;
@@ -118,16 +120,22 @@ public class Ring : MonoBehaviour
                 blizzard.gameObject.SetActive(true);
                 break;
             case 19:
-                Ring dRing;
                 for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--)
                 {
                     dRing = DeckManager.instance.rings[i];
-                    if (dRing.commanderNearest == null || Vector2.Distance(dRing.transform.position, transform.position) <= Vector2.Distance(dRing.transform.position, dRing.commanderNearest.transform.position)) //첫 사령관 링이거나 기존 사령관 링보다 더 가까운지 확인
+                    if (dRing.commanderNearest == null || Vector2.Distance(dRing.transform.position, transform.position) < Vector2.Distance(dRing.transform.position, dRing.commanderNearest.transform.position)) //첫 사령관 링이거나 기존 사령관 링보다 더 가까운지 확인
                         dRing.commanderNearest = this;
                 }
                 break;
             default:
                 break;
+        }
+
+        for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--)
+        {
+            dRing = DeckManager.instance.rings[i];
+            if (dRing.ringBase.id == 19 && (commanderNearest == null || Vector2.Distance(dRing.transform.position, transform.position) < Vector2.Distance(commanderNearest.transform.position, transform.position))) //첫 사령관 링이거나 기존 사령관 링보다 더 가까운지 확인
+                commanderNearest = dRing;
         }
 
         isInBattle = true;
@@ -154,6 +162,7 @@ public class Ring : MonoBehaviour
                 case 6:
                 case 8:
                 case 9:
+                case 13:
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
                     for (int i = 0; i < numTarget; i++)
                     {
@@ -191,6 +200,7 @@ public class Ring : MonoBehaviour
                     }
                     break;
                 case 5: //랜덤한 갯수만큼 공격
+                case 14:
                     if (Random.Range(0.0f, 1.0f) < 0.8f && commanderNearest != null && commanderNearest.commanderTarget != null) //사령관 대상인 경우
                     {
                         bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
@@ -279,6 +289,7 @@ public class Ring : MonoBehaviour
             case 9:
             case 10:
             case 12:
+            case 14:
                 monster.AE_DecreaseHP(curATK, new Color32(100, 0, 0, 255));
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
@@ -314,6 +325,10 @@ public class Ring : MonoBehaviour
                 monster.AE_DecreaseHP(curATK, new Color32(100, 0, 0, 255));
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 GenerateRP(curATK);
+                break;
+            case 13:
+                monster.AE_Paralyze(curATK, curEFF);
+                monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
             case 18:    //아무것도 없음
             case 19:    
@@ -361,6 +376,7 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurNumTarget(0.5f);
                         break;
                     case 8: //속 -15 속 -8
+                    case 14:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurSPD(-0.15f);
                         ring.ChangeCurSPD(-0.08f);
                         break;
@@ -384,6 +400,10 @@ public class Ring : MonoBehaviour
                     case 12:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(0.15f);
                         ring.ChangeCurATK(0.05f);
+                        break;
+                    case 13:
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(0.1f, false);
+                        ring.ChangeCurEFF(0.05f, true);
                         break;
                     case 2: //효과 없음
                     case 19:
@@ -417,6 +437,7 @@ public class Ring : MonoBehaviour
                         ChangeCurNumTarget(0.5f);
                         break;
                     case 8: //속 -15 속 -8
+                    case 14:
                         if (ring.ringBase.id == ringBase.id) ChangeCurSPD(-0.15f);
                         ChangeCurSPD(-0.08f);
                         break;
@@ -440,6 +461,10 @@ public class Ring : MonoBehaviour
                     case 12:
                         if (ring.ringBase.id == ringBase.id) ChangeCurATK(0.15f);
                         ChangeCurATK(0.05f);
+                        break;
+                    case 13:
+                        if (ring.ringBase.id == ringBase.id) ChangeCurEFF(0.1f, false);
+                        ChangeCurEFF(0.05f, true);
                         break;
                     case 2: //효과 없음
                     case 19:
@@ -478,6 +503,7 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurNumTarget(-0.5f);
                         break;
                     case 8: //속 +15 속 +8
+                    case 14:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurSPD(0.15f);
                         ring.ChangeCurSPD(0.08f);
                         break;
@@ -501,6 +527,10 @@ public class Ring : MonoBehaviour
                     case 12:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(-0.15f);
                         ring.ChangeCurATK(-0.05f);
+                        break;
+                    case 13:
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(-0.1f, false);
+                        ring.ChangeCurEFF(-0.05f, true);
                         break;
                     case 2: //효과 없음
                     case 19:
