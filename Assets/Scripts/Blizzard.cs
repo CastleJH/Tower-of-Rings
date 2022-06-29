@@ -28,14 +28,17 @@ public class Blizzard : MonoBehaviour
                 monsters[i].AE_DecreaseHP(parent.curATK, new Color32(50, 50, 255, 255));
             }
         }
+        if (!parent.gameObject.activeSelf)
+        {
+            RemoveBlizzard();
+        }
     }
 
     public void InitializeBlizzard(Ring par)
     {
         monsters.Clear();
         parent = par;
-        transform.position = par.transform.position;
-        transform.Translate(Vector3.forward);
+        transform.position = new Vector3(par.transform.position.x, par.transform.position.y, -0.002f);
         coolTime = 0.0f;
     }
 

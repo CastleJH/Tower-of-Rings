@@ -41,20 +41,21 @@ public class DeckManager : MonoBehaviour
     //덱을 초기화한다.
     public void InitializeDeck()
     {
-        AddToDeck(1);
-        AddToDeck(2);
-        AddToDeck(3);
-        AddToDeck(4);
-        AddToDeck(5);
-        AddToDeck(6);
-        RemoveFromDeck(0);
-        RemoveFromDeck(0);
-        RemoveFromDeck(0);
-        RemoveFromDeck(0);
-        RemoveFromDeck(0);
-        RemoveFromDeck(0);
-        AddToDeck(11);
-        AddToDeck(18);
+        AddRingToDeck(1);
+        AddRingToDeck(2);
+        AddRingToDeck(3);
+        AddRingToDeck(4);
+        AddRingToDeck(5);
+        AddRingToDeck(6);
+        RemoveRingFromDeck(0);
+        RemoveRingFromDeck(0);
+        RemoveRingFromDeck(0);
+        RemoveRingFromDeck(0);
+        RemoveRingFromDeck(0);
+        RemoveRingFromDeck(0);
+        AddRingToDeck(7);
+        AddRingToDeck(11);
+        AddRingToDeck(18);
     }
 
     //전투 준비한다. 필요한 변수들을 초기화한다.
@@ -64,7 +65,7 @@ public class DeckManager : MonoBehaviour
         genRing = null;
         isGenRing = false;
         ringNumber = 0;
-}
+    }
 
     //사용자 입력을 받는다.
     void GetInput()
@@ -81,7 +82,7 @@ public class DeckManager : MonoBehaviour
                 //링의 위치를 이동시키고 배치 가능 표시를 바꾼다.
                 genRing.transform.position = Camera.main.ScreenToWorldPoint(touchPos);
                 genRing.transform.Translate(Vector3.forward * 2);
-                genRing.CheckArragePossible();
+                genRing.CheckArrangePossible();
             }
             else
             {   
@@ -108,7 +109,7 @@ public class DeckManager : MonoBehaviour
                 if (hit.collider != null && hit.collider.tag == "Ring" && BattleManager.instance.rp >= 10)//마지막 터치 지점에 링이 있다면 제거한다.
                 {
                     ring = hit.collider.gameObject.GetComponent<Ring>();
-                    RemoveRing(ring);
+                    RemoveRingFromBattle(ring);
                     BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - 10);
                 }
                 ringRemover.transform.position = new Vector3(100, 100, 0);
@@ -123,7 +124,7 @@ public class DeckManager : MonoBehaviour
     public void TryPutRingIntoScene()
     {
         //올바른 위치가 아닌 경우 취소
-        if (!genRing.CheckArragePossible())
+        if (!genRing.CheckArrangePossible())
         {
             GameManager.instance.ReturnRingToPool(genRing);
             return;
@@ -145,14 +146,14 @@ public class DeckManager : MonoBehaviour
     }
 
     //링을 전투에서 제거한다.
-    public void RemoveRing(Ring ring)
+    public void RemoveRingFromBattle(Ring ring)
     {
         ring.RemoveFromBattle();
         GameManager.instance.ReturnRingToPool(ring);
     }
 
     //덱에 링스톤을 넣는다.
-    public bool AddToDeck(int ringID)
+    public bool AddRingToDeck(int ringID)
     {
         if (deck.Count >= maxDeckLength) return false;
         if (deck.Contains(ringID)) return false;
@@ -164,7 +165,7 @@ public class DeckManager : MonoBehaviour
     }
 
     //덱에서 링스톤을 제거한다.
-    public bool RemoveFromDeck(int index)
+    public bool RemoveRingFromDeck(int index)
     {
         if (deck.Count > index)
         {

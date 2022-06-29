@@ -59,6 +59,7 @@ public class Ring : MonoBehaviour
                 {
                     case 7:
                         GenerateRP(curATK);
+                        anim.SetTrigger("isShoot");
                         shootCoolTime = 0.0f;
                         break;
                     case 11:
@@ -173,7 +174,7 @@ public class Ring : MonoBehaviour
                 case 2: //산화 링의 소멸 카운팅
                     if (oxyRemoveCount-- == 0)
                     {
-                        DeckManager.instance.RemoveRing(this);
+                        DeckManager.instance.RemoveRingFromBattle(this);
                         break;
                     }
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
@@ -428,7 +429,7 @@ public class Ring : MonoBehaviour
     }
 
     //시너지를 제거한다.
-    public void RemoveSynergy()
+    void RemoveSynergy()
     {
         Ring ring;
 
@@ -520,7 +521,7 @@ public class Ring : MonoBehaviour
     }
 
     //배치 가능 범위인지 확인한다.
-    public bool CheckArragePossible()
+    public bool CheckArrangePossible()
     {
         int ret = 3;
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.75f);
