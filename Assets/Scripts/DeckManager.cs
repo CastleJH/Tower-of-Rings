@@ -20,6 +20,8 @@ public class DeckManager : MonoBehaviour
     public bool isGenRing;  //링 생성버튼이 눌렸는지 여부
     int ringNumber;    //링 생성시 부여하는 구분 번호
 
+    //기타
+    int ringLayerMask;
     void Awake()
     {
         instance = this;
@@ -28,6 +30,8 @@ public class DeckManager : MonoBehaviour
         rings = new List<Ring>();
         
         InitializeDeck();
+
+        ringLayerMask = 1 << LayerMask.NameToLayer("Ring");
     }
 
     void Update()
@@ -53,6 +57,7 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
+        AddRingToDeck(0);
         AddRingToDeck(7);
         AddRingToDeck(11);
         AddRingToDeck(18);
@@ -104,7 +109,7 @@ public class DeckManager : MonoBehaviour
             }
             else //링 제거의 경우
             {
-                RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(touchPos), Vector2.zero, 0f);
+                RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(touchPos), Vector2.zero, 0f, ringLayerMask);
                 Ring ring;
                 if (hit.collider != null && hit.collider.tag == "Ring" && BattleManager.instance.rp >= 10)//마지막 터치 지점에 링이 있다면 제거한다.
                 {
