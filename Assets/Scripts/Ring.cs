@@ -70,6 +70,11 @@ public class Ring : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            if (DeckManager.instance.genRing != this) 
+                GameManager.instance.ReturnRingToPool(this);
+        }
     }
 
     //링 배치 단계에서 보여질 모습을 바꾸는 것이 주 목적이다. id에 해당하는 링으로 변한다.
@@ -215,6 +220,15 @@ public class Ring : MonoBehaviour
                         bullet.gameObject.SetActive(true);
                     }
                     break;
+                case 12: //HP 높은 순으로 타겟만큼 공격
+                    targets = targets.OrderByDescending(x => x.curHP).ToList();
+                    for (int i = 0; i < numTarget; i++)
+                    {
+                        bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
+                        bullet.InitializeBullet(this, targets[i]);
+                        bullet.gameObject.SetActive(true);
+                    }
+                    break;
                 case 18: //랜덤한 갯수만큼 결계 생성
                     Barrier barrier;
                     if (Random.Range(0.0f, 1.0f) < 0.8f && commanderNearest != null && commanderNearest.commanderTarget != null) //사령관 대상인 경우
@@ -264,6 +278,7 @@ public class Ring : MonoBehaviour
             case 2:
             case 9:
             case 10:
+            case 12:
                 monster.AE_DecreaseHP(curATK, new Color32(100, 0, 0, 255));
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
@@ -366,6 +381,10 @@ public class Ring : MonoBehaviour
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(0.2f);
                         ring.ChangeCurATK(0.05f);
                         break;
+                    case 12:
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(0.15f);
+                        ring.ChangeCurATK(0.05f);
+                        break;
                     case 2: //효과 없음
                     case 19:
                         break;
@@ -416,6 +435,10 @@ public class Ring : MonoBehaviour
                         break;
                     case 9:
                         if (ring.ringBase.id == ringBase.id) ChangeCurATK(0.2f);
+                        ChangeCurATK(0.05f);
+                        break;
+                    case 12:
+                        if (ring.ringBase.id == ringBase.id) ChangeCurATK(0.15f);
                         ChangeCurATK(0.05f);
                         break;
                     case 2: //효과 없음
@@ -473,6 +496,10 @@ public class Ring : MonoBehaviour
                         break;
                     case 9:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(-0.2f);
+                        ring.ChangeCurATK(-0.05f);
+                        break;
+                    case 12:
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurATK(-0.15f);
                         ring.ChangeCurATK(-0.05f);
                         break;
                     case 2: //효과 없음

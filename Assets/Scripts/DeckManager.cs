@@ -57,7 +57,7 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
-        AddRingToDeck(0);
+        AddRingToDeck(12);
         AddRingToDeck(7);
         AddRingToDeck(11);
         AddRingToDeck(18);

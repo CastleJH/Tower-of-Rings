@@ -1,5 +1,5 @@
 * Ring.cs
-	0) PutRingIntoScene()
+	0) PutIntoBattle()
 	1) TryShoot()
 	3) AttackEffct()
 	4) ApplySynergy()
@@ -11,9 +11,8 @@
 * DeckManager.cs
 	6) InitializeDeck()
 
-* 구현 완료 목록
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-	11,                   18, 19
+* 구현 필요 목록
+	13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
 
 
 * z좌표 
