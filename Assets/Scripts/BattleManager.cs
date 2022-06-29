@@ -82,7 +82,7 @@ public class BattleManager : MonoBehaviour
     {
         while (newMonsterID < numGenMonster)
         {
-            float scale = 10.0f;
+            float scale = 5.0f;
             /*if (GameManager.instance.floor == 7) scale = 4.0f;
             else scale = 0.5f * (GameManager.instance.floor + 1);
             scale += 0.05f * (GameManager.instance.stage - 1);*/
@@ -92,8 +92,8 @@ public class BattleManager : MonoBehaviour
             monster.gameObject.transform.position = new Vector2(100, 100);
             if (phase == 3 && (newMonsterID == 29 || newMonsterID == 59))
                 monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 17)], pathID, scale);
-            else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], pathID, scale);
-            //else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[2], pathID, scale);
+            //else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], pathID, scale);
+            else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 4)], pathID, scale);
             monster.gameObject.SetActive(true); //몬스터를 킴
             monsters.Add(monster); //리스트에 삽입함
             newMonsterID++;
