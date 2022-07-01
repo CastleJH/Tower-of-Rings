@@ -93,7 +93,7 @@ public class BattleManager : MonoBehaviour
             if (phase == 3 && (newMonsterID == 29 || newMonsterID == 59))
                 monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 17)], pathID, scale);
             //else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], pathID, scale);
-            else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 4)], pathID, scale);
+            else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], pathID, scale);
             monster.gameObject.SetActive(true); //몬스터를 킴
             monsters.Add(monster); //리스트에 삽입함
             newMonsterID++;
@@ -107,6 +107,8 @@ public class BattleManager : MonoBehaviour
         //현재는 클리어든 오버든 같은 동작을 하도록 한 상태임.
         if ((monsters.Count == 0 && newMonsterID == numGenMonster) || isBattleOver)
         {
+            Debug.Log("End Battle");
+
             //배틀을 종료한다.
             isBattlePlaying = false;
 
@@ -114,8 +116,8 @@ public class BattleManager : MonoBehaviour
             StopAllCoroutines();
 
             //몬스터 리스트 정리
-            for (int i = 0; i < monsters.Count; i++)
-                GameManager.instance.ReturnMonsterToPool(monsters[i]);
+            for (int i = monsters.Count - 1; i >= 0; i--)
+                monsters[i].RemoveFromScene(0.0f);
             monsters.Clear();
 
             //덱 정리

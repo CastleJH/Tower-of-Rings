@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     private Queue<Ring> ringPool;
     private Queue<Monster> monsterPool;
     private Queue<Bullet>[] bulletPool;
-    private Queue<ParticleSystem>[] particlePool;
+    private Queue<ParticleChecker>[] particlePool;
     private Queue<Barrier> barrierPool;
     private Queue<Blizzard> blizzardPool;
     private Queue<DamageText> damageTextPool;
@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         ringPool = new Queue<Ring>();
         monsterPool = new Queue<Monster>();
         bulletPool = new Queue<Bullet>[ringstoneDB.Count];
-        particlePool = new Queue<ParticleSystem>[ringstoneDB.Count];
+        particlePool = new Queue<ParticleChecker>[ringstoneDB.Count];
         barrierPool = new Queue<Barrier>();
         blizzardPool = new Queue<Blizzard>();
         damageTextPool = new Queue<DamageText>();
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < ringstoneDB.Count; i++)
         {
             bulletPool[i] = new Queue<Bullet>();
-            particlePool[i] = new Queue<ParticleSystem>();
+            particlePool[i] = new Queue<ParticleChecker>();
         }
     }
 
@@ -178,15 +178,21 @@ public class GameManager : MonoBehaviour
         bulletPool[bullet.destroyID].Enqueue(bullet);
     }
 
+    //불렛 풀에 있는 모든 오브젝트를 제거한다.
+    public void EmptyBulletPool(int id)
+    {
+        while (bulletPool[id].Count > 0) Destroy(bulletPool[id].Dequeue().gameObject);
+    }
+
     //파티클을 오브젝트 풀에서 받아온다. disabled 상태로 준다.
-    public ParticleSystem GetParticleFromPool(int id)
+    public ParticleChecker GetParticleFromPool(int id)
     {
         if (particlePool[id].Count > 0) return particlePool[id].Dequeue();
-        else return Instantiate(particlePrefabs[id]).GetComponent<ParticleSystem>();
+        else return Instantiate(particlePrefabs[id]).GetComponent<ParticleChecker>();
     }
 
     //파티클을 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
-    public void ReturnParticleToPool(ParticleSystem particle, int id)
+    public void ReturnParticleToPool(ParticleChecker particle, int id)
     {
         /*추가 구현 필요 - 예외처리 제거할 것*/
         if (particlePool[id].Contains(particle))
@@ -198,13 +204,18 @@ public class GameManager : MonoBehaviour
         particlePool[id].Enqueue(particle);
     }
 
+    //파티클 풀에 있는 모든 오브젝트를 제거한다.
+    public void EmptyParticlePool(int id)
+    {
+        while (particlePool[id].Count > 0) Destroy(particlePool[id].Dequeue().gameObject);
+    }
+
     //결계를 오브젝트 풀에서 받아온다. disabled 상태로 준다.
     public Barrier GetBarrierFromPool()
     {
         if (barrierPool.Count > 0) return barrierPool.Dequeue();
         else return Instantiate(barrierPrefab).GetComponent<Barrier>();
     }
-
 
     //결계를 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
     public void ReturnBarrierToPool(Barrier barrier)

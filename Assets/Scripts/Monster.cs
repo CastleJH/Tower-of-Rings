@@ -24,8 +24,6 @@ public class Monster : MonoBehaviour
     //그래픽
     SpriteRenderer spriteRenderer;  //몬스터 이미지
     public TextMesh hpText;   //HP 텍스트
-    List<ParticleSystem> particles; //본인의 피격 파티클
-    List<int> particlesID;   //본인의 피격 파티클 종류
 
     //기타 변수
     float snowTime;         //눈꽃의 슬로우 효과가 지속된 시간
@@ -36,13 +34,11 @@ public class Monster : MonoBehaviour
     float paralyzeTime;         //마비의 마비 효과가 지속된 시간
     float paralyzeEndTime;      //마비의 마비 효과가 끝나는 시간
     public bool barrierBlock; //결계로부터 이동을 방해받지 않는지 여부
+    public int curseStack;     //저주 링으로부터 쌓인 스택
 
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        particles = new List<ParticleSystem>();
-        particlesID = new List<int>();
         
         poisonTime = new Dictionary<int, float>();
         poisonDmg = new Dictionary<int, float>();
@@ -95,6 +91,8 @@ public class Monster : MonoBehaviour
                 }
             }
 
+            if (curseStack != 0) spriteRenderer.color = Color.gray;
+
             if (!barrierBlock) //결계에 막히지 않으면 이동
             {
                 movedDistance += curSPD * Time.deltaTime;
@@ -123,65 +121,25 @@ public class Monster : MonoBehaviour
         spriteRenderer.sprite = GameManager.instance.monsterSprites[baseMonster.type];
         spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
         SetHPText();
-        InvokeParticleOff();
 
         //기타 변수
         snowEndTime = -1.0f;
         poisonDmg.Clear();
         poisonTime.Clear();
+        isInBlizzard = false;
         paralyzeEndTime = -1.0f;
         barrierBlock = false;
+        curseStack = 0;
     }
 
     //파티클을 플레이한다.
     public void PlayParticleCollision(int id, float time)
     {
         //피격 파티클을 가져와 저장한다.
-        ParticleSystem par = GameManager.instance.GetParticleFromPool(id);
-
-        //지속 시간을 지정해야 한다면 설정한다.
-        if (time != 0.0f)
-        {
-            ParticleSystem[] pars = par.GetComponentsInChildren<ParticleSystem>();
-            par.Stop(true);
-
-            for (int i = 0; i < pars.Length; i++)
-            {
-                var main = pars[i].main;
-                main.duration = time;
-            }
-        }
-
-        //저장한다.
-        particles.Add(par);
-        particlesID.Add(id);
-
-        //위치를 설정한다.
-        par.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -0.1f);
-        par.gameObject.transform.parent = gameObject.transform;
+        ParticleChecker par = GameManager.instance.GetParticleFromPool(id);
 
         //플레이한다.
-        par.gameObject.SetActive(true);
-        par.Play();
-    }
-
-    //제거해야 하는 파티클들을 확인하고 제거한다.
-    public void InvokeParticleOff()
-    {
-        for (int i = particles.Count - 1; i >= 0; i--)
-        {
-            if (!particles[i].IsAlive(true) || !BattleManager.instance.isBattlePlaying)   //파티클 재생이 끝났거나 게임이 끝난 경우
-            {
-                //재생을 한번 더 멈추고 제거한다(게임 종료에 의해 제거해야 하는 것일 수 있으므로).
-                particles[i].Stop(true);
-                GameManager.instance.ReturnParticleToPool(particles[i], particlesID[i]);
-                particles.RemoveAt(i);
-                particlesID.RemoveAt(i);
-            }
-        }
-
-        if (BattleManager.instance.isBattlePlaying && curHP > 0)  //게임이 아직 진행중이고 자신이 아직 HP가 남아있다면 다음에 이 함수를 또 부른다.
-            Invoke("InvokeParticleOff", 1f);
+        par.PlayParticle(transform, time);
     }
 
     //HP 텍스트를 갱신한다.
@@ -215,19 +173,18 @@ public class Monster : MonoBehaviour
         if (!gameObject.activeSelf) return;
 
         BattleManager.instance.monsters.Remove(this);
+
+        //저주 링의 사망시 폭발 효과를 적용한다.
+        if (curseStack != 0) AE_CurseDead();
+
         //BattleManager.instance.totalGetGold += 10;
         //BattleManager.instance.totalKilledMonster++;
         //BattleManager.instance.rp += BattleManager.instance.genRP;
         //UIManager.instance.SetIngameTotalRPText();
 
-        //저주 링의 사망시 폭발 효과를 적용한다.
-        //if (curseStack != 0) AE_CurseDead();
+
         //if (growRings.Count > 0) AE_GrowDead();
         //if (DeckManager.instance.isNecro) DeckManager.instance.necroCnt++;
-
-        //파티클을 모두 제거한다.
-        CancelInvoke();
-        InvokeParticleOff();
 
         //HP를 0으로 바꾼다.
         curHP = 0;
@@ -337,6 +294,25 @@ public class Monster : MonoBehaviour
         else
         {
             AE_DecreaseHP(curHP * (dmg * 0.005f), Color.red);
+        }
+    }
+
+    //공격 이펙트: 저주
+    public void AE_Curse(int stack)
+    {
+        curseStack += stack;
+    }
+
+    //공격 이펙트: 저주의 사망 효과
+    public void AE_CurseDead()
+    {
+        float dmg = curseStack;
+        dmg = baseHP * dmg * 0.01f;
+
+        for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
+        {
+            BattleManager.instance.monsters[i].PlayParticleCollision(21, 0.0f);
+            BattleManager.instance.monsters[i].AE_DecreaseHP(dmg, new Color32(50, 50, 50, 255));
         }
     }
 }

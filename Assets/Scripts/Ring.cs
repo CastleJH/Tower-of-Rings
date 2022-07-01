@@ -37,10 +37,11 @@ public class Ring : MonoBehaviour
     int oxyRemoveCount;     //산화 링의 소멸 카운트
     float explosionSplash;        //폭발 링의 스플래쉬 데미지(비율)
     int poisonStack;            //맹독 링의 공격 당 쌓는 스택
-    ParticleSystem rpGenerationParticle; //RP 생산시 링 위치에서 재생할 파티클
+    ParticleChecker rpGenerationParticle; //RP 생산시 링 위치에서 재생할 파티클
     Blizzard blizzard;
     public Monster commanderTarget; //사령관 링의 타겟
     public Ring commanderNearest;   //가장 근처의 사령관 링
+    int curseStack;            //저주 링의 공격 당 쌓는 스택
 
     void Awake()
     {
@@ -96,8 +97,6 @@ public class Ring : MonoBehaviour
     //실제로 게임에 넣는다.
     public void PutIntoBattle(int _number)
     {
-        Ring dRing;
-
         number = _number;
         
         commanderTarget = null;
@@ -119,23 +118,11 @@ public class Ring : MonoBehaviour
                 blizzard.InitializeBlizzard(this);
                 blizzard.gameObject.SetActive(true);
                 break;
-            case 19:
-                for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--)
-                {
-                    dRing = DeckManager.instance.rings[i];
-                    if (dRing.commanderNearest == null || Vector2.Distance(dRing.transform.position, transform.position) < Vector2.Distance(dRing.transform.position, dRing.commanderNearest.transform.position)) //첫 사령관 링이거나 기존 사령관 링보다 더 가까운지 확인
-                        dRing.commanderNearest = this;
-                }
+            case 21:
+                curseStack = 1;
                 break;
             default:
                 break;
-        }
-
-        for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--)
-        {
-            dRing = DeckManager.instance.rings[i];
-            if (dRing.ringBase.id == 19 && (commanderNearest == null || Vector2.Distance(dRing.transform.position, transform.position) < Vector2.Distance(commanderNearest.transform.position, transform.position))) //첫 사령관 링이거나 기존 사령관 링보다 더 가까운지 확인
-                commanderNearest = dRing;
         }
 
         isInBattle = true;
@@ -238,6 +225,7 @@ public class Ring : MonoBehaviour
                     }
                     break;
                 case 12: //HP 높은 순으로 타겟만큼 공격
+                case 21:
                     targets = targets.OrderByDescending(x => x.curHP).ToList();
                     for (int i = 0; i < numTarget; i++)
                     {
@@ -365,6 +353,10 @@ public class Ring : MonoBehaviour
                 monster.AE_Cut(curATK);
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
+            case 21:
+                monster.AE_Curse(curseStack);
+                monster.PlayParticleCollision(ringBase.id, 0.0f);
+                break;
             case 18:    //아무것도 없음
             case 19:    
                 break;
@@ -446,6 +438,10 @@ public class Ring : MonoBehaviour
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(0.01f, '+');
                         ring.ChangeCurEFF(0.05f, '*');
                         break;
+                    case 21:
+                        if (ring.ringBase.id == ringBase.id) ring.curseStack++;
+                        ring.ChangeCurSPD(-0.08f);
+                        break;
                     case 2: //효과 없음
                     case 19:
                         break;
@@ -512,6 +508,10 @@ public class Ring : MonoBehaviour
                     case 16:
                         if (ring.ringBase.id == ringBase.id) ChangeCurEFF(0.01f, '+');
                         ChangeCurEFF(0.05f, '*');
+                        break;
+                    case 21:
+                        if (ring.ringBase.id == ringBase.id) curseStack++;
+                        ChangeCurSPD(-0.08f);
                         break;
                     case 2: //효과 없음
                     case 19:
@@ -585,6 +585,10 @@ public class Ring : MonoBehaviour
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(-0.01f, '+');
                         ring.ChangeCurEFF(-0.05f, '*');
                         break;
+                    case 21:
+                        if (ring.ringBase.id == ringBase.id) ring.curseStack--;
+                        ring.ChangeCurSPD(0.08f);
+                        break;
                     case 2: //효과 없음
                     case 19:
                         break;
@@ -607,23 +611,6 @@ public class Ring : MonoBehaviour
             case 11:
                 blizzard.RemoveBlizzard();
                 blizzard = null;
-                break;
-            case 19:
-                Ring dRing;
-                List<Ring> commanderList = new List<Ring>();
-                for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) //모든 링에 대하여 이 링이 가장 가까운 사령관 링이었던 경우 삭제하고, 같은 사령관 링이면 저장한다.
-                {
-                    dRing = DeckManager.instance.rings[i];
-                    if (dRing.commanderNearest == this) dRing.commanderNearest = null;
-                    if (dRing.ringBase.id == ringBase.id) commanderList.Add(dRing);
-                }
-                for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) //모든 링에 대하여 새롭게 사령관 링을 찾아준다.
-                {
-                    dRing = DeckManager.instance.rings[i];
-                    for (int j = commanderList.Count - 1; j >= 0; j--) 
-                        if (dRing.commanderNearest == null || Vector2.Distance(dRing.transform.position, commanderList[j].transform.position) <= Vector2.Distance(dRing.transform.position, dRing.commanderNearest.transform.position)) //기존 사령관 링보다 더 가까운지 확인
-                            dRing.commanderNearest = commanderList[j];
-                }
                 break;
             default:
                 break;
@@ -708,12 +695,12 @@ public class Ring : MonoBehaviour
         if (curEFF < 0) curEFF = 0;
     }
 
+    //RP를 생산한다.
     void GenerateRP(float genRP)
     {
         if (rpGenerationParticle != null)   //이미 있던 파티클은 돌려준다.
         {
-            rpGenerationParticle.Stop();
-            GameManager.instance.ReturnParticleToPool(rpGenerationParticle, 7);
+            rpGenerationParticle.StopParticle();
         }
 
         //RP를 생산하고 UI를 업데이트 한다.
@@ -721,12 +708,8 @@ public class Ring : MonoBehaviour
 
         //파티클을 생성한다.
         rpGenerationParticle = GameManager.instance.GetParticleFromPool(7);
-
-        //위치를 설정한다.
-        rpGenerationParticle.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.1f);
-
+        
         //플레이한다.
-        rpGenerationParticle.gameObject.SetActive(true);
-        rpGenerationParticle.Play();
+        rpGenerationParticle.PlayParticle(transform, 0.0f);
     }
 }
