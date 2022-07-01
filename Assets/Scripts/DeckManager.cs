@@ -17,7 +17,7 @@ public class DeckManager : MonoBehaviour
     //배틀 중 변수
     public List<Ring> rings;    //전투 중인 링들
     public Ring genRing = null;    //생성 중인 링
-    public bool isGenRing;  //링 생성버튼이 눌렸는지 여부
+    public bool isEditRing;  //링 생성/제거버튼이 눌렸는지 여부
     int ringNumber;    //링 생성시 부여하는 구분 번호
 
     //기타
@@ -38,7 +38,7 @@ public class DeckManager : MonoBehaviour
     {
         if (BattleManager.instance.isBattlePlaying)
         {
-            if (isGenRing) GetInput(); //링 생성이 눌린 경우
+            if (isEditRing) GetInput(); //링 생성이 눌린 경우
         }
     }
     
@@ -57,13 +57,11 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
+        AddRingToDeck(20);
         //AddRingToDeck(7);   //공
-        //AddRingToDeck(14);  //속
-        //AddRingToDeck(10);  //타
-        AddRingToDeck(12);
-        AddRingToDeck(13);
-        AddRingToDeck(14);
-        AddRingToDeck(15); 
+        AddRingToDeck(14);  //속
+        AddRingToDeck(10);  //타
+        //AddRingToDeck(3);     //효
         AddRingToDeck(19);  //사령관
     }
 
@@ -72,7 +70,7 @@ public class DeckManager : MonoBehaviour
     {
         rings.Clear();
         genRing = null;
-        isGenRing = false;
+        isEditRing = false;
         ringNumber = 0;
     }
 
@@ -124,7 +122,7 @@ public class DeckManager : MonoBehaviour
                 ringRemover.transform.position = new Vector3(100, 100, 0);
             }
             genRing = null;
-            isGenRing = false;
+            isEditRing = false;
             UIManager.instance.SetBattleArrangeFail(null);
         }
     }

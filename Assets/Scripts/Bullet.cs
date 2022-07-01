@@ -17,11 +17,15 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if (parent.ringBase != null && target.curHP > 0 && target.movedDistance > 0.05f)
+        if (parent.ringBase != null && target != null && target.curHP > 0 && target.movedDistance > 0.05f)
         {
             Move();   //부모링이 있고 타겟이 살아있으면 이동
         }
-        else if (parent.ringBase != null)   //타겟만 잃은거라면 다시 발사
+        else
+        {
+            RemoveFromScene(0.0f); //제거
+        }
+        /*else if (parent.ringBase != null)   //타겟만 잃은거라면 다시 발사
         {
             parent.shootCoolTime = parent.curSPD - 0.1f;
             RemoveFromScene(0.0f);
@@ -29,7 +33,7 @@ public class Bullet : MonoBehaviour
         else
         {
             RemoveFromScene(0.0f); //제거
-        }
+        }*/
     }
 
     //적을 향해 이동한다.
@@ -65,7 +69,8 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.tag == "Monster")
         {
             Monster monster = collision.gameObject.GetComponent<Monster>();
-            if (monster.id == target.id)    //올바른 타겟에 도달한 경우
+            if (target == null) RemoveFromScene(0.0f);
+            else if (monster.id == target.id)    //올바른 타겟에 도달한 경우
             {
                 //공격 후 자신을 제거한다.
                 if (parent.ringBase != null) parent.AttackEffect(monster);

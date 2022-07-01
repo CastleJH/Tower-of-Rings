@@ -123,9 +123,14 @@ public class BattleManager : MonoBehaviour
                 GameManager.instance.ReturnRingToPool(DeckManager.instance.rings[i]);
             DeckManager.instance.rings.Clear();
 
-            //링 생성 중이었다면 이것도 정리
-            if (DeckManager.instance.isGenRing && DeckManager.instance.genRing != null)
-                GameManager.instance.ReturnRingToPool(DeckManager.instance.genRing);
+
+            //링 생성/제거 중이었다면 이것도 정리
+            if (DeckManager.instance.isEditRing)
+            {
+                if (DeckManager.instance.genRing != null) GameManager.instance.ReturnRingToPool(DeckManager.instance.genRing);
+                else DeckManager.instance.ringRemover.transform.position = new Vector3(100, 100, 0);
+
+            }   
         }
     }
 

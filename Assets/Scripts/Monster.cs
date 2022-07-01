@@ -235,6 +235,13 @@ public class Monster : MonoBehaviour
         GameManager.instance.ReturnMonsterToPool(this);
     }
 
+    //일반 몬스터인지/엘리트 몬스터인지 알려준다.
+    public bool IsNormalMonster()
+    {
+        if (baseMonster.type < 3) return true;
+        else return false;
+    }
+
     //공격 이펙트: HP감소
     public void AE_DecreaseHP(float dmg, Color32 color)
     {
@@ -305,5 +312,31 @@ public class Monster : MonoBehaviour
         if (paralyzeEndTime - paralyzeTime > time) return;
         paralyzeEndTime = time;
         paralyzeTime = 0;
+    }
+
+    //공격 이펙트: 귀환(텔레포트)
+    public void AE_Teleport(float dmg, float prob)
+    {
+        AE_DecreaseHP(dmg, new Color32(255, 0, 200, 255));
+        if (Random.Range(0.0f, 1.0f) < prob)
+        {
+            movedDistance = 0.0f;
+            DamageText t = GameManager.instance.GetDamageTextFromPool();
+            t.InitializeDamageText("귀환!", transform.position, new Color32(255, 0, 200, 255));
+            t.gameObject.SetActive(true);
+        }
+    }
+
+    //공격 이펙트: 절단
+    public void AE_Cut(float dmg)
+    {
+        if (IsNormalMonster())
+        {
+            AE_DecreaseHP(curHP * (dmg * 0.01f), Color.red);
+        }
+        else
+        {
+            AE_DecreaseHP(curHP * (dmg * 0.005f), Color.red);
+        }
     }
 }

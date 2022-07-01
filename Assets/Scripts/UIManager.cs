@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
         if (BattleManager.instance.isBattlePlaying)
         {
             if (battleRPNotEnough[index].activeSelf) return;
-            DeckManager.instance.isGenRing = true;
+            DeckManager.instance.isEditRing = true;
             if (index == DeckManager.instance.maxDeckLength) //제거 버튼이라면
             {
                 return;
@@ -47,7 +47,7 @@ public class UIManager : MonoBehaviour
                 battleRingDetailLongClickTime = 0.0f;
                 checkBattleRingDetailOn = true;
             }
-            else DeckManager.instance.isGenRing = false;
+            else DeckManager.instance.isEditRing = false;
         }
     }
 
