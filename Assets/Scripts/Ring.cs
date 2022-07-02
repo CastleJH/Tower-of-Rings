@@ -609,7 +609,7 @@ public class Ring : MonoBehaviour
         switch (ringBase.id)
         {
             case 11:
-                blizzard.RemoveBlizzard();
+                blizzard.RemoveFromBattle();
                 blizzard = null;
                 break;
             default:

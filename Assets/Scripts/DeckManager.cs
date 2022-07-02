@@ -25,6 +25,7 @@ public class DeckManager : MonoBehaviour
 
     //기타
     int ringLayerMask;
+
     void Awake()
     {
         instance = this;
@@ -45,12 +46,7 @@ public class DeckManager : MonoBehaviour
             debugFlag = false;
 
             //덱의 UI(링 스프라이트 및 소모 RP)변경
-            for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)
-            {
-                UIManager.instance.SetBattleDeckRingImage(i);
-                if (i < DeckManager.instance.deck.Count) UIManager.instance.SetBattleDeckRingRPText(i, (int)GameManager.instance.ringstoneDB[DeckManager.instance.deck[i]].baseRP);
-                else UIManager.instance.SetBattleDeckRingRPText(i, 0);
-            }
+            UIManager.instance.SetBattleDeckRingImageAndRPAll();
             BattleManager.instance.ChangeCurrentRP(500);
 
         }
@@ -75,9 +71,8 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
-        AddRingToDeck(1);
-        AddRingToDeck(20);
-        AddRingToDeck(21);
+        AddRingToDeck(11);
+        AddRingToDeck(18);
         //AddRingToDeck(7);   //공
         //AddRingToDeck(14);  //속
         //AddRingToDeck(10);  //타

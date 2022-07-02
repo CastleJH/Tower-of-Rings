@@ -83,4 +83,15 @@ public class UIManager : MonoBehaviour
             battleArrangeFail.SetActive(true);
         }
     }
+
+    //배틀에서 보여주는 덱의 UI(링 스프라이트 및 소모 RP)변경
+    public void SetBattleDeckRingImageAndRPAll()
+    {
+        for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)
+        {
+            SetBattleDeckRingImage(i);
+            if (i < DeckManager.instance.deck.Count) SetBattleDeckRingRPText(i, (int)GameManager.instance.ringstoneDB[DeckManager.instance.deck[i]].baseRP);
+            else SetBattleDeckRingRPText(i, 0);
+        }
+    }
 }

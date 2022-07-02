@@ -21,7 +21,7 @@ public class DamageText : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(new Vector2(0, speed) * Time.deltaTime);
+        transform.Translate(new Vector2(0, speed) * Time.deltaTime);    //위로 살짝 떠오른다.
     }
 
     //오브젝트 풀에 자신을 되돌려준다.

@@ -17,23 +17,8 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if (parent.ringBase != null && target != null && target.curHP > 0 && target.movedDistance > 0.05f)
-        {
-            Move();   //부모링이 있고 타겟이 살아있으면 이동
-        }
-        else
-        {
-            RemoveFromScene(0.0f); //제거
-        }
-        /*else if (parent.ringBase != null)   //타겟만 잃은거라면 다시 발사
-        {
-            parent.shootCoolTime = parent.curSPD - 0.1f;
-            RemoveFromScene(0.0f);
-        }
-        else
-        {
-            RemoveFromScene(0.0f); //제거
-        }*/
+        if (parent.ringBase != null && target != null && target.curHP > 0 && target.movedDistance > 0.05f) Move();   //부모링이 있고 타겟이 살아있으면 이동
+        else RemoveFromBattle(0.0f); //제거
     }
 
     //적을 향해 이동한다.
@@ -51,13 +36,14 @@ public class Bullet : MonoBehaviour
     }
 
     //게임에서 자신을 time초 뒤 제거한다.
-    void RemoveFromScene(float time)
+    void RemoveFromBattle(float time)
     {
-        if (time == 0.0f) InvokeReturnBulletToPool();
-        else Invoke("InvokeReturnBulletToPool", time);
+        if (time == 0.0f) InvokeRemoveFromBattle();
+        else Invoke("InvokeRemoveFromBattle", time);
     }
 
-    void InvokeReturnBulletToPool()
+    //실제로 게임에서 제거한다.
+    void InvokeRemoveFromBattle()
     {
         trailRenderer.Clear();
         CancelInvoke();
@@ -69,12 +55,12 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.tag == "Monster")
         {
             Monster monster = collision.gameObject.GetComponent<Monster>();
-            if (target == null) RemoveFromScene(0.0f);
+            if (target == null) RemoveFromBattle(0.0f);
             else if (monster.id == target.id)    //올바른 타겟에 도달한 경우
             {
                 //공격 후 자신을 제거한다.
                 if (parent.ringBase != null) parent.AttackEffect(monster);
-                RemoveFromScene(0.0f);
+                RemoveFromBattle(0.0f);
             }
         }
     }

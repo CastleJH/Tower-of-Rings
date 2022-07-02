@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseMonster
+public class BaseMonster        //몬스터의 원형
 {
-    public int type;
-    public string name;
-    public float hp;
-    public float spd;
-    public string description;
+    public int type;        //종류
+    public string name;     //이름
+    public float hp;        //기본 HP
+    public float spd;       //이동속도
+    public string description;  //설명(도감에서 나타날 정보)
 }
