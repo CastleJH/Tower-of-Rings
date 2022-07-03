@@ -318,7 +318,7 @@ public class Monster : MonoBehaviour
     public void AE_Execution(float dmg, float rate)
     {
         if (baseMonster.type > 2) rate *= 0.5f;
-        if (curHP < baseHP * rate) AE_DecreaseHP(-1, Color.red);
+        if (curHP - dmg < baseHP * rate) AE_DecreaseHP(-1, Color.red);
         else AE_DecreaseHP(dmg, new Color32(70, 70, 70, 255));
     }
 }
