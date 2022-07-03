@@ -43,6 +43,7 @@ public class Ring : MonoBehaviour
     public Ring commanderNearest;   //가장 근처의 사령관 링
     int curseStack;            //저주 링의 공격 당 쌓는 스택
     Amplifier amplifier;        //증폭
+    float executionRate;      //처형 기준 HP 비율
 
     void Awake()
     {
@@ -131,6 +132,9 @@ public class Ring : MonoBehaviour
                 amplifier.InitializeAmplifier(this);
                 amplifier.gameObject.SetActive(true);
                 break;
+            case 24:
+                executionRate = 0.1f;
+                break;
             default:
                 break;
         }
@@ -200,6 +204,7 @@ public class Ring : MonoBehaviour
                 case 5: //랜덤한 갯수만큼 공격
                 case 14:
                 case 20:
+                case 24:
                     if (commanderNearest != null && commanderNearest.commanderTarget != null && Random.Range(0.0f, 1.0f) < commanderNearest.curEFF) //사령관 대상인 경우
                     {
                         bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
@@ -363,6 +368,10 @@ public class Ring : MonoBehaviour
                 monster.AE_Curse(curseStack);
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
+            case 24:
+                monster.AE_Execution(curATK, executionRate);
+                monster.PlayParticleCollision(ringBase.id, 0.0f);
+                break;
             case 18:    //아무것도 없음
             case 19:
             case 22:
@@ -449,6 +458,10 @@ public class Ring : MonoBehaviour
                         if (ring.ringBase.id == ringBase.id) ring.curseStack++;
                         ring.ChangeCurSPD(-0.08f);
                         break;
+                    case 24:
+                        if (ring.ringBase.id == ringBase.id) ring.executionRate += 0.02f;
+                        ring.ChangeCurSPD(-0.08f);
+                        break;
                     case 2: //효과 없음
                     case 19:
                     case 22:
@@ -520,6 +533,10 @@ public class Ring : MonoBehaviour
                         break;
                     case 21:
                         if (ring.ringBase.id == ringBase.id) curseStack++;
+                        ChangeCurSPD(-0.08f);
+                        break;
+                    case 24:
+                        if (ring.ringBase.id == ringBase.id) executionRate += 0.02f;
                         ChangeCurSPD(-0.08f);
                         break;
                     case 2: //효과 없음
@@ -598,6 +615,10 @@ public class Ring : MonoBehaviour
                         break;
                     case 21:
                         if (ring.ringBase.id == ringBase.id) ring.curseStack--;
+                        ring.ChangeCurSPD(0.08f);
+                        break;
+                    case 24:
+                        if (ring.ringBase.id == ringBase.id) ring.executionRate -= 0.02f;
                         ring.ChangeCurSPD(0.08f);
                         break;
                     case 2: //효과 없음

@@ -70,7 +70,7 @@ public class DeckManager : MonoBehaviour
         AddRingToDeck(10);  //타
         AddRingToDeck(3);     //효
         AddRingToDeck(19);  //사령관
-        AddRingToDeck(23);
+        AddRingToDeck(24);
     }
 
     //전투 준비한다. 필요한 변수들을 초기화한다.
