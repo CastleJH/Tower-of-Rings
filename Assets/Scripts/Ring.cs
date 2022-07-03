@@ -42,6 +42,7 @@ public class Ring : MonoBehaviour
     public Monster commanderTarget; //사령관 링의 타겟
     public Ring commanderNearest;   //가장 근처의 사령관 링
     int curseStack;            //저주 링의 공격 당 쌓는 스택
+    Amplifier amplifier;        //증폭
 
     void Awake()
     {
@@ -64,6 +65,10 @@ public class Ring : MonoBehaviour
                         shootCoolTime = 0.0f;
                         break;
                     case 11:
+                    case 23:
+                        break;
+                    case 22:
+                        BombardAttack();
                         break;
                     default:
                         TryShoot();
@@ -120,6 +125,11 @@ public class Ring : MonoBehaviour
                 break;
             case 21:
                 curseStack = 1;
+                break;
+            case 23:
+                amplifier = GameManager.instance.GetAmplifierFromPool();
+                amplifier.InitializeAmplifier(this);
+                amplifier.gameObject.SetActive(true);
                 break;
             default:
                 break;
@@ -277,6 +287,8 @@ public class Ring : MonoBehaviour
                     break;
                 case 7: //발사 안함
                 case 11:
+                case 22:
+                case 23:
                     break;
                 default:
                     Debug.Log(string.Format("Not implemented yet. {0} TryShoot", ringBase.id.ToString()));
@@ -352,7 +364,8 @@ public class Ring : MonoBehaviour
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
             case 18:    //아무것도 없음
-            case 19:    
+            case 19:
+            case 22:
                 break;
             default:
                 Debug.Log(string.Format("Not implemented yet. {0} AttackEffect", ringBase.id.ToString()));
@@ -438,6 +451,8 @@ public class Ring : MonoBehaviour
                         break;
                     case 2: //효과 없음
                     case 19:
+                    case 22:
+                    case 23:
                         break;
                     default: //구현 안됨
                         Debug.LogError("no synergy");
@@ -509,6 +524,8 @@ public class Ring : MonoBehaviour
                         break;
                     case 2: //효과 없음
                     case 19:
+                    case 22:
+                    case 23:
                         break;
                     default: //구현 안됨
                         Debug.LogError("no synergy");
@@ -585,6 +602,8 @@ public class Ring : MonoBehaviour
                         break;
                     case 2: //효과 없음
                     case 19:
+                    case 22:
+                    case 23:
                         break;
                     default: //구현 안됨
                         Debug.LogError("no synergy");
@@ -604,6 +623,10 @@ public class Ring : MonoBehaviour
             case 11:
                 blizzard.RemoveFromBattle();
                 blizzard = null;
+                break;
+            case 23:
+                amplifier.RemoveFromBattle();
+                amplifier = null;
                 break;
             default:
                 break;
@@ -704,5 +727,17 @@ public class Ring : MonoBehaviour
         
         //플레이한다.
         rpGenerationParticle.PlayParticle(transform, 0.0f);
+    }
+
+    //범위 내 모든 적을 공격한다. 
+    void BombardAttack()
+    {
+        GetTargets();
+        for (int i = targets.Count - 1; i >= 0; i--)
+        {
+            targets[i].PlayParticleCollision(ringBase.id, 0.0f);
+            targets[i].AE_DecreaseHP(curATK, new Color32(180, 0, 0, 255));
+        }
+        DeckManager.instance.RemoveRingFromBattle(this);
     }
 }

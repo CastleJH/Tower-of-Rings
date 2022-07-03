@@ -1926,6 +1926,7 @@ MonoBehaviour:
   - {fileID: 3416776120990079515, guid: aa69ad2b0dcf0894c941e0ea0b4f1e15, type: 3}
   barrierPrefab: {fileID: 1361081555842129790, guid: 006f6ae3f88cb594eb6295d6d8696a4a, type: 3}
   blizzardPrefab: {fileID: 583379645925316701, guid: 4cf6c666fdd27c84e8fc1d68ed198c5a, type: 3}
+  amplifierPrefab: {fileID: 6058928862243412483, guid: b7218e3ac6341ad43a5ffd3bdf10c1d5, type: 3}
   damageTextPrefab: {fileID: 4119758275505345053, guid: 280ab572f05d400488ae86a667fef081, type: 3}
   ringSprites:
   - {fileID: 21300000, guid: 6a0faaca74be83846b9c5606ce3a43a7, type: 3}
@@ -4152,12 +4153,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c3f2b6f56036ef49b0c2287b865b24e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugFlag: 0
+  debugVariable: 0
   ringRemover: {fileID: 676791127}
   maxDeckLength: 6
   deck: 
   rings: []
   genRing: {fileID: 0}
-  isGenRing: 0
+  isEditRing: 0
 --- !u!4 &1644551405
 Transform:
   m_ObjectHideFlags: 0

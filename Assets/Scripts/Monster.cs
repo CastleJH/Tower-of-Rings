@@ -34,7 +34,8 @@ public class Monster : MonoBehaviour
     float paralyzeTime;         //마비의 마비 효과가 지속된 시간
     float paralyzeEndTime;      //마비의 마비 효과가 끝나는 시간
     public bool barrierBlock; //결계로부터 이동을 방해받지 않는지 여부
-    public int curseStack;     //저주 링으로부터 쌓인 스택
+    public int curseStack;     //저주로부터 쌓인 스택
+    public bool isInAmplify;    //증폭 범위 내에 있는지 여부
 
     void Awake()
     {
@@ -131,6 +132,7 @@ public class Monster : MonoBehaviour
         paralyzeEndTime = -1.0f;
         barrierBlock = false;
         curseStack = 0;
+        isInAmplify = false;
     }
 
     //파티클을 플레이한다.
@@ -205,6 +207,7 @@ public class Monster : MonoBehaviour
     {
         if (dmg != -1)
         {
+            if (isInAmplify) dmg *= 1.2f;
             curHP -= dmg;
             DamageText t = GameManager.instance.GetDamageTextFromPool();
             t.InitializeDamageText((Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
