@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
         battleRingDetailLongClickTime = 0.0f;
     }
 
-    //링 생성 버튼이 눌린 경우에 불린다.
+    //전투에서 링 생성 버튼이 눌린 경우에 불린다.
     public void ButtonGenerateRing(int index)
     {
         if (Input.touchCount > 1) return;
@@ -51,13 +51,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    //링 생성 버튼 누르기를 중지하면 불린다.
+    //전투에서 링 생성 버튼 누르기를 중지하면 불린다.
     public void ButtonGenerateRingUp()
     {
         checkBattleRingDetailOn = false;
     }
 
-    //배틀 UI의 덱 링 RP 비용 텍스트를 갱신한다.
+    //전투 UI에서 덱에 있는 링의 RP 비용 텍스트를 갱신한다.
     public void SetBattleDeckRingRPText(int index, int rp)
     {
         if (index >= DeckManager.instance.maxDeckLength) return;
@@ -65,7 +65,7 @@ public class UIManager : MonoBehaviour
         else battleDeckRingRPText[index].text = rp.ToString();
     }
 
-    //배틀 UI의 덱 링 이미지를 변경한다.
+    //전투 UI에서 덱에 있는 링의 이미지를 갱신한다.
     public void SetBattleDeckRingImage(int index)
     {
         if (index >= DeckManager.instance.maxDeckLength) return;
@@ -73,7 +73,7 @@ public class UIManager : MonoBehaviour
         else battleDeckRingImages[index].sprite = GameManager.instance.ringSprites[DeckManager.instance.deck[index]];
     }
 
-    //배틀 UI의 링 배치 실패 이유를 보여준다.
+    //전투 시 링 배치 실패 이유에 알맞은 UI를 보여준다.
     public void SetBattleArrangeFail(string str)
     {
         if (str == null) battleArrangeFail.SetActive(false);
@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    //배틀에서 보여주는 덱의 UI(링 스프라이트 및 소모 RP)변경
+    //전투 UI에서 덱 부분을 전체적으로 변경한다.(링 스프라이트 및 소모 RP)
     public void SetBattleDeckRingImageAndRPAll()
     {
         for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)

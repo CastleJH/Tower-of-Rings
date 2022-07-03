@@ -38,17 +38,4 @@ public class Barrier : MonoBehaviour
             monster.barrierBlock = true;
         }
     }
-
-    /*
-    //결계에 몬스터가 들어오면 이동 불가 상태로 만든다.
-    void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.tag == "Monster")
-        {
-            Monster monster = collision.GetComponent<Monster>();
-            monster.barrierBlock = false;
-            monsters.Remove(monster);
-        }
-    }
-    */
 }

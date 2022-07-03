@@ -16,7 +16,7 @@ public class DamageText : MonoBehaviour
     }
     void OnEnable()
     {
-        Invoke("DestroyText", lifetime);
+        Invoke("InvokeRemoveFromBattle", lifetime);
     }
 
     void Update()
@@ -25,7 +25,7 @@ public class DamageText : MonoBehaviour
     }
 
     //오브젝트 풀에 자신을 되돌려준다.
-    void DestroyText()
+    void InvokeRemoveFromBattle()
     {
         GameManager.instance.ReturnDamageTextToPool(this);
     }

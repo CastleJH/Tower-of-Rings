@@ -151,8 +151,6 @@ public class GameManager : MonoBehaviour
         ringPool.Enqueue(ring);
     }
 
-
-
     //불렛을 오브젝트 풀에서 받아온다. disabled 상태로 준다.
     public Bullet GetBulletFromPool(int id)
     {

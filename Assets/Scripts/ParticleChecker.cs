@@ -25,15 +25,14 @@ public class ParticleChecker : MonoBehaviour
         GameManager.instance.ReturnParticleToPool(this, id);
     }
 
-    //파티클을 플레이한다.
+    //파티클을 플레이한다. duration을 0.0f로 주면 원래 duration을 쓴다.
     public void PlayParticle(Transform _parent, float _duration)
     {
         //위치를 설정한다.
         transform.position = new Vector3(_parent.position.x, _parent.position.y, -0.1f);
         transform.parent = _parent;
 
-        //지속 시간을 지정해야 한다면 설정한다.
-        if (_duration != 0.0f)
+        if (_duration != 0.0f)  //지속 시간을 새로 지정해야 하는 경우
         {
             particle.Stop(true);
 

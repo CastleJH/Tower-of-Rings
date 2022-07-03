@@ -37,6 +37,7 @@ public class Ringstone
 
     public int level = 0;
 
+    //최대 10레벨까지 강화. 그 후 공격력/공격 쿨타임을 변경함.
     public bool Upgrade()
     {
         if (level == 10) return false;
@@ -49,6 +50,8 @@ public class Ringstone
         return true;
     }
 
+
+    //최소 1레벨까지 다운그레이드. 그 후 공격력/공격 쿨타임을 변경함.
     public void Downgrade()
     {
         if (level > 1) level--;

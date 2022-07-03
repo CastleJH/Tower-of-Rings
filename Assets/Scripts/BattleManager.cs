@@ -116,7 +116,7 @@ public class BattleManager : MonoBehaviour
 
             //몬스터 리스트 정리
             for (int i = monsters.Count - 1; i >= 0; i--)
-                monsters[i].RemoveFromScene(0.0f);
+                monsters[i].RemoveFromBattle(0.0f);
             monsters.Clear();
 
             //덱 정리

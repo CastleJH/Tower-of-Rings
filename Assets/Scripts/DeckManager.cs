@@ -24,7 +24,7 @@ public class DeckManager : MonoBehaviour
     int ringNumber;    //링 생성시 부여하는 구분 번호
 
     //기타
-    int ringLayerMask;
+    int ringLayerMask;  //링 레이어마스크
 
     void Awake()
     {
@@ -42,13 +42,7 @@ public class DeckManager : MonoBehaviour
     {
         if (debugFlag)
         {
-            RemoveRingFromDeck(debugVariable);
             debugFlag = false;
-
-            //덱의 UI(링 스프라이트 및 소모 RP)변경
-            UIManager.instance.SetBattleDeckRingImageAndRPAll();
-            BattleManager.instance.ChangeCurrentRP(500);
-
         }
         if (BattleManager.instance.isBattlePlaying)
         {
@@ -104,35 +98,35 @@ public class DeckManager : MonoBehaviour
                 //링의 위치를 이동시키고 배치 가능 표시를 바꾼다.
                 genRing.transform.position = Camera.main.ScreenToWorldPoint(touchPos);
                 genRing.transform.Translate(Vector3.forward * 2);
-                genRing.CheckArrangePossible();
+                genRing.CanBePlaced();
             }
-            else
+            else   //링 제거의 경우
             {   
                 //링 제거 표시의 위치를 이동시킨다.
                 ringRemover.transform.position = Camera.main.ScreenToWorldPoint(touchPos);
                 ringRemover.transform.Translate(Vector3.forward * 1);
             }
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0))  //터치(마우스)가 끝났을 때
         {
             if (Input.touchCount > 0) touchPos = Input.touches[0].position;
             else touchPos = Input.mousePosition;
+
             if (genRing != null)    //링 생성의 경우
             {
                 //플레이어의 마지막 터치 지점에 해당하는 곳에 가능하다면 링을 생성한다.
                 genRing.transform.position = Camera.main.ScreenToWorldPoint(touchPos);
                 genRing.transform.Translate(Vector3.forward * 11);
-                TryPutRingIntoScene();
+                TryPutRingIntoBattle();
             }
-            else //링 제거의 경우
+            else   //링 제거의 경우
             {
                 RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(touchPos), Vector2.zero, 0f, ringLayerMask);
                 Ring ring;
-                if (hit.collider != null && hit.collider.tag == "Ring" && BattleManager.instance.rp >= 10)//마지막 터치 지점에 링이 있다면 제거한다.
+                if (hit.collider != null && hit.collider.tag == "Ring" && BattleManager.instance.rp >= 10) //마지막 터치 지점에 링이 있다면 제거한다.
                 {
                     ring = hit.collider.gameObject.GetComponent<Ring>();
                     RemoveRingFromBattle(ring);
-                    GetCommanderNearestForAllRings();
                     BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - 10);
                 }
                 ringRemover.transform.position = new Vector3(100, 100, 0);
@@ -144,10 +138,10 @@ public class DeckManager : MonoBehaviour
     }
 
     //링을 scene에 배치한다.
-    public void TryPutRingIntoScene()
+    public void TryPutRingIntoBattle()
     {
         //올바른 위치가 아닌 경우 취소
-        if (!genRing.CheckArrangePossible())
+        if (!genRing.CanBePlaced())
         {
             GameManager.instance.ReturnRingToPool(genRing);
             return;
@@ -163,7 +157,7 @@ public class DeckManager : MonoBehaviour
             genRing.PutIntoBattle(ringNumber++);
             rings.Add(genRing);
             GetCommanderNearestForAllRings();
-            UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));
+            UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));  //다음 필요 RP값을 계산한다.
             BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - rpCost);
         }
         else GameManager.instance.ReturnRingToPool(genRing);
@@ -173,7 +167,9 @@ public class DeckManager : MonoBehaviour
     public void RemoveRingFromBattle(Ring ring)
     {
         ring.RemoveFromBattle();
+        rings.Remove(ring);
         GameManager.instance.ReturnRingToPool(ring);
+        GetCommanderNearestForAllRings();
     }
 
     //덱에 링스톤을 넣는다.

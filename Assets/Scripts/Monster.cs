@@ -91,7 +91,7 @@ public class Monster : MonoBehaviour
                 }
             }
 
-            if (curseStack != 0) spriteRenderer.color = Color.gray;
+            if (curseStack != 0) spriteRenderer.color = Color.gray;     //저주 중첩이 하나라도 있다면
 
             if (!barrierBlock) //결계에 막히지 않으면 이동
             {
@@ -102,6 +102,7 @@ public class Monster : MonoBehaviour
         }
     }
 
+    //몬스터를 초기화한다.
     public void InitializeMonster(int _id, BaseMonster monster, int pathID, float scale)
     {
         //아이디
@@ -142,7 +143,7 @@ public class Monster : MonoBehaviour
         par.PlayParticle(transform, time);
     }
 
-    //HP 텍스트를 갱신한다.
+    //HP 텍스트를 갱신한다. 소수점을 버리고 표현하되, 남은 HP가 0초과 1이하인 경우는 1로 표현한다.
     private void SetHPText()
     {
         if (curHP > 1.0f) hpText.text = ((int)curHP).ToString();
@@ -156,19 +157,19 @@ public class Monster : MonoBehaviour
         if (curHP <= 0)
         {
             /*추가 구현 필요 - 사망 애니메이션*/
-            RemoveFromScene(0.5f);
+            RemoveFromBattle(0.5f);
         }
     }
 
-    //게임에서 time 초 뒤 제거한다.
-    public void RemoveFromScene(float time)
+    //게임에서 time초 뒤 제거한다.
+    public void RemoveFromBattle(float time)
     {
-        if (time == 0.0f) InvokeReturnMonsterToPool();
-        else Invoke("InvokeReturnMonsterToPool", time);
+        if (time == 0.0f) InvokeRemoveFromBattle();
+        else Invoke("InvokeRemoveFromBattle", time);
     }
 
     //실제로 게임에서 제거한다. 링에 의한 각종 사망 효과를 적용한다. 골드/RP도 증가시킨다.
-    void InvokeReturnMonsterToPool()
+    void InvokeRemoveFromBattle()
     {
         if (!gameObject.activeSelf) return;
 
@@ -287,14 +288,8 @@ public class Monster : MonoBehaviour
     //공격 이펙트: 절단
     public void AE_Cut(float dmg)
     {
-        if (IsNormalMonster())
-        {
-            AE_DecreaseHP(curHP * (dmg * 0.01f), Color.red);
-        }
-        else
-        {
-            AE_DecreaseHP(curHP * (dmg * 0.005f), Color.red);
-        }
+        if (IsNormalMonster()) AE_DecreaseHP(curHP * (dmg * 0.01f), Color.red);
+        else AE_DecreaseHP(curHP * (dmg * 0.005f), Color.red);
     }
 
     //공격 이펙트: 저주

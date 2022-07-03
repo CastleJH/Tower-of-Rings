@@ -33,12 +33,12 @@ public class Ring : MonoBehaviour
     //기타 변수들
     public bool isInBattle;         //전투 중인지 체크용
     public float shootCoolTime;    //발사 쿨타임 체크용
-    public CircleCollider2D collider; //자신의 콜라이더
-    int oxyRemoveCount;     //산화 링의 소멸 카운트
+    public CircleCollider2D ringCollider; //자신의 콜라이더
+    int oxyRemoveCount;          //산화 링의 소멸 카운트
     float explosionSplash;        //폭발 링의 스플래쉬 데미지(비율)
     int poisonStack;            //맹독 링의 공격 당 쌓는 스택
     ParticleChecker rpGenerationParticle; //RP 생산시 링 위치에서 재생할 파티클
-    Blizzard blizzard;
+    Blizzard blizzard;          //눈보라
     public Monster commanderTarget; //사령관 링의 타겟
     public Ring commanderNearest;   //가장 근처의 사령관 링
     int curseStack;            //저주 링의 공격 당 쌓는 스택
@@ -46,7 +46,7 @@ public class Ring : MonoBehaviour
     void Awake()
     {
         targets = new List<Monster>();
-        collider = GetComponent<CircleCollider2D>(); 
+        ringCollider = GetComponent<CircleCollider2D>(); 
     }
 
     void Update()
@@ -54,7 +54,7 @@ public class Ring : MonoBehaviour
         if (isInBattle)
         {
             shootCoolTime += Time.deltaTime;
-            if (shootCoolTime > curSPD)
+            if (shootCoolTime > curSPD)     //공격 쿨타임이 되었다면
             {
                 switch (ringBase.id)
                 {
@@ -78,7 +78,7 @@ public class Ring : MonoBehaviour
         }
     }
 
-    //링 배치 단계에서 보여질 모습을 바꾸는 것이 주 목적이다. id에 해당하는 링으로 변한다.
+    //링 배치 단계를 위해, id에 해당하는 링으로 변한다.
     public void InitializeRing(int id)
     {
         //베이스 정보 얻기
@@ -91,7 +91,7 @@ public class Ring : MonoBehaviour
         transform.localScale = Vector3.one;
 
         //콜라이더 끄기
-        collider.enabled = false;
+        ringCollider.enabled = false;
     }
 
     //실제로 게임에 넣는다.
@@ -128,7 +128,7 @@ public class Ring : MonoBehaviour
         isInBattle = true;
         shootCoolTime = ringBase.baseSPD - 0.2f;
         rangeRenderer.color = new Color(0, 0, 0, 0);
-        collider.enabled = true;
+        ringCollider.enabled = true;
 
         ApplySynergy();
     }
@@ -137,7 +137,7 @@ public class Ring : MonoBehaviour
     public void TryShoot()
     {
         GetTargets();
-        int numTarget = Mathf.Min(targets.Count, (int)curNumTarget);
+        int numTarget = Mathf.Min(targets.Count, (int)curNumTarget);    //범위 내 몬스터 수 or 나의 최대 타겟 수 중 더 작은 것
         if (numTarget != 0)
         {
             if (ringBase.id != 19) audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[ringBase.id]);
@@ -206,12 +206,6 @@ public class Ring : MonoBehaviour
                         bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
                         bullet.InitializeBullet(this, targets[tar]);
                         bullet.gameObject.SetActive(true);
-                        /*if (tar < targets.Count)
-                        {
-                            bullet.InitializeBullet(this, targets[tar]);
-                            bullet.gameObject.SetActive(true);
-                        }
-                        else GameManager.instance.ReturnBulletToPool(bullet);*/
                         targets.RemoveAt(tar);
                     }
                     break;
@@ -386,7 +380,7 @@ public class Ring : MonoBehaviour
         {
             ring = DeckManager.instance.rings[i];
             if (ring == this) continue;
-            if (Vector2.Distance(ring.transform.position, transform.position) <= ringBase.range + ring.collider.radius)
+            if (Vector2.Distance(ring.transform.position, transform.position) <= ringBase.range + ring.ringCollider.radius)
             {
                 switch (ringBase.id)
                 {
@@ -458,7 +452,7 @@ public class Ring : MonoBehaviour
         {
             ring = DeckManager.instance.rings[i];
             if (ring == this) continue;
-            if (Vector2.Distance(ring.transform.position, transform.position) <= ring.ringBase.range + collider.radius)
+            if (Vector2.Distance(ring.transform.position, transform.position) <= ring.ringBase.range + ringCollider.radius)
                 switch (ring.ringBase.id)
                 {
                     case 0: //공 10 공 5
@@ -533,7 +527,7 @@ public class Ring : MonoBehaviour
         {
             ring = DeckManager.instance.rings[i];
             if (ring == this) continue;
-            if (Vector2.Distance(ring.transform.position, transform.position) <= ringBase.range + ring.collider.radius)
+            if (Vector2.Distance(ring.transform.position, transform.position) <= ringBase.range + ring.ringCollider.radius)
             {
                 switch (ringBase.id)
                 {
@@ -605,7 +599,6 @@ public class Ring : MonoBehaviour
     public void RemoveFromBattle()
     {
         RemoveSynergy();
-        DeckManager.instance.rings.Remove(this);
         switch (ringBase.id)
         {
             case 11:
@@ -618,7 +611,7 @@ public class Ring : MonoBehaviour
     }
 
     //배치 가능 범위인지 확인한다.
-    public bool CheckArrangePossible()
+    public bool CanBePlaced()
     {
         int ret = 3;
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.75f);

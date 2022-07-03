@@ -8,7 +8,6 @@ public class Endline : MonoBehaviour
     {
         if (collision.tag == "Monster")
         {
-            Debug.Log("touched endline");
             BattleManager.instance.isBattleOver = true;
         }
     }
