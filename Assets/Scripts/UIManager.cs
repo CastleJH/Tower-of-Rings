@@ -16,14 +16,14 @@ public class UIManager : MonoBehaviour
     public GameObject battleArrangeFail;
     public TextMeshProUGUI battleArrangeFailText;
 
-    bool checkBattleRingDetailOn;
-    float battleRingDetailLongClickTime;
+    //bool checkBattleRingDetailOn;
+    //float battleRingDetailLongClickTime;
     void Awake()
     {
         instance = this;
 
-        checkBattleRingDetailOn = false;
-        battleRingDetailLongClickTime = 0.0f;
+        //checkBattleRingDetailOn = false;
+        //battleRingDetailLongClickTime = 0.0f;
     }
 
     //전투에서 링 생성 버튼이 눌린 경우에 불린다.
@@ -44,8 +44,8 @@ public class UIManager : MonoBehaviour
                 tmpRing.InitializeRing(DeckManager.instance.deck[index]);
                 DeckManager.instance.genRing = tmpRing;
                 DeckManager.instance.genRing.gameObject.SetActive(true);
-                battleRingDetailLongClickTime = 0.0f;
-                checkBattleRingDetailOn = true;
+                //battleRingDetailLongClickTime = 0.0f;
+                //checkBattleRingDetailOn = true;
             }
             else DeckManager.instance.isEditRing = false;
         }
@@ -54,7 +54,7 @@ public class UIManager : MonoBehaviour
     //전투에서 링 생성 버튼 누르기를 중지하면 불린다.
     public void ButtonGenerateRingUp()
     {
-        checkBattleRingDetailOn = false;
+        //checkBattleRingDetailOn = false;
     }
 
     //전투 UI에서 덱에 있는 링의 RP 비용 텍스트를 갱신한다.

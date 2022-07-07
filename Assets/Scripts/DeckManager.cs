@@ -65,14 +65,12 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
-        AddRingToDeck(22);
-        AddRingToDeck(23);
-        AddRingToDeck(24);
-        //AddRingToDeck(7);   //공
-        //AddRingToDeck(14);  //속
-        //AddRingToDeck(10);  //타
-        //AddRingToDeck(3);     //효
-        AddRingToDeck(19);  //사령관
+        AddRingToDeck(25);
+        AddRingToDeck(7);   //공
+        AddRingToDeck(14);  //속
+        AddRingToDeck(10);  //타
+        AddRingToDeck(3);     //효
+        AddRingToDeck(23);  //사령관
     }
 
     //전투 준비한다. 필요한 변수들을 초기화한다.
@@ -155,10 +153,17 @@ public class DeckManager : MonoBehaviour
         //충분한 rp가 있다면 생성. 아니면 취소
         if (rpCost <= BattleManager.instance.rp)
         {
+            if (genRing.ringBase.id == 25)
+            {
+                int mutantIdx;
+                do mutantIdx = Random.Range(0, deck.Count);
+                while (deck[mutantIdx] == 23 || deck[mutantIdx] == 27 || deck[mutantIdx] == 30 || deck[mutantIdx] == 31);
+                genRing.InitializeRing(deck[mutantIdx]);
+            }
             genRing.PutIntoBattle(ringNumber++);
             rings.Add(genRing);
             GetCommanderNearestForAllRings();
-            UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));  //다음 필요 RP값을 계산한다.
+            if (deck[deckIdx] != 25) UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));  //다음 필요 RP값을 계산한다.
             BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - rpCost);
         }
         else GameManager.instance.ReturnRingToPool(genRing);

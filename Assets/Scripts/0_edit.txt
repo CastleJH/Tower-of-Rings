@@ -1,9 +1,9 @@
 * Ring.cs
 	0) PutIntoBattle()
-	1) TryShoot()
-	3) AttackEffct()
-	4) ApplySynergy()
-	5) RemoveSynergy()
+	1) TryShoot() **
+	3) AttackEffct() **
+	4) ApplySynergy() **
+	5) RemoveSynergy() **
 
 * Monster.cs
 	2) InitializeMonster(), 기타 피격 효과 함수 구현
@@ -12,7 +12,7 @@
 	6) InitializeDeck()
 
 * 구현 필요 목록
-	17, 25, 26, 27, 28, 29, 30, 31, 32
+	17, (25), 26, 27, 28, 29, 30, 31, 32
 
 
 * z좌표 
