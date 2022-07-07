@@ -8,7 +8,14 @@ public class Endline : MonoBehaviour
     {
         if (collision.tag == "Monster")
         {
-            BattleManager.instance.isBattleOver = true;
+            if (DeckManager.instance.isAngelEffect)
+            {
+                DeckManager.instance.isAngelEffect = false;
+                DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.angelRing);
+                for (int i = 0; i < BattleManager.instance.monsters.Count; i++)
+                    BattleManager.instance.monsters[i].AE_Angel();
+            }
+            else BattleManager.instance.isBattleOver = true;
         }
     }
 }

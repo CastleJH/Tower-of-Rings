@@ -22,6 +22,8 @@ public class DeckManager : MonoBehaviour
     public Ring genRing = null;    //생성 중인 링
     public bool isEditRing;  //링 생성/제거버튼이 눌렸는지 여부
     int ringNumber;    //링 생성시 부여하는 구분 번호
+    public bool isAngelEffect;     //천사 링의 효과가 유효한지 여부
+    public Ring angelRing;  //생성한 천사링
 
     //기타
     int ringLayerMask;  //링 레이어마스크
@@ -65,12 +67,14 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
+        AddRingToDeck(25);
         AddRingToDeck(26);
-        AddRingToDeck(7);   //공
-        AddRingToDeck(14);  //속
-        AddRingToDeck(10);  //타
-        AddRingToDeck(3);     //효
-        AddRingToDeck(19);  //사령관
+        AddRingToDeck(27);
+        //AddRingToDeck(7);   //공
+        //AddRingToDeck(14);  //속
+        //AddRingToDeck(10);  //타
+        //AddRingToDeck(3);     //효
+        //AddRingToDeck(19);  //사령관
     }
 
     //전투 준비한다. 필요한 변수들을 초기화한다.
@@ -80,6 +84,8 @@ public class DeckManager : MonoBehaviour
         genRing = null;
         isEditRing = false;
         ringNumber = 0;
+
+        isAngelEffect = false;
     }
 
     //사용자 입력을 받는다.
@@ -150,20 +156,35 @@ public class DeckManager : MonoBehaviour
         int deckIdx = deck.IndexOf(genRing.ringBase.id);
         int rpCost = int.Parse(UIManager.instance.battleDeckRingRPText[deckIdx].text);
 
-        //충분한 rp가 있다면 생성. 아니면 취소
+        //충분한 rp가 있다면 더 자세하게 생성 가능 여부 확인. 아니면 취소
         if (rpCost <= BattleManager.instance.rp)
         {
-            if (genRing.ringBase.id == 25)
+            if (genRing.ringBase.id == 25)  //돌연변이라면 똑같은 확률로 다른 링으로 변경(천사, 식물, 네크로, 동면 링 제외)
             {
                 int mutantIdx;
                 do mutantIdx = Random.Range(0, deck.Count);
-                while (deck[mutantIdx] == 23 || deck[mutantIdx] == 27 || deck[mutantIdx] == 30 || deck[mutantIdx] == 31);
+                while (deck[mutantIdx] == 27 || deck[mutantIdx] == 30 || deck[mutantIdx] == 31 || deck[mutantIdx] == 32);
                 genRing.InitializeRing(deck[mutantIdx]);
+            }
+
+            if (genRing.ringBase.id == 27)  //천사링이라면 아직 생성된 천사링이 한 번도 없는 경우에만 생성
+            {
+                if (UIManager.instance.battleDeckRingRPText[deckIdx].text == "MAX")
+                {
+                    GameManager.instance.ReturnRingToPool(genRing);
+                    return;
+                }
+                else
+                {
+                    UIManager.instance.SetBattleDeckRingRPText(deckIdx, -1);
+                    angelRing = genRing;
+                    isAngelEffect = true;
+                }
             }
             genRing.PutIntoBattle(ringNumber++);
             rings.Add(genRing);
             GetCommanderNearestForAllRings();
-            if (deck[deckIdx] != 25) UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));  //다음 필요 RP값을 계산한다.
+            if (deck[deckIdx] != 25 && deck[deckIdx] != 27) UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));  //다음 필요 RP값을 계산한다.
             BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - rpCost);
         }
         else GameManager.instance.ReturnRingToPool(genRing);
@@ -172,7 +193,7 @@ public class DeckManager : MonoBehaviour
     //링을 전투에서 제거한다.
     public void RemoveRingFromBattle(Ring ring)
     {
-        ring.RemoveFromBattle();
+        ring.ApplyRemoveEffect();
         rings.Remove(ring);
         GameManager.instance.ReturnRingToPool(ring);
         GetCommanderNearestForAllRings();

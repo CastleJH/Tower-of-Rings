@@ -332,4 +332,12 @@ public class Monster : MonoBehaviour
             ring.ChangeCurATK(0.1f);
         }
     }
+
+    //공격 이펙트: 천사
+    public void AE_Angel()
+    {
+        AE_DecreaseHP(curHP * 0.2f, Color.yellow);
+        movedDistance = 0;
+    }
+
 }

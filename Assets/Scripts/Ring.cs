@@ -170,6 +170,7 @@ public class Ring : MonoBehaviour
                 case 13:
                 case 16:
                 case 25:
+                case 27:
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
                     for (int i = 0; i < numTarget; i++)
                     {
@@ -323,6 +324,7 @@ public class Ring : MonoBehaviour
             case 14:
             case 15:
             case 25:
+            case 27:
                 monster.AE_DecreaseHP(curATK, new Color32(100, 0, 0, 255));
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
@@ -479,6 +481,7 @@ public class Ring : MonoBehaviour
                     case 19:
                     case 22:
                     case 23:
+                    case 27:
                         break;
                     default: //구현 안됨
                         Debug.LogError("no synergy");
@@ -558,6 +561,7 @@ public class Ring : MonoBehaviour
                     case 19:
                     case 22:
                     case 23:
+                    case 27:
                         break;
                     default: //구현 안됨
                         Debug.LogError("no synergy");
@@ -642,6 +646,7 @@ public class Ring : MonoBehaviour
                     case 19:
                     case 22:
                     case 23:
+                    case 27:
                         break;
                     default: //구현 안됨
                         Debug.LogError("no synergy");
@@ -652,8 +657,8 @@ public class Ring : MonoBehaviour
     }
 
 
-    //전투에서 제거한다.
-    public void RemoveFromBattle()
+    //전투에서 제거시 일어나는 변화를 적용한다.
+    public void ApplyRemoveEffect()
     {
         RemoveSynergy();
         switch (ringBase.id)

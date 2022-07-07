@@ -81,7 +81,7 @@ public class BattleManager : MonoBehaviour
         while (newMonsterID < numGenMonster)
         {
             //몬스터 능력치 배율을 조정한다.
-            float scale = 0.5f;     //일단은 페이즈 1개에 스테이지 구분없이 하는 중이므로 고정해놨다.
+            float scale = 2.0f;     //일단은 페이즈 1개에 스테이지 구분없이 하는 중이므로 고정해놨다.
             //이 부분은 후에 페이즈 3개를 모두 플레이하고 스테이지 개념이 생길 때 넣는다.
             /*if (GameManager.instance.floor == 7) scale = 4.0f;
             else scale = 0.5f * (GameManager.instance.floor + 1);
@@ -139,9 +139,11 @@ public class BattleManager : MonoBehaviour
     {
         rp = _rp;
         UIManager.instance.battleRPText.text = ((int)rp).ToString();
-        for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)    //RP량이 충분한 링만 버튼 활성화(=버튼 가림막 비활성화)
+        for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)    //RP량이 충분한 링/생성 최대에 도달하지 않은 링만 버튼 활성화(=버튼 가림막 비활성화)
         {
-            if (i < DeckManager.instance.deck.Count && int.Parse(UIManager.instance.battleDeckRingRPText[i].text) <= rp)
+            if (i < DeckManager.instance.deck.Count && UIManager.instance.battleDeckRingRPText[i].text == "MAX")
+                UIManager.instance.battleRPNotEnough[i].SetActive(true);
+            else if (i < DeckManager.instance.deck.Count && int.Parse(UIManager.instance.battleDeckRingRPText[i].text) <= rp)
                 UIManager.instance.battleRPNotEnough[i].SetActive(false);
             else UIManager.instance.battleRPNotEnough[i].SetActive(true);
         }
