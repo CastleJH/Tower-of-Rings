@@ -81,7 +81,7 @@ public class BattleManager : MonoBehaviour
         while (newMonsterID < numGenMonster)
         {
             //몬스터 능력치 배율을 조정한다.
-            float scale = 2.0f;     //일단은 페이즈 1개에 스테이지 구분없이 하는 중이므로 고정해놨다.
+            float scale = 0.5f;     //일단은 페이즈 1개에 스테이지 구분없이 하는 중이므로 고정해놨다.
             //이 부분은 후에 페이즈 3개를 모두 플레이하고 스테이지 개념이 생길 때 넣는다.
             /*if (GameManager.instance.floor == 7) scale = 4.0f;
             else scale = 0.5f * (GameManager.instance.floor + 1);

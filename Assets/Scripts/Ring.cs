@@ -44,6 +44,7 @@ public class Ring : MonoBehaviour
     int curseStack;            //저주 링의 공격 당 쌓는 스택
     Amplifier amplifier;        //증폭
     float executionRate;      //처형 기준 HP 비율
+    public int growStack;        //성장링의 공격력 증가 스택
 
     void Awake()
     {
@@ -135,6 +136,9 @@ public class Ring : MonoBehaviour
             case 24:
                 executionRate = 0.1f;
                 break;
+            case 26:
+                growStack = 0;
+                break;
             default:
                 break;
         }
@@ -206,6 +210,7 @@ public class Ring : MonoBehaviour
                 case 14:
                 case 20:
                 case 24:
+                case 26:
                     if (commanderNearest != null && commanderNearest.commanderTarget != null && Random.Range(0.0f, 1.0f) < commanderNearest.curEFF) //사령관 대상인 경우
                     {
                         bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
@@ -374,6 +379,10 @@ public class Ring : MonoBehaviour
                 monster.AE_Execution(curATK, executionRate);
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
+            case 26:
+                monster.AE_Grow(curATK, this);
+                monster.PlayParticleCollision(ringBase.id, 0.0f);
+                break;
             case 18:    //아무것도 없음
             case 19:
             case 22:
@@ -419,6 +428,7 @@ public class Ring : MonoBehaviour
                     case 1: //타 1 타 0.5
                     case 10:
                     case 20:
+                    case 26:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(1.0f);
                         ring.ChangeCurNumTarget(0.5f);
                         break;
@@ -497,6 +507,7 @@ public class Ring : MonoBehaviour
                     case 1: //타 1 타 0.5
                     case 10:
                     case 20:
+                    case 26:
                         if (ring.ringBase.id == ringBase.id) ChangeCurNumTarget(1.0f);
                         ChangeCurNumTarget(0.5f);
                         break;
@@ -580,6 +591,7 @@ public class Ring : MonoBehaviour
                     case 1: //타 -1 타 -0.5
                     case 10:
                     case 20:
+                    case 26:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
                         ring.ChangeCurNumTarget(-0.5f);
                         break;

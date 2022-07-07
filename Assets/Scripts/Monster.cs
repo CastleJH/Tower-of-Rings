@@ -321,4 +321,15 @@ public class Monster : MonoBehaviour
         if (curHP - dmg < baseHP * rate) AE_DecreaseHP(-1, Color.red);
         else AE_DecreaseHP(dmg, new Color32(70, 70, 70, 255));
     }
+
+    //공격 이펙트: 성장
+    public void AE_Grow(float dmg, Ring ring)
+    {
+        AE_DecreaseHP(dmg, new Color32(30, 180, 30, 255));
+        if (curHP <= 0 && ring.growStack < 20)
+        {
+            ring.growStack++;
+            ring.ChangeCurATK(0.1f);
+        }
+    }
 }
