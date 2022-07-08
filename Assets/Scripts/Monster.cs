@@ -213,13 +213,7 @@ public class Monster : MonoBehaviour
             t.InitializeDamageText((Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
             t.gameObject.SetActive(true);
         }
-        else
-        {
-            curHP = 0;
-            DamageText t = GameManager.instance.GetDamageTextFromPool();
-            t.InitializeDamageText("X", transform.position, Color.black);
-            t.gameObject.SetActive(true);
-        }
+        else curHP = 0;
         SetHPText();
         CheckDead();
     }
@@ -318,7 +312,13 @@ public class Monster : MonoBehaviour
     public void AE_Execution(float dmg, float rate)
     {
         if (baseMonster.type > 2) rate *= 0.5f;
-        if (curHP - dmg < baseHP * rate) AE_DecreaseHP(-1, Color.red);
+        if (curHP - dmg < baseHP * rate)
+        {
+            AE_DecreaseHP(-1, Color.red);
+            DamageText t = GameManager.instance.GetDamageTextFromPool();
+            t.InitializeDamageText("처형!", transform.position, new Color32(70, 70, 70, 255));
+            t.gameObject.SetActive(true);
+        }
         else AE_DecreaseHP(dmg, new Color32(70, 70, 70, 255));
     }
 
@@ -340,4 +340,32 @@ public class Monster : MonoBehaviour
         movedDistance = 0;
     }
 
+    //공격 이펙트: 추적
+    public void AE_Chase(float dmg, float radius)
+    {
+        Monster monster;
+        for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
+        {
+            monster = BattleManager.instance.monsters[i];
+            if (Vector2.Distance(transform.position, monster.transform.position) < radius)
+                monster.AE_DecreaseHP(dmg, new Color32(100, 0, 0, 255));
+        }
+    }
+
+    //공격 이펙트: 즉사
+    public void AE_InstantDeath(float dmg, float prob)
+    {
+        if (Random.Range(0.0f, 1.0f) < prob)
+        {
+            if (baseMonster.type > 2) AE_DecreaseHP(curHP * prob * 0.5f, new Color32(80, 80, 80, 255));
+            else
+            {
+                AE_DecreaseHP(-1, Color.black);
+                DamageText t = GameManager.instance.GetDamageTextFromPool();
+                t.InitializeDamageText("즉사!", transform.position, new Color32(80, 80, 80, 255));
+                t.gameObject.SetActive(true);
+            }
+        }
+        else AE_DecreaseHP(dmg, new Color32(80, 80, 80, 255));
+    }
 }

@@ -24,6 +24,8 @@ public class DeckManager : MonoBehaviour
     int ringNumber;    //링 생성시 부여하는 구분 번호
     public bool isAngelEffect;     //천사 링의 효과가 유효한지 여부
     public Ring angelRing;  //생성한 천사링
+    public int sleepActivated;    //유효한 동면 링의 수
+    public int sleepGenerated; //생성한 동면 링의 수
 
     //기타
     int ringLayerMask;  //링 레이어마스크
@@ -67,9 +69,10 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
-        AddRingToDeck(25);
-        AddRingToDeck(26);
-        AddRingToDeck(27);
+        AddRingToDeck(28);
+        AddRingToDeck(29);
+        AddRingToDeck(32);
+        AddRingToDeck(18);
         //AddRingToDeck(7);   //공
         //AddRingToDeck(14);  //속
         //AddRingToDeck(10);  //타
@@ -86,6 +89,9 @@ public class DeckManager : MonoBehaviour
         ringNumber = 0;
 
         isAngelEffect = false;
+        angelRing = null;
+        sleepActivated = 0;
+        sleepGenerated = 0;
     }
 
     //사용자 입력을 받는다.
@@ -181,10 +187,25 @@ public class DeckManager : MonoBehaviour
                     isAngelEffect = true;
                 }
             }
+
+            if (genRing.ringBase.id == 32)  //동면링이라면 아직 3개 미만으로 생성한 경우만 생성
+            {
+                if (UIManager.instance.battleDeckRingRPText[deckIdx].text == "MAX")
+                {
+                    GameManager.instance.ReturnRingToPool(genRing);
+                    return;
+                }
+                else
+                {
+                    if (++sleepGenerated == 3) UIManager.instance.SetBattleDeckRingRPText(deckIdx, -1);
+                    sleepActivated++;
+                }
+            }
+
             genRing.PutIntoBattle(ringNumber++);
             rings.Add(genRing);
             GetCommanderNearestForAllRings();
-            if (deck[deckIdx] != 25 && deck[deckIdx] != 27) UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));  //다음 필요 RP값을 계산한다.
+            if (deck[deckIdx] != 25 && deck[deckIdx] != 27 && deck[deckIdx] != 32) UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));  //다음 필요 RP값을 계산한다.
             BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - rpCost);
         }
         else GameManager.instance.ReturnRingToPool(genRing);

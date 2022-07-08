@@ -45,6 +45,7 @@ public class Ring : MonoBehaviour
     Amplifier amplifier;        //증폭
     float executionRate;      //처형 기준 HP 비율
     public int growStack;        //성장링의 공격력 증가 스택
+    float chaseAttackRadius;         //추격의 피해 범위
 
     void Awake()
     {
@@ -71,6 +72,9 @@ public class Ring : MonoBehaviour
                         break;
                     case 22:
                         BombardAttack();
+                        break;
+                    case 32:
+                        if (DeckManager.instance.sleepActivated == 3) TryShoot();
                         break;
                     default:
                         TryShoot();
@@ -139,6 +143,9 @@ public class Ring : MonoBehaviour
             case 26:
                 growStack = 0;
                 break;
+            case 28:
+                chaseAttackRadius = 1.5f;
+                break;
             default:
                 break;
         }
@@ -171,6 +178,7 @@ public class Ring : MonoBehaviour
                 case 16:
                 case 25:
                 case 27:
+                case 32:
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
                     for (int i = 0; i < numTarget; i++)
                     {
@@ -212,6 +220,7 @@ public class Ring : MonoBehaviour
                 case 20:
                 case 24:
                 case 26:
+                case 29:
                     if (commanderNearest != null && commanderNearest.commanderTarget != null && Random.Range(0.0f, 1.0f) < commanderNearest.curEFF) //사령관 대상인 경우
                     {
                         bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
@@ -297,6 +306,29 @@ public class Ring : MonoBehaviour
                         if (commanderTarget == null || commanderTarget.movedDistance < targets[i].movedDistance)
                             commanderTarget = targets[i];
                     break;
+                case 28: //주변에 가장 몬스터가 많이 있는 몬스터 고르기
+                    int maxID = -1;
+                    int maxHave = 0;
+                    targets = targets.OrderByDescending(x => x.movedDistance).ToList();
+                    for (int j = 0; j < targets.Count; j++)
+                    {
+                        int tmpHave = 0;
+                        for (int k = j - 1; k >= 0; k--)
+                            if (Vector2.Distance(targets[k].transform.position, targets[j].transform.position) < chaseAttackRadius) tmpHave++;
+                            else break;
+                        for (int k = j; k < targets.Count; k++)
+                            if (Vector2.Distance(targets[k].transform.position, targets[j].transform.position) < chaseAttackRadius) tmpHave++;
+                            else break;
+                        if (tmpHave > maxHave)
+                        {
+                            maxHave = tmpHave;
+                            maxID = j;
+                        }
+                    }
+                    bullet = GameManager.instance.GetBulletFromPool(ringBase.id);
+                    bullet.InitializeBullet(this, targets[maxID]);
+                    bullet.gameObject.SetActive(true);
+                    break;
                 case 7: //발사 안함
                 case 11:
                 case 22:
@@ -325,6 +357,7 @@ public class Ring : MonoBehaviour
             case 15:
             case 25:
             case 27:
+            case 32:
                 monster.AE_DecreaseHP(curATK, new Color32(100, 0, 0, 255));
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
@@ -385,6 +418,14 @@ public class Ring : MonoBehaviour
                 monster.AE_Grow(curATK, this);
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
+            case 28:
+                monster.AE_Chase(curATK * (1.0f + (curNumTarget * 0.5f)), chaseAttackRadius);
+                monster.PlayParticleCollision(ringBase.id, 0.0f);
+                break;
+            case 29:
+                monster.AE_InstantDeath(curATK, curEFF);
+                monster.PlayParticleCollision(ringBase.id, 0.0f);
+                break;
             case 18:    //아무것도 없음
             case 19:
             case 22:
@@ -431,6 +472,7 @@ public class Ring : MonoBehaviour
                     case 10:
                     case 20:
                     case 26:
+                    case 32:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(1.0f);
                         ring.ChangeCurNumTarget(0.5f);
                         break;
@@ -477,6 +519,14 @@ public class Ring : MonoBehaviour
                         if (ring.ringBase.id == ringBase.id) ring.executionRate += 0.02f;
                         ring.ChangeCurSPD(-0.08f);
                         break;
+                    case 28:
+                        if (ring.ringBase.id == ringBase.id) ring.chaseAttackRadius += 0.15f;
+                        ring.ChangeCurATK(0.05f);
+                        break;
+                    case 29:
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(0.02f, '+');
+                        ring.ChangeCurEFF(0.05f, '*');
+                        break;
                     case 2: //효과 없음
                     case 19:
                     case 22:
@@ -511,6 +561,7 @@ public class Ring : MonoBehaviour
                     case 10:
                     case 20:
                     case 26:
+                    case 32:
                         if (ring.ringBase.id == ringBase.id) ChangeCurNumTarget(1.0f);
                         ChangeCurNumTarget(0.5f);
                         break;
@@ -557,6 +608,14 @@ public class Ring : MonoBehaviour
                         if (ring.ringBase.id == ringBase.id) executionRate += 0.02f;
                         ChangeCurSPD(-0.08f);
                         break;
+                    case 28:
+                        if (ring.ringBase.id == ringBase.id) chaseAttackRadius += 0.15f;
+                        ChangeCurATK(0.05f);
+                        break;
+                    case 29:
+                        if (ring.ringBase.id == ringBase.id) ChangeCurEFF(0.02f, '+');
+                        ChangeCurEFF(0.05f, '*');
+                        break;
                     case 2: //효과 없음
                     case 19:
                     case 22:
@@ -596,6 +655,7 @@ public class Ring : MonoBehaviour
                     case 10:
                     case 20:
                     case 26:
+                    case 32:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
                         ring.ChangeCurNumTarget(-0.5f);
                         break;
@@ -642,6 +702,14 @@ public class Ring : MonoBehaviour
                         if (ring.ringBase.id == ringBase.id) ring.executionRate -= 0.02f;
                         ring.ChangeCurSPD(0.08f);
                         break;
+                    case 28:
+                        if (ring.ringBase.id == ringBase.id) ring.chaseAttackRadius -= 0.15f;
+                        ring.ChangeCurATK(-0.05f);
+                        break;
+                    case 29:
+                        if (ring.ringBase.id == ringBase.id) ring.ChangeCurEFF(-0.02f, '+');
+                        ring.ChangeCurEFF(-0.05f, '*');
+                        break;
                     case 2: //효과 없음
                     case 19:
                     case 22:
@@ -670,6 +738,9 @@ public class Ring : MonoBehaviour
             case 23:
                 amplifier.RemoveFromBattle();
                 amplifier = null;
+                break;
+            case 32:
+                DeckManager.instance.sleepActivated--;
                 break;
             default:
                 break;
