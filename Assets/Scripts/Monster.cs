@@ -357,7 +357,7 @@ public class Monster : MonoBehaviour
     {
         if (Random.Range(0.0f, 1.0f) < prob)
         {
-            if (baseMonster.type > 2) AE_DecreaseHP(curHP * prob * 0.5f, new Color32(80, 80, 80, 255));
+            if (baseMonster.type > 2) AE_DecreaseHP(baseHP * prob * 0.5f, new Color32(80, 80, 80, 255));
             else
             {
                 AE_DecreaseHP(-1, Color.black);
