@@ -178,6 +178,8 @@ public class Ring : MonoBehaviour
                 case 16:
                 case 25:
                 case 27:
+                case 30:
+                case 31:
                 case 32:
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
                     for (int i = 0; i < numTarget; i++)
@@ -357,6 +359,8 @@ public class Ring : MonoBehaviour
             case 15:
             case 25:
             case 27:
+            case 30:
+            case 31:
             case 32:
                 monster.AE_DecreaseHP(curATK, new Color32(100, 0, 0, 255));
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
@@ -472,6 +476,8 @@ public class Ring : MonoBehaviour
                     case 10:
                     case 20:
                     case 26:
+                    case 30:
+                    case 31:
                     case 32:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(1.0f);
                         ring.ChangeCurNumTarget(0.5f);
@@ -561,6 +567,8 @@ public class Ring : MonoBehaviour
                     case 10:
                     case 20:
                     case 26:
+                    case 30:
+                    case 31:
                     case 32:
                         if (ring.ringBase.id == ringBase.id) ChangeCurNumTarget(1.0f);
                         ChangeCurNumTarget(0.5f);
@@ -655,6 +663,8 @@ public class Ring : MonoBehaviour
                     case 10:
                     case 20:
                     case 26:
+                    case 30:
+                    case 31:
                     case 32:
                         if (ring.ringBase.id == ringBase.id) ring.ChangeCurNumTarget(-1.0f);
                         ring.ChangeCurNumTarget(-0.5f);

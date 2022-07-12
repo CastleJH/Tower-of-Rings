@@ -180,6 +180,22 @@ public class Monster : MonoBehaviour
         //저주 링의 사망시 폭발 효과를 적용한다.
         if (curseStack != 0) AE_CurseDead();
 
+        //네크로 링의 사망을 카운팅한다.
+        if (DeckManager.instance.necroIdx != -1)
+        {
+
+            if (DeckManager.instance.necroCount < 20)
+            {
+                DeckManager.instance.necroCount++;
+                if (DeckManager.instance.necroCount >= 20)
+                {
+                    DeckManager.instance.necroCount = 20;
+                    UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, "20/20");
+                    BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp);
+                }
+                else UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, DeckManager.instance.necroCount.ToString() + "/20");
+            }
+        }
         //BattleManager.instance.totalGetGold += 10;
         //BattleManager.instance.totalKilledMonster++;
         //BattleManager.instance.rp += BattleManager.instance.genRP;

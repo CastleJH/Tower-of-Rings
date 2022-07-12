@@ -26,6 +26,10 @@ public class DeckManager : MonoBehaviour
     public Ring angelRing;  //생성한 천사링
     public int sleepActivated;    //유효한 동면 링의 수
     public int sleepGenerated; //생성한 동면 링의 수
+    float plantCoolTime;    //식물 링의 생성 쿨타임
+    int plantIdx;       //식물 링의 덱에서의 인덱스(0 이상인 경우만 쿨타임이 돌아간다)
+    public int necroCount;         //네크로 링의 사망 카운트
+    public int necroIdx;       //네크로 링의 덱에서의 인덱스
 
     //기타
     int ringLayerMask;  //링 레이어마스크
@@ -51,6 +55,20 @@ public class DeckManager : MonoBehaviour
         if (BattleManager.instance.isBattlePlaying)
         {
             if (isEditRing) GetInput(); //링 생성이 눌린 경우
+            if (plantIdx != -1)
+            {
+                if (plantCoolTime < 10)
+                {
+                    plantCoolTime += Time.deltaTime;
+                    if (plantCoolTime >= 10.0f)
+                    {
+                        plantCoolTime = 10.0f;
+                        UIManager.instance.SetBattleDeckRingRPText(plantIdx, "10.00");
+                        BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp);
+                    }
+                    else UIManager.instance.SetBattleDeckRingRPText(plantIdx, string.Format("{0:0.00}", plantCoolTime));
+                }
+            }
         }
     }
     
@@ -69,8 +87,8 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
-        AddRingToDeck(28);
-        AddRingToDeck(29);
+        AddRingToDeck(30);
+        AddRingToDeck(31);
         AddRingToDeck(32);
         AddRingToDeck(18);
         //AddRingToDeck(7);   //공
@@ -92,6 +110,10 @@ public class DeckManager : MonoBehaviour
         angelRing = null;
         sleepActivated = 0;
         sleepGenerated = 0;
+        plantCoolTime = 0.0f;
+        plantIdx = -1;
+        necroCount = 0;
+        necroIdx = -1;
     }
 
     //사용자 입력을 받는다.
@@ -160,16 +182,17 @@ public class DeckManager : MonoBehaviour
 
         //소모 rp값을 계산
         int deckIdx = deck.IndexOf(genRing.ringBase.id);
-        int rpCost = int.Parse(UIManager.instance.battleDeckRingRPText[deckIdx].text);
+        int rpCost;
+        if (!int.TryParse(UIManager.instance.battleDeckRingRPText[deckIdx].text, out rpCost)) rpCost = 0;
 
         //충분한 rp가 있다면 더 자세하게 생성 가능 여부 확인. 아니면 취소
         if (rpCost <= BattleManager.instance.rp)
         {
-            if (genRing.ringBase.id == 25)  //돌연변이라면 똑같은 확률로 다른 링으로 변경(천사, 식물, 네크로, 동면 링 제외)
+            if (genRing.ringBase.id == 25)  //돌연변이라면 똑같은 확률로 다른 링으로 변경(천사, 동면 링 제외)
             {
                 int mutantIdx;
                 do mutantIdx = Random.Range(0, deck.Count);
-                while (deck[mutantIdx] == 27 || deck[mutantIdx] == 30 || deck[mutantIdx] == 31 || deck[mutantIdx] == 32);
+                while (deck[mutantIdx] == 27 || deck[mutantIdx] == 32);
                 genRing.InitializeRing(deck[mutantIdx]);
             }
 
@@ -182,10 +205,24 @@ public class DeckManager : MonoBehaviour
                 }
                 else
                 {
-                    UIManager.instance.SetBattleDeckRingRPText(deckIdx, -1);
+                    UIManager.instance.SetBattleDeckRingRPText(deckIdx, "MAX");
                     angelRing = genRing;
                     isAngelEffect = true;
                 }
+            }
+
+            if (genRing.ringBase.id == 30)
+            {
+                plantCoolTime = 0.0f;
+                plantIdx = deckIdx;
+                UIManager.instance.SetBattleDeckRingRPText(deckIdx, "0.00");
+            }
+            
+            if (genRing.ringBase.id == 31)
+            {
+                necroCount = 0;
+                necroIdx = deckIdx;
+                UIManager.instance.SetBattleDeckRingRPText(deckIdx, "0/20");
             }
 
             if (genRing.ringBase.id == 32)  //동면링이라면 아직 3개 미만으로 생성한 경우만 생성
@@ -197,7 +234,8 @@ public class DeckManager : MonoBehaviour
                 }
                 else
                 {
-                    if (++sleepGenerated == 3) UIManager.instance.SetBattleDeckRingRPText(deckIdx, -1);
+                    if (++sleepGenerated == 3) UIManager.instance.SetBattleDeckRingRPText(deckIdx, "MAX");
+                    else UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));
                     sleepActivated++;
                 }
             }
@@ -205,7 +243,7 @@ public class DeckManager : MonoBehaviour
             genRing.PutIntoBattle(ringNumber++);
             rings.Add(genRing);
             GetCommanderNearestForAllRings();
-            if (deck[deckIdx] != 25 && deck[deckIdx] != 27 && deck[deckIdx] != 32) UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));  //다음 필요 RP값을 계산한다.
+            if (deck[deckIdx] != 25 && deck[deckIdx] != 27 && deck[deckIdx] != 30 && deck[deckIdx] != 31 && deck[deckIdx] != 32) UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));  //다음 필요 RP값을 계산한다.
             BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - rpCost);
         }
         else GameManager.instance.ReturnRingToPool(genRing);

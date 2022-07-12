@@ -137,15 +137,30 @@ public class BattleManager : MonoBehaviour
     //현재 RP량을 바꾼다.
     public void ChangeCurrentRP(float _rp)
     {
+        int consumeRP;
         rp = _rp;
         UIManager.instance.battleRPText.text = ((int)rp).ToString();
-        for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)    //RP량이 충분한 링/생성 최대에 도달하지 않은 링만 버튼 활성화(=버튼 가림막 비활성화)
+        for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)    //RP값 변경 후 생성 가능한 링만 버튼 활성화(=버튼 가림막 비활성화)
         {
-            if (i < DeckManager.instance.deck.Count && UIManager.instance.battleDeckRingRPText[i].text == "MAX")
-                UIManager.instance.battleRPNotEnough[i].SetActive(true);
-            else if (i < DeckManager.instance.deck.Count && int.Parse(UIManager.instance.battleDeckRingRPText[i].text) <= rp)
-                UIManager.instance.battleRPNotEnough[i].SetActive(false);
-            else UIManager.instance.battleRPNotEnough[i].SetActive(true);
+            if (int.TryParse(UIManager.instance.battleDeckRingRPText[i].text, out consumeRP))
+            {
+                if (consumeRP <= rp) UIManager.instance.battleRPNotEnough[i].SetActive(false);
+                else UIManager.instance.battleRPNotEnough[i].SetActive(true);
+            }
+            else
+            {
+                Debug.Log("no parse: " + i.ToString());
+                switch (UIManager.instance.battleDeckRingRPText[i].text)
+                {
+                    case "10.00":
+                    case "20/20":
+                        UIManager.instance.battleRPNotEnough[i].SetActive(false);
+                        break;
+                    default:
+                        UIManager.instance.battleRPNotEnough[i].SetActive(true);
+                        break;
+                }
+            }
         }
         if (rp < 10) UIManager.instance.battleRPNotEnough[DeckManager.instance.maxDeckLength].SetActive(true);
         else UIManager.instance.battleRPNotEnough[DeckManager.instance.maxDeckLength].SetActive(false);

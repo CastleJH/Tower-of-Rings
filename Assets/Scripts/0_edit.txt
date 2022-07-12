@@ -1,7 +1,7 @@
 * Ring.cs
 	0) PutIntoBattle()
 	1) TryShoot() **
-	3) AttackEffct() **
+	3) AttackEffect() **
 	4) ApplySynergy() **
 	5) RemoveSynergy() **
 
@@ -12,7 +12,7 @@
 	6) InitializeDeck()
 
 * 구현 필요 목록
-	17, (26), 27, 28, 29, 30, 31, 32
+	17, 31, 32
 
 
 * z좌표 

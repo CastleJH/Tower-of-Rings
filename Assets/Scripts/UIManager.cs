@@ -57,13 +57,20 @@ public class UIManager : MonoBehaviour
         //checkBattleRingDetailOn = false;
     }
 
-    //전투 UI에서 덱에 있는 링의 RP 비용 텍스트를 갱신한다. rp를 -1로 주면 MAX로 바꾼다.
+    //전투 UI에서 덱에 있는 링의 RP 비용 텍스트를 갱신한다.
     public void SetBattleDeckRingRPText(int index, int rp)
     {
         if (index >= DeckManager.instance.maxDeckLength) return;
         if (index >= DeckManager.instance.deck.Count) battleDeckRingRPText[index].text = " ";
-        else if (rp == -1) battleDeckRingRPText[index].text = "MAX";
         else battleDeckRingRPText[index].text = rp.ToString();
+    }
+
+    //전투 UI에서 덱에 있는 링의 RP 비용 텍스트를 문자열로 갱신한다.
+    public void SetBattleDeckRingRPText(int index, string str)
+    {
+        if (index >= DeckManager.instance.maxDeckLength) return;
+        if (index >= DeckManager.instance.deck.Count) battleDeckRingRPText[index].text = " ";
+        battleDeckRingRPText[index].text = str;
     }
 
     //전투 UI에서 덱에 있는 링의 이미지를 갱신한다.
