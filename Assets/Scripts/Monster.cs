@@ -26,6 +26,7 @@ public class Monster : MonoBehaviour
     public TextMesh hpText;   //HP 텍스트
 
     //기타 변수
+    bool isInBattle;     //살아서 전투에 참여중인지 여부
     float snowTime;         //눈꽃의 슬로우 효과가 지속된 시간
     float snowEndTime;      //눈꽃의 슬로우 효과가 끝나는 시간
     Dictionary<int, float> poisonDmg;   //맹독의 데미지
@@ -47,7 +48,7 @@ public class Monster : MonoBehaviour
 
     void Update()
     {
-        if (curHP > 0)  //살아있는 경우에만 동작할 수 있음.
+        if (isInBattle)
         {
             curSPD = baseSPD;
 
@@ -125,6 +126,7 @@ public class Monster : MonoBehaviour
         SetHPText();
 
         //기타 변수
+        isInBattle = true;
         snowEndTime = -1.0f;
         poisonDmg.Clear();
         poisonTime.Clear();
@@ -156,21 +158,31 @@ public class Monster : MonoBehaviour
     //죽었는지 확인한다. 사망 애니메이션 후 잠시 뒤 게임에서 자신을 제거한다.
     void CheckDead()
     {
-        if (curHP <= 0)
+        if (curHP <= 0 && isInBattle)
         {
-            RemoveFromBattle(0.5f);
+            isInBattle = false;
+            RemoveFromBattle(true);
         }
     }
 
-    //게임에서 time초 뒤 제거한다. time = 0.0f면 단순 제거이지만, 양수라면 사망 효과를 낸다.
-    public void RemoveFromBattle(float time)
+    //게임에서 제거한다. isDead = true면 사망으로 인한 효과를 낸다.
+    public void RemoveFromBattle(bool isDead)
     {
-        if (time == 0.0f) InvokeRemoveFromBattle();
-        else
+        if (!gameObject.activeSelf) return;
+
+        curHP = 0;  //HP를 0으로 바꾼다.
+        BattleManager.instance.monsters.Remove(this);
+        if (isDead)
         {
             ApplyDeadEffect();
-            Invoke("InvokeRemoveFromBattle", time);
+            Invoke("InvokeReturnMonsterToPool", 0.5f);
         }
+        else InvokeReturnMonsterToPool();
+    }
+
+    void InvokeReturnMonsterToPool()
+    {
+        GameManager.instance.ReturnMonsterToPool(this);
     }
 
     //사망 효과를 적용한다. (골드 획득도 포함)
@@ -197,21 +209,11 @@ public class Monster : MonoBehaviour
         }
 
         //보스 몬스터면 20골드 획득한다. 일반 몬스터면 66%확률로 1, 33%확률로 2골드 획득한다.
-        if (IsNormalMonster()) BattleManager.instance.goldGet += Mathf.Clamp(Random.Range(0, 3), 1, 2);
-        else BattleManager.instance.goldGet += 20;
-    }
-
-    //실제로 게임에서 제거한다.
-    void InvokeRemoveFromBattle()
-    {
-        if (!gameObject.activeSelf) return;
-
-        BattleManager.instance.monsters.Remove(this);
-
-        //HP를 0으로 바꾼다.
-        curHP = 0;
-
-        GameManager.instance.ReturnMonsterToPool(this);
+        int g;
+        if (IsNormalMonster()) g = Mathf.Clamp(Random.Range(0, 3), 1, 2);
+        else g = 20;
+        BattleManager.instance.goldGet += g;
+        Debug.Log(g);
     }
 
     //일반 몬스터인지/엘리트 몬스터인지 알려준다.

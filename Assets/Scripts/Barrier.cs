@@ -30,7 +30,6 @@ public class Barrier : MonoBehaviour
     //결계에 몬스터가 들어오면 이동 불가 상태로 만든다.
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.tag);
         if (collision.tag == "Monster")
         {
             Monster monster = collision.GetComponent<Monster>();

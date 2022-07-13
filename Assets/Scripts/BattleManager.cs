@@ -115,9 +115,9 @@ public class BattleManager : MonoBehaviour
                 StopAllCoroutines();
 
                 //몬스터 리스트 정리
-                for (int i = monsters.Count - 1; i >= 0; i--)
+                /*for (int i = monsters.Count - 1; i >= 0; i--)
                     monsters[i].RemoveFromBattle(0.0f);
-                monsters.Clear();
+                monsters.Clear();*/
 
                 float greedyATK = -1.0f;
                 float greedyEFF = 0.0f;
