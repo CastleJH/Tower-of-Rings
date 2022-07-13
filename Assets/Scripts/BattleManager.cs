@@ -13,9 +13,10 @@ public class BattleManager : MonoBehaviour
 
     //전투 별 변수
     public bool isBattlePlaying;  //게임 진행 중인지 여부
-    public bool isBattleOver;       //게임 오버의 여부(몬스터가 엔드라인에 닿았음)
     public int pathID;      //현재 전장 번호
     public float rp;        //현재 보유 RP
+    public int goldGet;
+    public int emeraldGet;
 
     //페이즈 별 변수
     public int phase;   //현재 페이즈
@@ -47,8 +48,9 @@ public class BattleManager : MonoBehaviour
     {
         //전투 별 변수 초기화
         isBattlePlaying = true;
-        isBattleOver = false;
         pathID = 0; //일단 임시로 고정했다. 실제로는 랜덤으로 정해져야함.
+        goldGet = 0;
+        emeraldGet = 0;
 
         //덱의 이미지/RP 비용등을 초기화한다.
         UIManager.instance.SetBattleDeckRingImageAndRPAll();
@@ -81,11 +83,10 @@ public class BattleManager : MonoBehaviour
         while (newMonsterID < numGenMonster)
         {
             //몬스터 능력치 배율을 조정한다.
-            float scale = 2.0f;     //일단은 페이즈 1개에 스테이지 구분없이 하는 중이므로 고정해놨다.
-            //이 부분은 후에 페이즈 3개를 모두 플레이하고 스테이지 개념이 생길 때 넣는다.
-            /*if (GameManager.instance.floor == 7) scale = 4.0f;
+            float scale;
+            if (GameManager.instance.floor == 7) scale = 4.0f;
             else scale = 0.5f * (GameManager.instance.floor + 1);
-            scale += 0.05f * (GameManager.instance.stage - 1);*/
+            scale += 0.05f * (phase - 1);
 
             //몬스터 생성
             Monster monster = GameManager.instance.GetMonsterFromPool();
@@ -103,34 +104,59 @@ public class BattleManager : MonoBehaviour
     //배틀이 종료되었는지 확인한다.
     void CheckBattleOver()
     {
-        //현재는 클리어든 오버든 같은 동작을 하도록 한 상태임.
-        if ((monsters.Count == 0 && newMonsterID == numGenMonster) || isBattleOver)
+        if (monsters.Count == 0 && newMonsterID == numGenMonster)
         {
-            Debug.Log("End Battle");
-
-            //배틀을 종료한다.
-            isBattlePlaying = false;
-
-            //몬스터 생성 종료
-            StopAllCoroutines();
-
-            //몬스터 리스트 정리
-            for (int i = monsters.Count - 1; i >= 0; i--)
-                monsters[i].RemoveFromBattle(0.0f);
-            monsters.Clear();
-
-            //덱 정리
-            for (int i = 0; i < DeckManager.instance.rings.Count; i++)
-                GameManager.instance.ReturnRingToPool(DeckManager.instance.rings[i]);
-            DeckManager.instance.rings.Clear();
-
-
-            //링 생성/제거 중이었다면 이것도 정리
-            if (DeckManager.instance.isEditRing)
+            if (phase == 3)     //마지막 페이즈였다면 보상을 주고 전투를 종료한다.
             {
-                if (DeckManager.instance.genRing != null) GameManager.instance.ReturnRingToPool(DeckManager.instance.genRing);
-                else DeckManager.instance.ringRemover.transform.position = new Vector3(100, 100, 0);
-            }   
+                //배틀을 종료한다.
+                isBattlePlaying = false;
+
+                //몬스터 생성 종료
+                StopAllCoroutines();
+
+                //몬스터 리스트 정리
+                for (int i = monsters.Count - 1; i >= 0; i--)
+                    monsters[i].RemoveFromBattle(0.0f);
+                monsters.Clear();
+
+                float greedyATK = -1.0f;
+                float greedyEFF = 0.0f;
+
+                //덱 정리
+                for (int i = 0; i < DeckManager.instance.rings.Count; i++)
+                {
+                    if (DeckManager.instance.rings[i].ringBase.id == 17)
+                    {
+                        greedyATK = DeckManager.instance.rings[i].curATK;
+                        greedyEFF = DeckManager.instance.rings[i].curEFF;
+                    }
+                    GameManager.instance.ReturnRingToPool(DeckManager.instance.rings[i]);
+                }
+                DeckManager.instance.rings.Clear();
+
+                //링 생성/제거 중이었다면 이것도 정리
+                if (DeckManager.instance.isEditRing)
+                {
+                    if (DeckManager.instance.genRing != null) GameManager.instance.ReturnRingToPool(DeckManager.instance.genRing);
+                    else DeckManager.instance.ringRemover.transform.position = new Vector3(100, 100, 0);
+                }
+
+                emeraldGet = 0;
+                if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림
+                {
+                    goldGet += (int)(goldGet * greedyATK * 0.01f);
+                    float tmp = Random.Range(0.0f, 1.0f);
+                    Debug.Log(tmp);
+                    if (tmp <= greedyATK * 0.01f + greedyEFF) emeraldGet = Random.Range(3, 6);
+                }
+                GameManager.instance.ChangeGold(goldGet);
+                GameManager.instance.ChangeEmerald(emeraldGet);
+            }
+            else
+            {
+                phase++;
+                StartPhase();
+            }
         }
     }
 
@@ -149,7 +175,6 @@ public class BattleManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("no parse: " + i.ToString());
                 switch (UIManager.instance.battleDeckRingRPText[i].text)
                 {
                     case "10.00":

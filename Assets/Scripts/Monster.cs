@@ -158,25 +158,24 @@ public class Monster : MonoBehaviour
     {
         if (curHP <= 0)
         {
-            /*추가 구현 필요 - 사망 애니메이션*/
             RemoveFromBattle(0.5f);
         }
     }
 
-    //게임에서 time초 뒤 제거한다.
+    //게임에서 time초 뒤 제거한다. time = 0.0f면 단순 제거이지만, 양수라면 사망 효과를 낸다.
     public void RemoveFromBattle(float time)
     {
         if (time == 0.0f) InvokeRemoveFromBattle();
-        else Invoke("InvokeRemoveFromBattle", time);
+        else
+        {
+            ApplyDeadEffect();
+            Invoke("InvokeRemoveFromBattle", time);
+        }
     }
 
-    //실제로 게임에서 제거한다. 링에 의한 각종 사망 효과를 적용한다. 골드/RP도 증가시킨다.
-    void InvokeRemoveFromBattle()
+    //사망 효과를 적용한다. (골드 획득도 포함)
+    void ApplyDeadEffect()
     {
-        if (!gameObject.activeSelf) return;
-
-        BattleManager.instance.monsters.Remove(this);
-
         //저주 링의 사망시 폭발 효과를 적용한다.
         if (curseStack != 0) AE_CurseDead();
 
@@ -196,14 +195,18 @@ public class Monster : MonoBehaviour
                 else UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, DeckManager.instance.necroCount.ToString() + "/20");
             }
         }
-        //BattleManager.instance.totalGetGold += 10;
-        //BattleManager.instance.totalKilledMonster++;
-        //BattleManager.instance.rp += BattleManager.instance.genRP;
-        //UIManager.instance.SetIngameTotalRPText();
 
+        //보스 몬스터면 20골드 획득한다. 일반 몬스터면 66%확률로 1, 33%확률로 2골드 획득한다.
+        if (IsNormalMonster()) BattleManager.instance.goldGet += Mathf.Clamp(Random.Range(0, 3), 1, 2);
+        else BattleManager.instance.goldGet += 20;
+    }
 
-        //if (growRings.Count > 0) AE_GrowDead();
-        //if (DeckManager.instance.isNecro) DeckManager.instance.necroCnt++;
+    //실제로 게임에서 제거한다.
+    void InvokeRemoveFromBattle()
+    {
+        if (!gameObject.activeSelf) return;
+
+        BattleManager.instance.monsters.Remove(this);
 
         //HP를 0으로 바꾼다.
         curHP = 0;
@@ -327,7 +330,7 @@ public class Monster : MonoBehaviour
     //공격 이펙트: 처형
     public void AE_Execution(float dmg, float rate)
     {
-        if (baseMonster.type > 2) rate *= 0.5f;
+        if (!IsNormalMonster()) rate *= 0.5f;
         if (curHP - dmg < baseHP * rate)
         {
             AE_DecreaseHP(-1, Color.red);
@@ -373,7 +376,7 @@ public class Monster : MonoBehaviour
     {
         if (Random.Range(0.0f, 1.0f) < prob)
         {
-            if (baseMonster.type > 2) AE_DecreaseHP(baseHP * prob * 0.5f, new Color32(80, 80, 80, 255));
+            if (!IsNormalMonster()) AE_DecreaseHP(baseHP * prob * 0.5f, new Color32(80, 80, 80, 255));
             else
             {
                 AE_DecreaseHP(-1, Color.black);

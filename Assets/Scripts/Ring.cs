@@ -68,6 +68,7 @@ public class Ring : MonoBehaviour
                         shootCoolTime = 0.0f;
                         break;
                     case 11:
+                    case 17:
                     case 23:
                         break;
                     case 22:
@@ -333,6 +334,7 @@ public class Ring : MonoBehaviour
                     break;
                 case 7: //발사 안함
                 case 11:
+                case 17:
                 case 22:
                 case 23:
                     break;
@@ -430,6 +432,7 @@ public class Ring : MonoBehaviour
                 monster.AE_InstantDeath(curATK, curEFF);
                 monster.PlayParticleCollision(ringBase.id, 0.0f);
                 break;
+            case 17:
             case 18:    //아무것도 없음
             case 19:
             case 22:
@@ -534,6 +537,7 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurEFF(0.05f, '*');
                         break;
                     case 2: //효과 없음
+                    case 17:
                     case 19:
                     case 22:
                     case 23:
@@ -625,6 +629,7 @@ public class Ring : MonoBehaviour
                         ChangeCurEFF(0.05f, '*');
                         break;
                     case 2: //효과 없음
+                    case 17:
                     case 19:
                     case 22:
                     case 23:
@@ -721,6 +726,7 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurEFF(-0.05f, '*');
                         break;
                     case 2: //효과 없음
+                    case 17:
                     case 19:
                     case 22:
                     case 23:

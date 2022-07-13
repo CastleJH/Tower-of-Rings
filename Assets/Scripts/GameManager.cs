@@ -44,6 +44,14 @@ public class GameManager : MonoBehaviour
     private Queue<Amplifier> amplifierPool;
     private Queue<DamageText> damageTextPool;
 
+    //게임 진행상황 관련 변수
+    private int playerMaxHP;
+    private int playerCurHP;
+    public int gold;
+    public int emerald;
+    public int floor;
+
+
     void Awake()
     {
         instance = this;
@@ -69,6 +77,18 @@ public class GameManager : MonoBehaviour
             bulletPool[i] = new Queue<Bullet>();
             particlePool[i] = new Queue<ParticleChecker>();
         }
+
+        InitializeGame();
+    }
+
+    //게임을 초기화한다.
+    void InitializeGame()
+    {
+        playerMaxHP = 100;
+        playerCurHP = 100;
+        gold = 0;
+        emerald = 0;
+        floor = 1;
     }
 
     //"*_db.csv"를 읽어온다.
@@ -291,5 +311,32 @@ public class GameManager : MonoBehaviour
         }
         damageText.gameObject.SetActive(false);
         damageTextPool.Enqueue(damageText);
+    }
+
+    //플레이어의 현재 HP를 바꾼다. 0이라면 게임오버.
+    public void ChangePlayerCurHP(int _HP)
+    {
+        playerCurHP = Mathf.Clamp(playerCurHP + _HP, 0, playerMaxHP);
+        if (playerCurHP == 0)
+        {
+            Time.timeScale = 0.0f;
+            Debug.Log("GAME OVER!!!");
+        }
+    }
+
+    //골드를 바꾼다.
+    public bool ChangeGold(int _gold)
+    {
+        if (gold + _gold < 0) return false;
+        gold += _gold;
+        return true;
+    }
+    
+    //에메랄드를 바꾼다.
+    public bool ChangeEmerald(int _emerald)
+    {
+        if (emerald + _emerald < 0) return false;
+        emerald += _emerald;
+        return true;
     }
 }

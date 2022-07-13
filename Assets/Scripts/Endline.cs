@@ -15,7 +15,13 @@ public class Endline : MonoBehaviour
                 for (int i = 0; i < BattleManager.instance.monsters.Count; i++)
                     BattleManager.instance.monsters[i].AE_Angel();
             }
-            else BattleManager.instance.isBattleOver = true;
+            else
+            {
+                Monster monster = collision.GetComponent<Monster>();
+                if (monster.IsNormalMonster()) GameManager.instance.ChangePlayerCurHP(-1);
+                else GameManager.instance.ChangePlayerCurHP(-20);
+                monster.RemoveFromBattle(0.0f);
+            }
         }
     }
 }
