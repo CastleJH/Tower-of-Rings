@@ -66,26 +66,46 @@ void GenerateStage() {
 			}
 			if (isSpecial) specials.push_back(cur);
 		}
-	} while (roomNum != genNum || specials.size() < minSpecial);
+	} while (roomNum != genNum || specials.size() != minSpecial);
 
-	//특수 방들 중 마지막을 빼고 랜덤한 미스터리 방으로 만듦
-	for (int i = 1; i < specials.size() - 1; i++)
-		room[specials[i].first][specials[i].second] = 2 + rand() % 6;
+
+	vector<bool> occupied(minSpecial, false);
+	//특수 방들 중 가장 먼 방을 보스 방으로 만듦
+	room[specials[minSpecial - 1].first][specials[minSpecial - 1].second] = 9;
+	occupied[minSpecial - 1] = true;
 
 	//상점을 만들어야 하는 경우 가장 시작점과 가까운 특수 방을 상점으로 만듦
-	if (store) room[specials[0].first][specials[0].second] = 8;
+	if (store) {
+		room[specials[0].first][specials[0].second] = 8;
+		occupied[0] = true;
+	}
 
-	//특수 방들 중 가장 먼 방을 보스 방으로 만듦
-	room[specials[specials.size() - 1].first][specials[specials.size() - 1].second] = 9;
+	//특수 방들 중 마지막을 빼고 랜덤한 미스터리 방으로 만듦. 유물 방은 반드시 1개만, 제련/링의 방은 반드시 1개 이상 생성함.
+	for (int i = 2; i <= 4; i++) {
+		int idx;
+		do {
+			idx = rand() % minSpecial;
+		} while (occupied[idx]);
+		room[specials[idx].first][specials[idx].second] = i;
+		occupied[idx] = true;
+	}
+	for (int i = 0; i < minSpecial; i++) {
+		if (occupied[i]) continue;
+		do {
+			room[specials[i].first][specials[i].second] = 2 + rand() % 6;
+		} while (room[specials[i].first][specials[i].second] == 4);
+	}
+
+
 }
 
 bool CheckValidInput() {
 	if (roomNum > 32) {
-		cout << "방 개수가 너무 많습니다.\n\n방 개수(32 이하) | 최소 미스터리 개수(상점 포함, min(방/2, 9) 이하) | 상점 생성여부(0, 1)? (공백으로 구분하여 입력)\n";
+		cout << "방 개수가 너무 많습니다.\n\n방 수(<=32) | 미스터리 수(3<=x<=min(방/2, 9(상점포함이면 8))) | 상점 여부(0, 1)? (공백 구분 입력)\n";
 		return false;
 	}
-	if (minSpecial > min(9, roomNum / 2)) {
-		cout << "미스터리 방 수가 너무 많습니다\n\n방 개수(32 이하) | 최소 미스터리 개수(상점 포함, min(방/2, 9) 이하) | 상점 생성여부(0, 1)? (공백으로 구분하여 입력)\n";
+	if (minSpecial > min(9 - store, roomNum / 2) || minSpecial < 3) {
+		cout << "미스터리 방 수가 올바르지 않습니다.\n\n방 수(<=32) | 미스터리 수(3<=x<=min(방/2, 9(상점포함이면 8))) | 상점 여부(0, 1)? (공백 구분 입력)\n";
 		return false;
 	}
 	return true;
@@ -116,17 +136,20 @@ void PrintStage() {
 int main() {
 	srand(time(0));
 
-	cout << "방 개수(32 이하) | 최소 미스터리 개수(상점 포함, min(방/2, 9) 이하) | 상점 생성여부(0, 1)? (공백으로 구분하여 입력)\n";
+	cout << "방 수(<=32) | 미스터리 수(3<=x<=min(방/2, 9(상점포함이면 8))) | 상점 여부(0, 1)? (공백 구분 입력)\n";
 
-	//생성할 방 개수, 최소 미스터리 방 개수(상점포함), 상점 생성 여부를 입력받는다.
+	//생성할 방 개수, 미스터리 방 개수(상점포함), 상점 생성 여부를 입력받는다.
 	while (cin >> roomNum >> minSpecial >> store) {
 		if (!CheckValidInput()) continue;
 
-		minSpecial++;	//보스 방은 specials에 포함된 상태로 생성할것이므로 1개 늘려준다.
+		//보스 방은 specials에 포함된 상태로 생성할것이므로 1개 늘려준다. 그리고 상점도 생성해야 하면 1개 더 늘려준다.
+		if (store) minSpecial += 2;
+		else minSpecial++;
+
 		GenerateStage();
-		
+
 		PrintStage();
-		cout << "\n---------------------------------\n방 개수(32 이하) | 최소 미스터리 개수(상점 포함, min(방/2, 9) 이하) | 상점 생성여부(0, 1)? (공백으로 구분하여 입력)\n";
+		cout << "\n---------------------------------\n방 수(<=32) | 미스터리 수(3<=x<=min(방/2, 9(상점포함이면 8))) | 상점 여부(0, 1)? (공백 구분 입력)\n";
 	}
 	return 0;
 }
