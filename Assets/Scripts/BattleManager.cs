@@ -84,8 +84,8 @@ public class BattleManager : MonoBehaviour
         {
             //몬스터 능력치 배율을 조정한다.
             float scale;
-            if (GameManager.instance.floor == 7) scale = 4.0f;
-            else scale = 0.5f * (GameManager.instance.floor + 1);
+            if (GameManager.instance.floor.floorNum == 7) scale = 4.0f;
+            else scale = 0.5f * (GameManager.instance.floor.floorNum + 1);
             scale += 0.05f * (phase - 1);
 
             //몬스터 생성

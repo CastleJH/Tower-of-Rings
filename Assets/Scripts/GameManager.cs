@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
     private int playerCurHP;
     public int gold;
     public int emerald;
-    public int floor;
+    public Floor floor;
 
 
     void Awake()
@@ -88,7 +88,8 @@ public class GameManager : MonoBehaviour
         playerCurHP = 100;
         gold = 0;
         emerald = 0;
-        floor = 1;
+        floor = new Floor();
+        floor.Generate(2);
     }
 
     //"*_db.csv"를 읽어온다.
