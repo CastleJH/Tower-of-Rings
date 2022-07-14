@@ -80,7 +80,7 @@ void GenerateStage() {
 		occupied[0] = true;
 	}
 
-	//특수 방들 중 마지막을 빼고 랜덤한 미스터리 방으로 만듦. 유물 방은 반드시 1개만, 제련/링의 방은 반드시 1개 이상 생성함.
+	//제련/링/유물의 방을 1개씩 생성함.
 	for (int i = 2; i <= 4; i++) {
 		int idx;
 		do {
@@ -89,14 +89,14 @@ void GenerateStage() {
 		room[specials[idx].first][specials[idx].second] = i;
 		occupied[idx] = true;
 	}
+
+	//남은 방들을 유물의 방을 제외한 랜덤한 미스터리 방으로 만듦.
 	for (int i = 0; i < minSpecial; i++) {
 		if (occupied[i]) continue;
 		do {
 			room[specials[i].first][specials[i].second] = 2 + rand() % 6;
 		} while (room[specials[i].first][specials[i].second] == 4);
 	}
-
-
 }
 
 bool CheckValidInput() {
