@@ -48,7 +48,6 @@ public class Blizzard : MonoBehaviour
     //눈보라에 몬스터가 들어오면 둔화 상태로 만든다.
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.tag);
         if (collision.tag == "Monster")
         {
             Monster monster = collision.GetComponent<Monster>();

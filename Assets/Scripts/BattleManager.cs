@@ -13,7 +13,6 @@ public class BattleManager : MonoBehaviour
 
     //전투 별 변수
     public bool isBattlePlaying;  //게임 진행 중인지 여부
-    public int pathID;      //현재 전장 번호
     public float rp;        //현재 보유 RP
     public int goldGet;
     public int emeraldGet;
@@ -31,11 +30,6 @@ public class BattleManager : MonoBehaviour
 
     void Update()
     {
-        if (debugFlag)
-        {
-            debugFlag = false;
-            StartBattle();
-        }
         if (isBattlePlaying)    //전투 중인 경우
         {
             //전투 종료 여부 확인
@@ -44,13 +38,17 @@ public class BattleManager : MonoBehaviour
     }
 
     //전투를 시작한다.
-    void StartBattle()
+    public void StartBattle()
     {
         //전투 별 변수 초기화
         isBattlePlaying = true;
-        pathID = 0; //일단 임시로 고정했다. 실제로는 랜덤으로 정해져야함.
         goldGet = 0;
         emeraldGet = 0;
+
+        //전장을 킨다.
+        UIManager.instance.TurnMapOnOff(false);
+        GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(true);
+        UIManager.instance.TurnDeckOnOff(true);
 
         //덱의 이미지/RP 비용등을 초기화한다.
         UIManager.instance.SetBattleDeckRingImageAndRPAll();
@@ -60,10 +58,6 @@ public class BattleManager : MonoBehaviour
 
         //덱 매니저의 전투 관련 변수들을 초기화한다.
         DeckManager.instance.PrepareBattle();
-
-        //카메라를 해당하는 전장으로 이동한다.
-        Camera.main.transform.position = GameManager.instance.monsterPaths[pathID].transform.position;
-        Camera.main.transform.Translate(0, -2, -10);
 
         phase = 1;
         StartPhase();
@@ -84,16 +78,19 @@ public class BattleManager : MonoBehaviour
         {
             //몬스터 능력치 배율을 조정한다.
             float scale;
-            if (GameManager.instance.floor.floorNum == 7) scale = 4.0f;
-            else scale = 0.5f * (GameManager.instance.floor.floorNum + 1);
+            if (FloorManager.instance.floor.floorNum == 7) scale = 4.0f;
+            else scale = 0.5f * (FloorManager.instance.floor.floorNum + 1);
             scale += 0.05f * (phase - 1);
+
+            //나중에 삭제하세요
+            scale = 1.0f;
 
             //몬스터 생성
             Monster monster = GameManager.instance.GetMonsterFromPool();
             monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
             if (phase == 3 && (newMonsterID == 29 || newMonsterID == 59))   //페이즈 3의 중간/마지막 몬스터는 반드시 보스
-                monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 17)], pathID, scale);
-            else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], pathID, scale);    //그외에는 일반 몬스터
+                monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 17)], FloorManager.instance.curRoom.pathID, scale);
+            else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
             monster.gameObject.SetActive(true);
             monsters.Add(monster);
             newMonsterID++;
@@ -145,12 +142,18 @@ public class BattleManager : MonoBehaviour
                 if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림
                 {
                     goldGet += (int)(goldGet * greedyATK * 0.01f);
-                    float tmp = Random.Range(0.0f, 1.0f);
-                    Debug.Log(tmp);
-                    if (tmp <= greedyATK * 0.01f + greedyEFF) emeraldGet = Random.Range(3, 6);
+                    if (Random.Range(0.0f, 1.0f) <= greedyATK * 0.01f + greedyEFF) emeraldGet = Random.Range(3, 6);
                 }
                 GameManager.instance.ChangeGold(goldGet);
                 GameManager.instance.ChangeEmerald(emeraldGet);
+
+                //전장을 끄고 맵을 갱신하고 포탈을 보여준다.
+                GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(false);
+                UIManager.instance.TurnDeckOnOff(false);
+                FloorManager.instance.ChangeCurRoomToIdle();
+                UIManager.instance.RevealMapArea(FloorManager.instance.playerX, FloorManager.instance.playerY);
+                UIManager.instance.TurnMapOnOff(true);
+                FloorManager.instance.TurnPortalsOnOff(true);
             }
             else
             {

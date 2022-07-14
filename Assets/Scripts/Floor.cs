@@ -5,6 +5,8 @@ using UnityEngine;
 public class Room
 {
     public int type;
+	public bool visited;
+	public int pathID;
 	public int upgrade;
 	public int ring;
 	public int relic;
@@ -52,7 +54,7 @@ public class Floor
 
 			//방 초기화
 			for (int i = 1; i <= 9; i++)
-				for (int j = 1; j <= 9; j++)
+				for (int j = 1; j <= 9; j++) 
 					rooms[i, j].type = -1;
 
 			for (int i = 0; i < 10; i++) rooms[0, i].type = rooms[i, 0].type = rooms[10, i].type = rooms[i, 10].type = 10;
@@ -137,5 +139,10 @@ public class Floor
 			do rooms[specials[i].Key, specials[i].Value].type = 2 + Random.Range(0, 6); 
 			while (rooms[specials[i].Key, specials[i].Value].type == 4);
 		}
+
+		//모든 전투 방들의 전장 형태를 결정함.
+		for (int i = 1; i <= 9; i++)
+			for (int j = 1; j <= 9; j++)
+				if (rooms[i, j].type == 1 || rooms[i, j].type == 9) rooms[i, j].pathID = 0;
 	}
 }

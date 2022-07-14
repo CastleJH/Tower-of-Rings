@@ -213,7 +213,6 @@ public class Monster : MonoBehaviour
         if (IsNormalMonster()) g = Mathf.Clamp(Random.Range(0, 3), 1, 2);
         else g = 20;
         BattleManager.instance.goldGet += g;
-        Debug.Log(g);
     }
 
     //일반 몬스터인지/엘리트 몬스터인지 알려준다.

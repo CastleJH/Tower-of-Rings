@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     //스프라이트
     public Sprite[] ringSprites;
     public Sprite[] monsterSprites;
+    public Sprite[] portalSprites;
+    public Sprite[] mapRoomSprites;
     public Sprite emptyRingSprite;
 
     //사운드
@@ -49,8 +51,6 @@ public class GameManager : MonoBehaviour
     private int playerCurHP;
     public int gold;
     public int emerald;
-    public Floor floor;
-
 
     void Awake()
     {
@@ -88,8 +88,6 @@ public class GameManager : MonoBehaviour
         playerCurHP = 100;
         gold = 0;
         emerald = 0;
-        floor = new Floor();
-        floor.Generate(2);
     }
 
     //"*_db.csv"를 읽어온다.
