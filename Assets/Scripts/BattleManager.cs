@@ -92,7 +92,7 @@ public class BattleManager : MonoBehaviour
             if (phase == 3 && newMonsterID == 0)   //페이즈 3의 첫 몬스터는 반드시 엘리트/보스
             {
                 if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 10)], FloorManager.instance.curRoom.pathID, scale);
-                //if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[3], FloorManager.instance.curRoom.pathID, scale);
+                //if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[9], FloorManager.instance.curRoom.pathID, scale);
                 else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(10, 17)], FloorManager.instance.curRoom.pathID, scale);
             }
             else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터

@@ -239,7 +239,7 @@ public class Monster : MonoBehaviour
         switch (baseMonster.type)
         {
             case 3:
-                baseSPD = baseMonster.spd * 1.0f + 0.5f * ((baseHP - curHP) / baseHP);
+                baseSPD = baseMonster.spd * (1.0f + (baseHP - curHP) / baseHP);
                 break;
             case 4:
                 if (skillUseTime != 0)
@@ -291,7 +291,7 @@ public class Monster : MonoBehaviour
                         if (colliders[i].tag == "Monster")
                         {
                             monster = colliders[i].GetComponent<Monster>();
-                            if (monster.curHP > 0 && monster != this) monster.AE_DecreaseHP(monster.baseHP * 0.05f, new Color32(0, 255, 0, 255));
+                            if (monster.curHP > 0 && monster != this) monster.AE_DecreaseHP(-monster.baseHP * 0.05f, new Color32(0, 255, 0, 255));
                         }
                 }
                 break;
@@ -341,6 +341,8 @@ public class Monster : MonoBehaviour
         {
             if (isInAmplify) dmg *= 1.2f;
             curHP -= dmg;
+            if (dmg < 0) dmg *= -1;
+            if (curHP > baseHP) curHP = baseHP;
             DamageText t = GameManager.instance.GetDamageTextFromPool();
             t.InitializeDamageText((Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
             t.gameObject.SetActive(true);
