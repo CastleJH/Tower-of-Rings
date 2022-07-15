@@ -143,6 +143,7 @@ public class Floor
 		//모든 전투 방들의 전장 형태를 결정함.
 		for (int i = 1; i <= 9; i++)
 			for (int j = 1; j <= 9; j++)
-				if (rooms[i, j].type == 1 || rooms[i, j].type == 9) rooms[i, j].pathID = 0;
+				if (rooms[i, j].type == 1 || rooms[i, j].type == 9) 
+					rooms[i, j].pathID = Random.Range(0, GameManager.instance.monsterPaths.Length);
 	}
 }

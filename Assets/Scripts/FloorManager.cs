@@ -88,7 +88,7 @@ public class FloorManager : MonoBehaviour
                 break;
             case 9:
                 TurnPortalsOnOff(false);
-                roomImage.transform.position = GameManager.instance.monsterPaths[curRoom.pathID].transform.position;
+                roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y, roomImage.transform.position.z);
                 BattleManager.instance.StartBattle();
                 break;
         }

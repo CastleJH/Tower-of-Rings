@@ -37,6 +37,10 @@ public class Monster : MonoBehaviour
     public bool barrierBlock; //결계로부터 이동을 방해받지 않는지 여부
     public int curseStack;     //저주로부터 쌓인 스택
     public bool isInAmplify;    //증폭 범위 내에 있는지 여부
+    float skillCoolTime;    //엘리트/보스 몬스터의 스킬 쿨타임
+    float skillUseTime;     //엘리트/보스 몬스터의 스킬 지속된 시간
+    bool immuneDamage;
+    bool immuneInterrupt;
 
     void Awake()
     {
@@ -50,30 +54,35 @@ public class Monster : MonoBehaviour
     {
         if (isInBattle)
         {
+            if (!IsNormalMonster()) UseMonsterSkill();
             curSPD = baseSPD;
 
             spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
 
-
-            //이동방해는 약한순->강한순으로 적용되어야 한다.
-            if (isInBlizzard) //눈보라 속이라면
+            if (!immuneInterrupt)
             {
-                curSPD = baseSPD * 0.7f;
-                spriteRenderer.color = Color.cyan;
-            }
+                //이동방해는 약한순->강한순으로 적용되어야 한다.
+                if (isInBlizzard) //눈보라 속이라면
+                {
+                    curSPD = baseSPD * 0.7f;
+                    spriteRenderer.color = Color.cyan;
+                }
 
-            if (snowTime < snowEndTime) //눈꽃 링의 둔화가 적용중이라면
-            {
-                curSPD = baseSPD * 0.5f;
-                snowTime += Time.deltaTime;
-                spriteRenderer.color = Color.cyan;
-            }
+                if (snowTime < snowEndTime) //눈꽃 링의 둔화가 적용중이라면
+                {
+                    curSPD = baseSPD * 0.5f;
+                    snowTime += Time.deltaTime;
+                    spriteRenderer.color = Color.cyan;
+                }
 
-            if (paralyzeTime < paralyzeEndTime) //마비 링의 마비가 적용중이라면
-            {
-                curSPD = 0;
-                paralyzeTime += Time.deltaTime;
-                spriteRenderer.color = Color.yellow;
+                if (paralyzeTime < paralyzeEndTime) //마비 링의 마비가 적용중이라면
+                {
+                    curSPD = 0;
+                    paralyzeTime += Time.deltaTime;
+                    spriteRenderer.color = Color.yellow;
+                }
+
+                if (barrierBlock) curSPD = 0;
             }
 
             if (poisonDmg.Count > 0)  //맹독 중첩이 하나라도 있다면
@@ -95,12 +104,9 @@ public class Monster : MonoBehaviour
 
             if (curseStack != 0) spriteRenderer.color = Color.gray;     //저주 중첩이 하나라도 있다면
 
-            if (!barrierBlock) //결계에 막히지 않으면 이동
-            {
-                movedDistance += curSPD * Time.deltaTime;
-                transform.position = path.path.GetPointAtDistance(movedDistance);
-                transform.Translate(0.0f, 0.0f, id * 0.001f);
-            }
+            movedDistance += curSPD * Time.deltaTime;
+            transform.position = path.path.GetPointAtDistance(movedDistance);
+            transform.Translate(0.0f, 0.0f, id * 0.001f);
         }
     }
 
@@ -135,6 +141,10 @@ public class Monster : MonoBehaviour
         barrierBlock = false;
         curseStack = 0;
         isInAmplify = false;
+        skillCoolTime = 0.0f;
+        skillUseTime = 0.0f;
+        immuneDamage = false;
+        immuneInterrupt = false;
     }
 
     //파티클을 플레이한다.
@@ -222,9 +232,111 @@ public class Monster : MonoBehaviour
         else return false;
     }
 
+    //엘리트/보스의 스킬을 사용한다.
+    void UseMonsterSkill()
+    {
+        Monster monster;
+        switch (baseMonster.type)
+        {
+            case 3:
+                baseSPD = baseMonster.spd * 1.0f + 0.5f * ((baseHP - curHP) / baseHP);
+                break;
+            case 4:
+                if (skillUseTime != 0)
+                {
+                    baseSPD = baseMonster.spd * 2;
+                    skillUseTime += Time.deltaTime;
+                    if (skillUseTime > 2.0f)
+                    {
+                        skillUseTime = 0.0f;
+                        skillCoolTime = 0.0f;
+                    }
+                }
+                else
+                {
+                    baseSPD = baseMonster.spd;
+                    skillCoolTime += Time.deltaTime;
+                    if (skillCoolTime > 5.0f)
+                    {
+                        skillCoolTime = 0.0f;
+                        skillUseTime = 0.0001f;
+                    }
+                }
+                break;
+            case 5:
+                if (curHP < baseHP * 0.2f)
+                {
+                    if (skillUseTime < 5.0f)
+                    {
+                        immuneDamage = true;
+                        immuneInterrupt = true;
+                        skillUseTime += Time.deltaTime;
+                    }
+                    else
+                    {
+                        immuneDamage = false;
+                        immuneInterrupt = false;
+                    }
+                }
+                break;
+            case 6:
+                skillCoolTime += Time.deltaTime;
+                if (skillCoolTime >= 1.0f)
+                {
+                    skillCoolTime = 0.0f;
+
+                    Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);
+
+                    for (int i = 0; i < colliders.Length; i++)
+                        if (colliders[i].tag == "Monster")
+                        {
+                            monster = colliders[i].GetComponent<Monster>();
+                            if (monster.curHP > 0 && monster != this) monster.AE_DecreaseHP(monster.baseHP * 0.05f, new Color32(0, 255, 0, 255));
+                        }
+                }
+                break;
+            case 7:
+                for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
+                {
+                    monster = BattleManager.instance.monsters[i];
+                    if (monster != this && Vector2.Distance(monster.transform.position, transform.position) < 1.5f)
+                        monster.baseSPD = monster.baseMonster.spd * 1.2f;
+                    else monster.baseSPD = monster.baseMonster.spd;
+                }
+                break;
+            case 8:
+                immuneInterrupt = true;
+                break;
+            case 9:
+                skillCoolTime += Time.deltaTime;
+                if (skillCoolTime >= 5.0f)
+                {
+                    skillCoolTime = 0.0f;
+
+                    BattleManager.instance.ChangeCurrentRP((int)BattleManager.instance.rp * 0.8f);
+                }
+                break;
+            case 10:
+                break;
+            case 11:
+                break;
+            case 12:
+                break;
+            case 13:
+                break;
+            case 14:
+                break;
+            case 15:
+                break;
+            case 16:
+                break;
+        }
+    }
+
     //공격 이펙트: HP감소
     public void AE_DecreaseHP(float dmg, Color32 color)
     {
+        if (immuneDamage) dmg = 0;
         if (dmg != -1)
         {
             if (isInAmplify) dmg *= 1.2f;

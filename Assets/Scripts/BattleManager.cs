@@ -66,7 +66,8 @@ public class BattleManager : MonoBehaviour
     //페이즈를 시작한다. 관련 변수를 초기화하고 몬스터 생성 코루틴을 시작한다.
     void StartPhase()
     {
-        numGenMonster = 15 * (phase + 1);
+        if (phase == 2) numGenMonster = 45;
+        else numGenMonster = 30;
         newMonsterID = 0;
         StartCoroutine(GenerateMonster());
     }
@@ -88,8 +89,12 @@ public class BattleManager : MonoBehaviour
             //몬스터 생성
             Monster monster = GameManager.instance.GetMonsterFromPool();
             monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
-            if (phase == 3 && (newMonsterID == 29 || newMonsterID == 59))   //페이즈 3의 중간/마지막 몬스터는 반드시 보스
-                monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 17)], FloorManager.instance.curRoom.pathID, scale);
+            if (phase == 3 && newMonsterID == 0)   //페이즈 3의 첫 몬스터는 반드시 엘리트/보스
+            {
+                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 10)], FloorManager.instance.curRoom.pathID, scale);
+                //if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[3], FloorManager.instance.curRoom.pathID, scale);
+                else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(10, 17)], FloorManager.instance.curRoom.pathID, scale);
+            }
             else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
             monster.gameObject.SetActive(true);
             monsters.Add(monster);
