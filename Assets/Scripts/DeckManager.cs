@@ -87,9 +87,8 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
-        AddRingToDeck(17);
-        AddRingToDeck(30);
-        AddRingToDeck(31);
+        AddRingToDeck(1);
+        AddRingToDeck(15);
         AddRingToDeck(18);
         AddRingToDeck(7);   //°ø
         //AddRingToDeck(14);  //¼Ó

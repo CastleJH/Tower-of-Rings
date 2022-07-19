@@ -41,6 +41,7 @@ public class Monster : MonoBehaviour
     float skillUseTime;     //엘리트/보스 몬스터의 스킬 지속된 시간
     bool immuneDamage;
     bool immuneInterrupt;
+    int puppetID;
 
     void Awake()
     {
@@ -54,6 +55,7 @@ public class Monster : MonoBehaviour
     {
         if (isInBattle)
         {
+            baseSPD = baseMonster.spd;
             if (!IsNormalMonster()) UseMonsterSkill();
             curSPD = baseSPD;
 
@@ -106,7 +108,8 @@ public class Monster : MonoBehaviour
 
             movedDistance += curSPD * Time.deltaTime;
             transform.position = path.path.GetPointAtDistance(movedDistance);
-            transform.Translate(0.0f, 0.0f, id * 0.001f);
+            if (id < 10000) transform.Translate(0.0f, 0.0f, id * 0.001f);
+            else transform.Translate(0.0f, 0.0f, -0.001f);
         }
     }
 
@@ -141,10 +144,12 @@ public class Monster : MonoBehaviour
         barrierBlock = false;
         curseStack = 0;
         isInAmplify = false;
-        skillCoolTime = 0.0f;
+        if (IsNormalMonster()) skillCoolTime = 0.0f;
+        else skillCoolTime = 8.0f;
         skillUseTime = 0.0f;
         immuneDamage = false;
         immuneInterrupt = false;
+        puppetID = 10000;
     }
 
     //파티클을 플레이한다.
@@ -235,88 +240,31 @@ public class Monster : MonoBehaviour
     //엘리트/보스의 스킬을 사용한다.
     void UseMonsterSkill()
     {
-        Monster monster;
         switch (baseMonster.type)
         {
             case 3:
-                baseSPD = baseMonster.spd * (1.0f + (baseHP - curHP) / baseHP);
+                Elite_Berserker();
                 break;
             case 4:
-                if (skillUseTime != 0)
-                {
-                    baseSPD = baseMonster.spd * 2;
-                    skillUseTime += Time.deltaTime;
-                    if (skillUseTime > 2.0f)
-                    {
-                        skillUseTime = 0.0f;
-                        skillCoolTime = 0.0f;
-                    }
-                }
-                else
-                {
-                    baseSPD = baseMonster.spd;
-                    skillCoolTime += Time.deltaTime;
-                    if (skillCoolTime > 5.0f)
-                    {
-                        skillCoolTime = 0.0f;
-                        skillUseTime = 0.0001f;
-                    }
-                }
+                Elite_Messenger();
                 break;
             case 5:
-                if (curHP < baseHP * 0.2f)
-                {
-                    if (skillUseTime < 5.0f)
-                    {
-                        immuneDamage = true;
-                        immuneInterrupt = true;
-                        skillUseTime += Time.deltaTime;
-                    }
-                    else
-                    {
-                        immuneDamage = false;
-                        immuneInterrupt = false;
-                    }
-                }
+                Elite_Giant();
                 break;
             case 6:
-                skillCoolTime += Time.deltaTime;
-                if (skillCoolTime >= 1.0f)
-                {
-                    skillCoolTime = 0.0f;
-
-                    Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);
-
-                    for (int i = 0; i < colliders.Length; i++)
-                        if (colliders[i].tag == "Monster")
-                        {
-                            monster = colliders[i].GetComponent<Monster>();
-                            if (monster.curHP > 0 && monster != this) monster.AE_DecreaseHP(-monster.baseHP * 0.05f, new Color32(0, 255, 0, 255));
-                        }
-                }
+                Elite_DarkPriest();
                 break;
             case 7:
-                for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
-                {
-                    monster = BattleManager.instance.monsters[i];
-                    if (monster != this && Vector2.Distance(monster.transform.position, transform.position) < 1.5f)
-                        monster.baseSPD = monster.baseMonster.spd * 1.2f;
-                    else monster.baseSPD = monster.baseMonster.spd;
-                }
+                Elite_DevilCommander();
                 break;
             case 8:
-                immuneInterrupt = true;
+                Elite_Purifier();
                 break;
             case 9:
-                skillCoolTime += Time.deltaTime;
-                if (skillCoolTime >= 5.0f)
-                {
-                    skillCoolTime = 0.0f;
-
-                    BattleManager.instance.ChangeCurrentRP((int)BattleManager.instance.rp * 0.8f);
-                }
+                Elite_Predator();
                 break;
             case 10:
+                Boss_Puppeteer();
                 break;
             case 11:
                 break;
@@ -501,5 +449,131 @@ public class Monster : MonoBehaviour
             }
         }
         else AE_DecreaseHP(dmg, new Color32(80, 80, 80, 255));
+    }
+
+    public void Elite_Berserker()
+    {
+        baseSPD = baseMonster.spd * (1.0f + (baseHP - curHP) / baseHP);
+    }
+
+    public void Elite_Messenger()
+    {
+        if (skillUseTime != 0)
+        {
+            baseSPD = baseMonster.spd * 2;
+            skillUseTime += Time.deltaTime;
+            if (skillUseTime > 2.0f)
+            {
+                skillUseTime = 0.0f;
+                skillCoolTime = 0.0f;
+            }
+        }
+        else
+        {
+            skillCoolTime += Time.deltaTime;
+            if (skillCoolTime > 5.0f)
+            {
+                skillCoolTime = 0.0f;
+                skillUseTime = 0.0001f;
+            }
+        }
+    }
+
+    public void Elite_Giant()
+    {
+        if (curHP < baseHP * 0.2f)
+        {
+            if (skillUseTime < 5.0f)
+            {
+                immuneDamage = true;
+                immuneInterrupt = true;
+                skillUseTime += Time.deltaTime;
+            }
+            else
+            {
+                immuneDamage = false;
+                immuneInterrupt = false;
+            }
+        }
+    }
+
+    public void Elite_DarkPriest()
+    {
+        skillCoolTime += Time.deltaTime;
+        if (skillCoolTime >= 1.0f)
+        {
+            skillCoolTime = 0.0f;
+
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);
+            Monster monster;
+
+            for (int i = 0; i < colliders.Length; i++)
+                if (colliders[i].tag == "Monster")
+                {
+                    monster = colliders[i].GetComponent<Monster>();
+                    if (monster.curHP > 0 && monster != this) monster.AE_DecreaseHP(-monster.baseHP * 0.05f, new Color32(0, 255, 0, 255));
+                }
+        }
+    }
+
+    public void Elite_DevilCommander()
+    {
+        Monster monster;
+        for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
+        {
+            monster = BattleManager.instance.monsters[i];
+            if (monster != this && Vector2.Distance(monster.transform.position, transform.position) < 1.5f)
+                monster.baseSPD = monster.baseMonster.spd * 1.2f;
+            else monster.baseSPD = monster.baseMonster.spd;
+        }
+    }
+
+    public void Elite_Purifier()
+    {
+        immuneInterrupt = true;
+    }
+
+    public void Elite_Predator()
+    {
+        skillCoolTime += Time.deltaTime;
+        if (skillCoolTime >= 5.0f)
+        {
+            skillCoolTime = 0.0f;
+
+            BattleManager.instance.ChangeCurrentRP((int)BattleManager.instance.rp * 0.8f);
+        }
+    }
+
+    public void Boss_Puppeteer()
+    {
+        Debug.Log("puppet");
+        Monster monster;
+        skillCoolTime += Time.deltaTime;
+        if (skillCoolTime >= 10.0f)
+        {
+            skillCoolTime = 0.0f;
+
+            float scale;
+            if (FloorManager.instance.floor.floorNum == 7) scale = 4.0f;
+            else scale = 0.5f * (FloorManager.instance.floor.floorNum + 1);
+
+            monster = GameManager.instance.GetMonsterFromPool();
+            monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
+            monster.InitializeMonster(puppetID++, GameManager.instance.monsterDB[17], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
+            monster.movedDistance = movedDistance + 1.0f;
+            monster.gameObject.SetActive(true);
+            BattleManager.instance.monsters.Add(monster);
+        }
+
+        for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
+        {
+            monster = BattleManager.instance.monsters[i];
+            if (monster.id >= 10000)
+            {
+                immuneDamage = true;
+                return;
+            }
+        }
+        immuneDamage = false;
     }
 }

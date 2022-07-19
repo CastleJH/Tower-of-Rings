@@ -17,8 +17,8 @@ public class BattleManager : MonoBehaviour
     public int goldGet;
     public int emeraldGet;
 
-    //페이즈 별 변수
-    public int phase;   //현재 페이즈
+    //웨이브 별 변수
+    public int wave;   //현재 웨이브
     private int numGenMonster;  //생성할 몬스터 수
     private int newMonsterID;   //새로 생성할 몬스터 아이디
 
@@ -59,14 +59,15 @@ public class BattleManager : MonoBehaviour
         //덱 매니저의 전투 관련 변수들을 초기화한다.
         DeckManager.instance.PrepareBattle();
 
-        phase = 1;
-        StartPhase();
+        wave = 1;
+        wave = 3;
+        StartWave();
     }
 
-    //페이즈를 시작한다. 관련 변수를 초기화하고 몬스터 생성 코루틴을 시작한다.
-    void StartPhase()
+    //웨이브를 시작한다. 관련 변수를 초기화하고 몬스터 생성 코루틴을 시작한다.
+    void StartWave()
     {
-        if (phase == 2) numGenMonster = 45;
+        if (wave == 2) numGenMonster = 45;
         else numGenMonster = 30;
         newMonsterID = 0;
         StartCoroutine(GenerateMonster());
@@ -81,7 +82,7 @@ public class BattleManager : MonoBehaviour
             float scale;
             if (FloorManager.instance.floor.floorNum == 7) scale = 4.0f;
             else scale = 0.5f * (FloorManager.instance.floor.floorNum + 1);
-            scale += 0.05f * (phase - 1);
+            scale += 0.05f * (wave - 1);
 
             //나중에 삭제하세요
             scale = 1.0f;
@@ -89,11 +90,11 @@ public class BattleManager : MonoBehaviour
             //몬스터 생성
             Monster monster = GameManager.instance.GetMonsterFromPool();
             monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
-            if (phase == 3 && newMonsterID == 0)   //페이즈 3의 첫 몬스터는 반드시 엘리트/보스
+            if (wave == 3 && newMonsterID == 0)   //웨이브 3의 첫 몬스터는 반드시 엘리트/보스
             {
-                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 10)], FloorManager.instance.curRoom.pathID, scale);
-                //if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[9], FloorManager.instance.curRoom.pathID, scale);
-                else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(10, 17)], FloorManager.instance.curRoom.pathID, scale);
+                //if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 10)], FloorManager.instance.curRoom.pathID, scale);
+                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[10], FloorManager.instance.curRoom.pathID, scale);
+                else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[FloorManager.instance.floor.floorNum + 9], FloorManager.instance.curRoom.pathID, scale);
             }
             else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
             monster.gameObject.SetActive(true);
@@ -108,7 +109,7 @@ public class BattleManager : MonoBehaviour
     {
         if (monsters.Count == 0 && newMonsterID == numGenMonster)
         {
-            if (phase == 3)     //마지막 페이즈였다면 보상을 주고 전투를 종료한다.
+            if (wave == 3)     //마지막 웨이브였다면 보상을 주고 전투를 종료한다.
             {
                 //배틀을 종료한다.
                 isBattlePlaying = false;
@@ -162,8 +163,8 @@ public class BattleManager : MonoBehaviour
             }
             else
             {
-                phase++;
-                StartPhase();
+                wave++;
+                StartWave();
             }
         }
     }

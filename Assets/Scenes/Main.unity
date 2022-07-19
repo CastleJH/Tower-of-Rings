@@ -3442,7 +3442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugFlag: 1
-  debugInt: 2
+  debugInt: 1
   portals:
   - {fileID: 742702808}
   - {fileID: 562530851}
@@ -4613,6 +4613,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 666a60dac37049348a311607bb90bbbb, type: 3}
   - {fileID: 21300000, guid: db4312e67e705bd4ebaa295b87c13538, type: 3}
   - {fileID: 21300000, guid: 542bee68e2f5c9746825538783a2633a, type: 3}
+  - {fileID: 21300000, guid: 3a7bf5aef83245544b5a4773b0af1652, type: 3}
   portalSprites:
   - {fileID: 21300000, guid: aff675b508fd13b4c9b52b79fc665c5b, type: 3}
   - {fileID: 21300000, guid: 538850a8e5f773c428a650b6607eab91, type: 3}
@@ -7038,7 +7039,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1215895385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8622,7 +8623,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1370015498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10500,7 +10501,7 @@ MonoBehaviour:
   rp: 0
   goldGet: 0
   emeraldGet: 0
-  phase: 0
+  wave: 0
 --- !u!4 &1712438887
 Transform:
   m_ObjectHideFlags: 0
@@ -12303,7 +12304,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1994005702
 MonoBehaviour:
   m_ObjectHideFlags: 0
