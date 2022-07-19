@@ -268,15 +268,19 @@ public class Monster : MonoBehaviour
                 Boss_Slime();
                 break;
             case 12:
+                Boss_Sealer();
                 break;
             case 13:
                 Boss_DarkWarlock();
                 break;
             case 14:
+                Boss_Executer();
                 break;
             case 15:
+                Boss_Spacer();
                 break;
             case 16:
+                Boss_King();
                 break;
         }
     }
@@ -451,12 +455,12 @@ public class Monster : MonoBehaviour
         else AE_DecreaseHP(dmg, new Color32(80, 80, 80, 255));
     }
 
-    public void Elite_Berserker()
+    void Elite_Berserker()
     {
         baseSPD = baseMonster.spd * (1.0f + (baseHP - curHP) / baseHP);
     }
 
-    public void Elite_Messenger()
+    void Elite_Messenger()
     {
         if (skillUseTime != 0)
         {
@@ -479,7 +483,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void Elite_Giant()
+    void Elite_Giant()
     {
         if (curHP < baseHP * 0.2f)
         {
@@ -497,7 +501,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void Elite_DarkPriest()
+    void Elite_DarkPriest()
     {
         skillCoolTime += Time.deltaTime;
         if (skillCoolTime >= 1.0f)
@@ -516,7 +520,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void Elite_DevilCommander()
+    void Elite_DevilCommander()
     {
         Monster monster;
         for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
@@ -528,12 +532,12 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void Elite_Purifier()
+    void Elite_Purifier()
     {
         immuneInterrupt = true;
     }
 
-    public void Elite_Predator()
+    void Elite_Predator()
     {
         skillCoolTime += Time.deltaTime;
         if (skillCoolTime >= 5.0f)
@@ -544,7 +548,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void Boss_Puppeteer()
+    void Boss_Puppeteer()
     {
         Monster monster;
         skillCoolTime += Time.deltaTime;
@@ -572,7 +576,7 @@ public class Monster : MonoBehaviour
         immuneDamage = false;
     }
 
-    public void Boss_Slime()
+    void Boss_Slime()
     {
         Monster monster;
         skillCoolTime += Time.deltaTime;
@@ -601,10 +605,44 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void Boss_DarkWarlock()
+    void Boss_Sealer()
+    {
+        if (skillUseTime != 0)
+        {
+            baseSPD = baseMonster.spd * 2;
+            skillUseTime += Time.deltaTime;
+            if (skillUseTime > 5.0f)
+            {
+                skillUseTime = 0.0f;
+                skillCoolTime = 0.0f;
+                for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) DeckManager.instance.rings[i].isSealed = false;
+            }
+        }
+        else
+        {
+            skillCoolTime += Time.deltaTime;
+            if (skillCoolTime >= 10.0f)
+            {
+                skillUseTime = 0.001f;
+                
+                int targetSealNum = DeckManager.instance.rings.Count / 2;
+                int sealNum = 0;
+                int tarIdx;
+                while (sealNum < targetSealNum)
+                {
+                    do tarIdx = Random.Range(0, DeckManager.instance.rings.Count);
+                    while (DeckManager.instance.rings[tarIdx].isSealed);
+                    DeckManager.instance.rings[tarIdx].isSealed = true;
+                    sealNum++;
+                }
+            }
+        }
+    }
+
+    void Boss_DarkWarlock()
     {
         skillCoolTime += Time.deltaTime;
-        if (skillCoolTime >= 15.0f)
+        if (skillCoolTime >= 10.0f)
         {
             int ringID;
             bool canDowngrade = false;
@@ -626,5 +664,20 @@ public class Monster : MonoBehaviour
                 BattleManager.instance.ringDowngrade.Add(ringID);
             }
         }
+    }
+
+    void Boss_Executer()
+    {
+
+    }
+
+    void Boss_Spacer()
+    {
+
+    }
+
+    void Boss_King()
+    {
+
     }
 }

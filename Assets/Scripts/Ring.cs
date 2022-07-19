@@ -35,6 +35,7 @@ public class Ring : MonoBehaviour
     public bool isInBattle;         //전투 중인지 체크용
     public float shootCoolTime;    //발사 쿨타임 체크용
     public CircleCollider2D ringCollider; //자신의 콜라이더
+    public bool isSealed;           //보스 몬스터로 인한 봉인 여부
     int oxyRemoveCount;          //산화 링의 소멸 카운트
     float explosionSplash;        //폭발 링의 스플래쉬 데미지(비율)
     int poisonStack;            //맹독 링의 공격 당 쌓는 스택
@@ -58,29 +59,32 @@ public class Ring : MonoBehaviour
     {
         if (isInBattle)
         {
-            shootCoolTime += Time.deltaTime;
-            if (shootCoolTime > curSPD)     //공격 쿨타임이 되었다면
+            if (!isSealed)
             {
-                switch (ringBase.id)
+                shootCoolTime += Time.deltaTime;
+                if (shootCoolTime > curSPD)     //공격 쿨타임이 되었다면
                 {
-                    case 7:
-                        GenerateRP(curATK);
-                        anim.SetTrigger("isShoot");
-                        shootCoolTime = 0.0f;
-                        break;
-                    case 11:
-                    case 17:
-                    case 23:
-                        break;
-                    case 22:
-                        BombardAttack();
-                        break;
-                    case 32:
-                        if (DeckManager.instance.sleepActivated == 3) TryShoot();
-                        break;
-                    default:
-                        TryShoot();
-                        break;
+                    switch (ringBase.id)
+                    {
+                        case 7:
+                            GenerateRP(curATK);
+                            anim.SetTrigger("isShoot");
+                            shootCoolTime = 0.0f;
+                            break;
+                        case 11:
+                        case 17:
+                        case 23:
+                            break;
+                        case 22:
+                            BombardAttack();
+                            break;
+                        case 32:
+                            if (DeckManager.instance.sleepActivated == 3) TryShoot();
+                            break;
+                        default:
+                            TryShoot();
+                            break;
+                    }
                 }
             }
         }
@@ -156,6 +160,7 @@ public class Ring : MonoBehaviour
         shootCoolTime = ringBase.baseSPD - 0.2f;
         rangeRenderer.color = new Color(0, 0, 0, 0);
         ringCollider.enabled = true;
+        isSealed = false;
 
         ApplySynergy();
     }

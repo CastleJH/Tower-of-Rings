@@ -63,6 +63,7 @@ public class BattleManager : MonoBehaviour
         DeckManager.instance.PrepareBattle();
 
         wave = 1;
+        //지우세요!
         wave = 3;
         StartWave();
     }
@@ -72,6 +73,8 @@ public class BattleManager : MonoBehaviour
     {
         if (wave == 2) numGenMonster = 45;
         else numGenMonster = 30;
+        //지우세요!
+        numGenMonster = 1;
         newMonsterID = 0;
         StartCoroutine(GenerateMonster());
     }
@@ -93,7 +96,8 @@ public class BattleManager : MonoBehaviour
             if (wave == 3 && newMonsterID == 0)   //웨이브 3의 첫 몬스터는 반드시 엘리트/보스
             {
                 //if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 10)], FloorManager.instance.curRoom.pathID, 1.0f);
-                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[13], FloorManager.instance.curRoom.pathID, 1.0f);
+                //지우세요!
+                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[12], FloorManager.instance.curRoom.pathID, 1.0f);
                 else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[FloorManager.instance.floor.floorNum + 9], FloorManager.instance.curRoom.pathID, 1.0f);
             }
             else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
