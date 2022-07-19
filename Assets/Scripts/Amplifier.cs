@@ -32,7 +32,7 @@ public class Amplifier : MonoBehaviour
     {
         monsters.Clear();
         parent = par;
-        transform.position = new Vector3(par.transform.position.x, par.transform.position.y, -0.002f);
+        transform.position = new Vector3(par.transform.position.x, par.transform.position.y, -0.2f);
         transform.localScale = new Vector3(par.ringBase.range * 2, par.ringBase.range * 2, 1);
     }
 

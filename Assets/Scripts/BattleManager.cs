@@ -97,7 +97,7 @@ public class BattleManager : MonoBehaviour
             {
                 //if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 10)], FloorManager.instance.curRoom.pathID, 1.0f);
                 //지우세요!
-                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[12], FloorManager.instance.curRoom.pathID, 1.0f);
+                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[13], FloorManager.instance.curRoom.pathID, 1.0f);
                 else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[FloorManager.instance.floor.floorNum + 9], FloorManager.instance.curRoom.pathID, 1.0f);
             }
             else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터

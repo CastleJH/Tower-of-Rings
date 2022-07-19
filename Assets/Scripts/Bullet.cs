@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
     public int destroyID;
     public Ring parent;
     public Monster target;
+    bool isInBattle;
 
     TrailRenderer trailRenderer;
 
@@ -17,7 +18,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if (parent.ringBase != null && target != null && target.curHP > 0 && target.movedDistance > 0.05f) Move();   //부모링이 있고 타겟이 살아있으면 이동
+        if (isInBattle && parent.ringBase != null && target != null && target.curHP > 0 && target.movedDistance > 0.05f) Move();   //부모링이 있고 타겟이 살아있으면 이동
         else RemoveFromBattle(0.0f); //제거
     }
 
@@ -32,6 +33,8 @@ public class Bullet : MonoBehaviour
     {
         parent = _parent;
         target = _target;
+        isInBattle = true;
+
         transform.position = new Vector3(parent.transform.position.x, parent.transform.position.y, 0);
     }
 
@@ -52,7 +55,7 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Monster")
+        if (collision.gameObject.tag == "Monster" && isInBattle)
         {
             Monster monster = collision.gameObject.GetComponent<Monster>();
             if (target == null) RemoveFromBattle(0.0f);
@@ -60,6 +63,7 @@ public class Bullet : MonoBehaviour
             {
                 //공격 후 자신을 제거한다.
                 if (parent.ringBase != null) parent.AttackEffect(monster);
+                isInBattle = false;
                 RemoveFromBattle(0.0f);
             }
         }

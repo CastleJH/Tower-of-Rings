@@ -15,7 +15,7 @@ public class Barrier : MonoBehaviour
     public void InitializeBarrier(float lifeTime, Vector2 pos)
     {
         monsters.Clear();
-        transform.position = new Vector3(pos.x, pos.y, -0.001f);
+        transform.position = new Vector3(pos.x, pos.y, -0.1f);
         Invoke("InvokeRemoveFromBattle", lifeTime + 0.05f);
     }
 

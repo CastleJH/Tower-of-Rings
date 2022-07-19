@@ -134,7 +134,6 @@ public class FloorManager : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0))
         {
-            Debug.Log("touched");
             Vector2 touchPos;
 
             if (Input.touchCount > 0) touchPos = Input.touches[0].position;

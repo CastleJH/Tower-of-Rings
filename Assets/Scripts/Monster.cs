@@ -593,8 +593,8 @@ public class Monster : MonoBehaviour
             monster.InitializeMonster(cloneID--, GameManager.instance.monsterDB[11], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
 
             monster.movedDistance = movedDistance + 0.5f;
-            monster.curHP *= 0.666f;
-            SetHPText();
+            monster.curHP = curHP * 0.666f;
+            monster.SetHPText();
 
             monster.gameObject.SetActive(true);
             BattleManager.instance.monsters.Add(monster);

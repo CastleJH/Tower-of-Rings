@@ -89,7 +89,7 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         AddRingToDeck(1);
         AddRingToDeck(15);
-        AddRingToDeck(18);
+        //AddRingToDeck(18);
         AddRingToDeck(7);   //°ø
         //AddRingToDeck(14);  //¼Ó
         //AddRingToDeck(10);  //Å¸
@@ -247,8 +247,6 @@ public class DeckManager : MonoBehaviour
         if (deck.Contains(ringID)) return false;
         if (ringID < 0 || ringID >= GameManager.instance.ringstoneDB.Count) return false;
         GameManager.instance.ringstoneDB[ringID].level = 0;
-        GameManager.instance.ringstoneDB[ringID].Upgrade();
-        GameManager.instance.ringstoneDB[ringID].Upgrade();
         GameManager.instance.ringstoneDB[ringID].Upgrade();
         deck.Add(ringID);
         return true;
