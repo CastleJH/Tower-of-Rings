@@ -270,6 +270,7 @@ public class Monster : MonoBehaviour
             case 12:
                 break;
             case 13:
+                Boss_DarkWarlock();
                 break;
             case 14:
                 break;
@@ -597,6 +598,33 @@ public class Monster : MonoBehaviour
             movedDistance -= 0.5f;
             curHP *= 0.666f;
             SetHPText();
+        }
+    }
+
+    public void Boss_DarkWarlock()
+    {
+        skillCoolTime += Time.deltaTime;
+        if (skillCoolTime >= 15.0f)
+        {
+            int ringID;
+            bool canDowngrade = false;
+            for (int i = 0; i < DeckManager.instance.deck.Count; i++)
+            {
+                ringID = DeckManager.instance.deck[i];
+                if (GameManager.instance.ringstoneDB[ringID].level > 1)
+                {
+                    canDowngrade = true;
+                    break;
+                }
+            }
+            if (canDowngrade)
+            {
+                skillCoolTime = 0.0f;
+                do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
+                while (GameManager.instance.ringstoneDB[ringID].level == 1);
+                GameManager.instance.ringstoneDB[ringID].Downgrade();
+                BattleManager.instance.ringDowngrade.Add(ringID);
+            }
         }
     }
 }

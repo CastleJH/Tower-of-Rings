@@ -75,7 +75,7 @@ public class DeckManager : MonoBehaviour
     //덱을 초기화한다.
     public void InitializeDeck()
     {
-        AddRingToDeck(1);
+        AddRingToDeck(10);
         AddRingToDeck(2);
         AddRingToDeck(3);
         AddRingToDeck(4);
@@ -247,6 +247,8 @@ public class DeckManager : MonoBehaviour
         if (deck.Contains(ringID)) return false;
         if (ringID < 0 || ringID >= GameManager.instance.ringstoneDB.Count) return false;
         GameManager.instance.ringstoneDB[ringID].level = 0;
+        GameManager.instance.ringstoneDB[ringID].Upgrade();
+        GameManager.instance.ringstoneDB[ringID].Upgrade();
         GameManager.instance.ringstoneDB[ringID].Upgrade();
         deck.Add(ringID);
         return true;

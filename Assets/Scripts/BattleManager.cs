@@ -16,6 +16,7 @@ public class BattleManager : MonoBehaviour
     public float rp;        //현재 보유 RP
     public int goldGet;
     public int emeraldGet;
+    public List<int> ringDowngrade;
 
     //웨이브 별 변수
     public int wave;   //현재 웨이브
@@ -26,6 +27,7 @@ public class BattleManager : MonoBehaviour
     {
         instance = this;
         monsters = new List<Monster>();
+        ringDowngrade = new List<int>();
     }
 
     void Update()
@@ -44,6 +46,7 @@ public class BattleManager : MonoBehaviour
         isBattlePlaying = true;
         goldGet = 0;
         emeraldGet = 0;
+        ringDowngrade.Clear();
 
         //전장을 킨다.
         UIManager.instance.TurnMapOnOff(false);
@@ -90,7 +93,7 @@ public class BattleManager : MonoBehaviour
             if (wave == 3 && newMonsterID == 0)   //웨이브 3의 첫 몬스터는 반드시 엘리트/보스
             {
                 //if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 10)], FloorManager.instance.curRoom.pathID, 1.0f);
-                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[11], FloorManager.instance.curRoom.pathID, 1.0f);
+                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[13], FloorManager.instance.curRoom.pathID, 1.0f);
                 else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[FloorManager.instance.floor.floorNum + 9], FloorManager.instance.curRoom.pathID, 1.0f);
             }
             else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
@@ -140,6 +143,10 @@ public class BattleManager : MonoBehaviour
                     if (DeckManager.instance.genRing != null) GameManager.instance.ReturnRingToPool(DeckManager.instance.genRing);
                     else DeckManager.instance.ringRemover.transform.position = new Vector3(100, 100, 0);
                 }
+
+                //다운그레이드 된 링들을 50% 확률로 복구
+                for (int i = 0; i < ringDowngrade.Count; i++)
+                    if (Random.Range(0, 2) == 1) GameManager.instance.ringstoneDB[ringDowngrade[i]].Upgrade();
 
                 emeraldGet = 0;
                 if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림

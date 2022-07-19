@@ -40,13 +40,15 @@ public class Ringstone
     //최대 10레벨까지 강화. 그 후 공격력/공격 쿨타임을 변경함.
     public bool Upgrade()
     {
-        if (level == 10) return false;
+        if (level == 5) return false;
         level++;
         baseATK = dbATK;
         baseSPD = dbSPD;
         for (int i = 2; i <= level; i++)
-            if (i % 2 == 0) baseATK += dbATK * 0.1f;
-            else baseSPD *= 0.95f;
+        {
+            baseATK += dbATK * 0.5f;
+            baseSPD -= dbSPD * 0.05f;
+        }
         return true;
     }
 
@@ -58,7 +60,19 @@ public class Ringstone
         baseATK = dbATK;
         baseSPD = dbSPD;
         for (int i = 2; i <= level; i++)
-            if (i % 2 == 0) baseATK += dbATK * 0.1f;
-            else baseSPD *= 0.95f;
+        {
+            baseATK += dbATK * 0.5f;
+            baseSPD -= dbSPD * 0.05f;
+        }
+
+        Ring ring;
+        for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--)
+        {
+            ring = DeckManager.instance.rings[i];
+            ring.ChangeCurATK(0.0f);
+            ring.ChangeCurSPD(0.0f);
+            ring.ChangeCurNumTarget(0.0f);
+            ring.ChangeCurEFF(0.0f, '*');
+        }
     }
 }

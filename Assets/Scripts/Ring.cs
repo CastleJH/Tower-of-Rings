@@ -16,7 +16,8 @@ public class Ring : MonoBehaviour
     public float buffNumTarget; //타겟 수 변화량(그대로 더하기 한다. 0.0f로 시작)
     public float buffATK;       //데미지 변화율(그대로 곱하기 한다. 1.0f로 시작)
     public float buffSPD;       //공격 쿨타임 변화율(그대로 곱하기 한다. 1.0f로 시작. 0.2f보다 작아도 0.2f를 곱함)
-    public float buffEFF;       //효과 지속시간 변화율(그대로 더하기 한다. 0.0f로 시작)
+    public float buffEFF;       //효과 지속시간 변화율(그대로 곱하기 한다. 1.0f로 시작)
+    public float buffEFFPlus;       //효과 지속시간 변화율(그대로 더하기 한다. 0.0f로 시작)
 
     //타겟
     public List<Monster> targets; //공격범위 내의 몬스터들
@@ -451,8 +452,10 @@ public class Ring : MonoBehaviour
         buffNumTarget = 0.0f;
         buffATK = 1.0f;
         buffSPD = 1.0f;
-        buffEFF = 0.0f;
-        
+        buffEFF = 1.0f;
+        buffEFFPlus = 0.0f;
+
+
         ChangeCurNumTarget(0.0f);
         ChangeCurATK(0.0f);
         ChangeCurSPD(0.0f);
@@ -835,9 +838,9 @@ public class Ring : MonoBehaviour
     //효과 지속시간/확률을 증감한다. (isMul인경우 베이스*buff, 아니면 buff자체를 더해준다)
     public void ChangeCurEFF(float buff, char mulOrPlus)
     {
-        if (mulOrPlus == '*') buffEFF += ringBase.baseEFF * buff;
-        else buffEFF += buff;
-        curEFF = ringBase.baseEFF + buffEFF;
+        if (mulOrPlus == '*') buffEFF += buff;
+        else buffEFFPlus += buff;
+        curEFF = ringBase.baseEFF * buffEFF + buffEFFPlus;
         if (curEFF < 0) curEFF = 0;
     }
 
