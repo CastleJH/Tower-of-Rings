@@ -41,7 +41,7 @@ public class Monster : MonoBehaviour
     float skillUseTime;     //엘리트/보스 몬스터의 스킬 지속된 시간
     bool immuneDamage;
     bool immuneInterrupt;
-    int puppetID;
+    int cloneID;
 
     void Awake()
     {
@@ -108,8 +108,7 @@ public class Monster : MonoBehaviour
 
             movedDistance += curSPD * Time.deltaTime;
             transform.position = path.path.GetPointAtDistance(movedDistance);
-            if (id < 10000) transform.Translate(0.0f, 0.0f, id * 0.001f);
-            else transform.Translate(0.0f, 0.0f, -0.001f);
+            transform.Translate(0.0f, 0.0f, id * 0.001f);
         }
     }
 
@@ -144,12 +143,11 @@ public class Monster : MonoBehaviour
         barrierBlock = false;
         curseStack = 0;
         isInAmplify = false;
-        if (IsNormalMonster()) skillCoolTime = 0.0f;
-        else skillCoolTime = 8.0f;
+        skillCoolTime = 0.0f;
         skillUseTime = 0.0f;
         immuneDamage = false;
         immuneInterrupt = false;
-        puppetID = 10000;
+        cloneID = -1;
     }
 
     //파티클을 플레이한다.
@@ -163,7 +161,7 @@ public class Monster : MonoBehaviour
     }
 
     //HP 텍스트를 갱신한다. 소수점을 버리고 표현하되, 남은 HP가 0초과 1이하인 경우는 1로 표현한다.
-    private void SetHPText()
+    public void SetHPText()
     {
         if (curHP > 1.0f) hpText.text = ((int)curHP).ToString();
         else if (curHP > 0.0f) hpText.text = "1";
@@ -267,6 +265,7 @@ public class Monster : MonoBehaviour
                 Boss_Puppeteer();
                 break;
             case 11:
+                Boss_Slime();
                 break;
             case 12:
                 break;
@@ -546,7 +545,34 @@ public class Monster : MonoBehaviour
 
     public void Boss_Puppeteer()
     {
-        Debug.Log("puppet");
+        Monster monster;
+        skillCoolTime += Time.deltaTime;
+        if (skillCoolTime >= 10.0f)
+        {
+            skillCoolTime = 0.0f;
+
+            monster = GameManager.instance.GetMonsterFromPool();
+            monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
+            monster.InitializeMonster(cloneID--, GameManager.instance.monsterDB[17], FloorManager.instance.curRoom.pathID, 1.0f);    //그외에는 일반 몬스터
+            monster.movedDistance = movedDistance + 1.0f;
+            monster.gameObject.SetActive(true);
+            BattleManager.instance.monsters.Add(monster);
+        }
+
+        for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
+        {
+            monster = BattleManager.instance.monsters[i];
+            if (monster.id < 0)
+            {
+                immuneDamage = true;
+                return;
+            }
+        }
+        immuneDamage = false;
+    }
+
+    public void Boss_Slime()
+    {
         Monster monster;
         skillCoolTime += Time.deltaTime;
         if (skillCoolTime >= 10.0f)
@@ -559,21 +585,18 @@ public class Monster : MonoBehaviour
 
             monster = GameManager.instance.GetMonsterFromPool();
             monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
-            monster.InitializeMonster(puppetID++, GameManager.instance.monsterDB[17], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
-            monster.movedDistance = movedDistance + 1.0f;
+            monster.InitializeMonster(cloneID--, GameManager.instance.monsterDB[11], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
+
+            monster.movedDistance = movedDistance + 0.5f;
+            monster.curHP *= 0.666f;
+            SetHPText();
+
             monster.gameObject.SetActive(true);
             BattleManager.instance.monsters.Add(monster);
-        }
 
-        for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
-        {
-            monster = BattleManager.instance.monsters[i];
-            if (monster.id >= 10000)
-            {
-                immuneDamage = true;
-                return;
-            }
+            movedDistance -= 0.5f;
+            curHP *= 0.666f;
+            SetHPText();
         }
-        immuneDamage = false;
     }
 }
