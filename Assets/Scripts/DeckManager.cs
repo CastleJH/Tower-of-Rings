@@ -248,7 +248,6 @@ public class DeckManager : MonoBehaviour
         if (ringID < 0 || ringID >= GameManager.instance.ringDB.Count) return false;
         GameManager.instance.ringDB[ringID].level = 0;
         GameManager.instance.ringDB[ringID].Upgrade();
-        GameManager.instance.ringDB[ringID].Upgrade();
         deck.Add(ringID);
         return true;
     }

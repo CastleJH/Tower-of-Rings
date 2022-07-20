@@ -722,47 +722,52 @@ public class Monster : MonoBehaviour
             {
                 skillCoolTime1 = 0.0f;
 
-                switch (Random.Range(0, 3))
+                bool canDowngrade = false;
+                do
                 {
-                    case 0:
-                        DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[Random.Range(0, DeckManager.instance.rings.Count)]);
-                        break;
-                    case 1:
-                        int ringID;
-                        bool canDowngrade = false;
-                        for (int i = 0; i < DeckManager.instance.deck.Count; i++)
-                        {
-                            ringID = DeckManager.instance.deck[i];
-                            if (GameManager.instance.ringDB[ringID].level > 1)
+                    switch (Random.Range(0, 3))
+                    {
+                        case 0:
+                            DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[Random.Range(0, DeckManager.instance.rings.Count)]);
+                            canDowngrade = true;
+                            break;
+                        case 1:
+                            int ringID;
+                            for (int i = 0; i < DeckManager.instance.deck.Count; i++)
                             {
-                                canDowngrade = true;
-                                break;
+                                ringID = DeckManager.instance.deck[i];
+                                if (GameManager.instance.ringDB[ringID].level > 1)
+                                {
+                                    canDowngrade = true;
+                                    break;
+                                }
                             }
-                        }
-                        if (canDowngrade)
-                        {
-                            skillCoolTime1 = 0.0f;
-                            do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
-                            while (GameManager.instance.ringDB[ringID].level == 1);
-                            GameManager.instance.ringDB[ringID].Downgrade();
-                            BattleManager.instance.ringDowngrade.Add(ringID);
-                        }
-                        break;
-                    case 2:
-                        skillUseTime = 0.001f;
+                            if (canDowngrade)
+                            {
+                                skillCoolTime1 = 0.0f;
+                                do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
+                                while (GameManager.instance.ringDB[ringID].level == 1);
+                                GameManager.instance.ringDB[ringID].Downgrade();
+                                BattleManager.instance.ringDowngrade.Add(ringID);
+                            }
+                            break;
+                        case 2:
+                            skillUseTime = 0.001f;
 
-                        int targetSealNum = DeckManager.instance.rings.Count / 2;
-                        int sealNum = 0;
-                        int tarIdx;
-                        while (sealNum < targetSealNum)
-                        {
-                            do tarIdx = Random.Range(0, DeckManager.instance.rings.Count);
-                            while (DeckManager.instance.rings[tarIdx].isSealed);
-                            DeckManager.instance.rings[tarIdx].isSealed = true;
-                            sealNum++;
-                        }
-                        break;
-                }
+                            int targetSealNum = DeckManager.instance.rings.Count / 2;
+                            int sealNum = 0;
+                            int tarIdx;
+                            while (sealNum < targetSealNum)
+                            {
+                                do tarIdx = Random.Range(0, DeckManager.instance.rings.Count);
+                                while (DeckManager.instance.rings[tarIdx].isSealed);
+                                DeckManager.instance.rings[tarIdx].isSealed = true;
+                                sealNum++;
+                            }
+                            canDowngrade = true;
+                            break;
+                    }
+                } while (!canDowngrade);
             }
         }
 
