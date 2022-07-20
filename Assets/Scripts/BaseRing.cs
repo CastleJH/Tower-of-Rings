@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ringstone
+public class BaseRing
 {
     //Á¾·ù
     public int id;

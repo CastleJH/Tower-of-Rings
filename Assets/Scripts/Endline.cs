@@ -18,8 +18,7 @@ public class Endline : MonoBehaviour
             else
             {
                 Monster monster = collision.GetComponent<Monster>();
-                if (monster.IsNormalMonster()) GameManager.instance.ChangePlayerCurHP(-1);
-                else GameManager.instance.ChangePlayerCurHP(-20);
+                GameManager.instance.ChangePlayerCurHP(monster.baseMonster.atk);
                 monster.RemoveFromBattle(false);
             }
         }

@@ -18,14 +18,14 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if (isInBattle && parent.ringBase != null && target != null && target.curHP > 0 && target.movedDistance > 0.05f) Move();   //부모링이 있고 타겟이 살아있으면 이동
+        if (isInBattle && parent.baseRing != null && target != null && target.curHP > 0 && target.movedDistance > 0.05f) Move();   //부모링이 있고 타겟이 살아있으면 이동
         else RemoveFromBattle(0.0f); //제거
     }
 
     //적을 향해 이동한다.
     void Move()
     {
-        transform.position = Vector2.MoveTowards(transform.position, target.transform.position, parent.ringBase.bulletSPD * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, target.transform.position, parent.baseRing.bulletSPD * Time.deltaTime);
     }
 
     //불렛의 부모&타겟을 지정하며 초기화한다.
@@ -62,7 +62,7 @@ public class Bullet : MonoBehaviour
             else if (monster.id == target.id)    //올바른 타겟에 도달한 경우
             {
                 //공격 후 자신을 제거한다.
-                if (parent.ringBase != null) parent.AttackEffect(monster);
+                if (parent.baseRing != null) parent.AttackEffect(monster);
                 isInBattle = false;
                 RemoveFromBattle(0.0f);
             }

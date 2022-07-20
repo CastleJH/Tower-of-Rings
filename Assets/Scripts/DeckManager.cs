@@ -180,43 +180,43 @@ public class DeckManager : MonoBehaviour
         }
 
         //소모 rp값을 계산
-        int deckIdx = deck.IndexOf(genRing.ringBase.id);
+        int deckIdx = deck.IndexOf(genRing.baseRing.id);
         int rpCost;
         if (!int.TryParse(UIManager.instance.battleDeckRingRPText[deckIdx].text, out rpCost)) rpCost = 0;
 
         //충분한 rp가 있다면 더 자세하게 생성 가능 여부 확인. 아니면 취소
         if (rpCost <= BattleManager.instance.rp)
         {
-            if (genRing.ringBase.id == 17)  //탐욕링이라면 앞으로 생성 불가하게 막음
+            if (genRing.baseRing.id == 17)  //탐욕링이라면 앞으로 생성 불가하게 막음
             {
                 UIManager.instance.SetBattleDeckRingRPText(deckIdx, "MAX");
             }
-            else if (genRing.ringBase.id == 25)  //돌연변이라면 똑같은 확률로 다른 링으로 변경(천사, 동면 링 제외)
+            else if (genRing.baseRing.id == 25)  //돌연변이라면 똑같은 확률로 다른 링으로 변경(천사, 동면 링 제외)
             {
                 int mutantIdx;
                 do mutantIdx = Random.Range(0, deck.Count);
                 while (deck[mutantIdx] == 17 || deck[mutantIdx] == 27 || deck[mutantIdx] == 32);
                 genRing.InitializeRing(deck[mutantIdx]);
             }
-            else if (genRing.ringBase.id == 27)  //천사링이라면 효과를 키고 앞으로 생성 불가하게 막음
+            else if (genRing.baseRing.id == 27)  //천사링이라면 효과를 키고 앞으로 생성 불가하게 막음
             {
                 UIManager.instance.SetBattleDeckRingRPText(deckIdx, "MAX");
                 angelRing = genRing;
                 isAngelEffect = true;
             }
-            else if (genRing.ringBase.id == 30)
+            else if (genRing.baseRing.id == 30)
             {
                 plantCoolTime = 0.0f;
                 plantIdx = deckIdx;
                 UIManager.instance.SetBattleDeckRingRPText(deckIdx, "0.00");
             }
-            else if (genRing.ringBase.id == 31)
+            else if (genRing.baseRing.id == 31)
             {
                 necroCount = 0;
                 necroIdx = deckIdx;
                 UIManager.instance.SetBattleDeckRingRPText(deckIdx, "0/20");
             }
-            else if (genRing.ringBase.id == 32)  //동면링이라면 효과 발동 가능한지 확인하고 3개 생성이면 앞으로 생성 불가하게 막음
+            else if (genRing.baseRing.id == 32)  //동면링이라면 효과 발동 가능한지 확인하고 3개 생성이면 앞으로 생성 불가하게 막음
             {
                 if (++sleepGenerated == 3) UIManager.instance.SetBattleDeckRingRPText(deckIdx, "MAX");
                 else UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));
@@ -240,19 +240,19 @@ public class DeckManager : MonoBehaviour
         GetCommanderNearestForAllRings();
     }
 
-    //덱에 링스톤을 넣는다.
+    //덱에 링을 넣는다.
     public bool AddRingToDeck(int ringID)
     {
         if (deck.Count >= maxDeckLength) return false;
         if (deck.Contains(ringID)) return false;
-        if (ringID < 0 || ringID >= GameManager.instance.ringstoneDB.Count) return false;
-        GameManager.instance.ringstoneDB[ringID].level = 0;
-        GameManager.instance.ringstoneDB[ringID].Upgrade();
+        if (ringID < 0 || ringID >= GameManager.instance.ringDB.Count) return false;
+        GameManager.instance.ringDB[ringID].level = 0;
+        GameManager.instance.ringDB[ringID].Upgrade();
         deck.Add(ringID);
         return true;
     }
 
-    //덱에서 링스톤을 제거한다.
+    //덱에서 링을 제거한다.
     public bool RemoveRingFromDeck(int index)
     {
         if (deck.Count > index)
@@ -260,8 +260,8 @@ public class DeckManager : MonoBehaviour
             int ringID = deck[index];
             GameManager.instance.EmptyParticlePool(ringID);
             GameManager.instance.EmptyBulletPool(ringID);
-            GameManager.instance.ringstoneDB[ringID].level = 0;
-            GameManager.instance.ringstoneDB[ringID].Upgrade();
+            GameManager.instance.ringDB[ringID].level = 0;
+            GameManager.instance.ringDB[ringID].Upgrade();
             deck.RemoveAt(index);
             return true;
         }
@@ -279,7 +279,7 @@ public class DeckManager : MonoBehaviour
         for (int i = rings.Count - 1; i >= 0; i--) //모든 링에 대하여 이 링이 가장 가까운 사령관 링이었던 경우 삭제하고, 같은 사령관 링이면 저장한다.
         {
             ring = rings[i];
-            if (ring.ringBase.id == 19) commanderList.Add(ring);
+            if (ring.baseRing.id == 19) commanderList.Add(ring);
         }
 
         if (commanderList.Count == 0) return;

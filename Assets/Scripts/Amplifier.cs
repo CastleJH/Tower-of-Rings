@@ -21,7 +21,7 @@ public class Amplifier : MonoBehaviour
         if (coolTime > 0.5f)    //0.5초마다 파티클 재생
         {
             coolTime = 0.0f;
-            for (int i = monsters.Count - 1; i >= 0; i--) monsters[i].PlayParticleCollision(parent.ringBase.id, 0.0f);
+            for (int i = monsters.Count - 1; i >= 0; i--) monsters[i].PlayParticleCollision(parent.baseRing.id, 0.0f);
         }
         //부모링이 전투에서 제거되면 본인도 제거한다.
         if (!parent.gameObject.activeSelf) RemoveFromBattle();
@@ -33,7 +33,7 @@ public class Amplifier : MonoBehaviour
         monsters.Clear();
         parent = par;
         transform.position = new Vector3(par.transform.position.x, par.transform.position.y, -0.2f);
-        transform.localScale = new Vector3(par.ringBase.range * 2, par.ringBase.range * 2, 1);
+        transform.localScale = new Vector3(par.baseRing.range * 2, par.baseRing.range * 2, 1);
     }
 
     //증폭을 전투에서 제거한다. 제거하면서 영향을 받던 모든 몬스터들의 추가 피격 상태를 해제한다.

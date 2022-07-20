@@ -74,7 +74,7 @@ public class BattleManager : MonoBehaviour
         if (wave == 2) numGenMonster = 45;
         else numGenMonster = 30;
         //지우세요!
-        numGenMonster = 1;
+        //numGenMonster = 1;
         newMonsterID = 0;
         StartCoroutine(GenerateMonster());
     }
@@ -86,9 +86,7 @@ public class BattleManager : MonoBehaviour
         {
             //몬스터 능력치 배율을 조정한다.
             float scale;
-            if (FloorManager.instance.floor.floorNum == 7) scale = 4.0f;
-            else scale = 0.5f * (FloorManager.instance.floor.floorNum + 1);
-            scale += 0.05f * (wave - 1);
+            scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) + 0.05f * (wave - 1);
 
             //몬스터 생성
             Monster monster = GameManager.instance.GetMonsterFromPool();
@@ -97,7 +95,7 @@ public class BattleManager : MonoBehaviour
             {
                 //if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(3, 10)], FloorManager.instance.curRoom.pathID, 1.0f);
                 //지우세요!
-                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[13], FloorManager.instance.curRoom.pathID, 1.0f);
+                if (FloorManager.instance.curRoom.type == 1) monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[15], FloorManager.instance.curRoom.pathID, 1.0f);
                 else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[FloorManager.instance.floor.floorNum + 9], FloorManager.instance.curRoom.pathID, 1.0f);
             }
             else monster.InitializeMonster(newMonsterID, GameManager.instance.monsterDB[Random.Range(0, 3)], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
@@ -132,7 +130,7 @@ public class BattleManager : MonoBehaviour
                 //덱 정리
                 for (int i = 0; i < DeckManager.instance.rings.Count; i++)
                 {
-                    if (DeckManager.instance.rings[i].ringBase.id == 17)
+                    if (DeckManager.instance.rings[i].baseRing.id == 17)
                     {
                         greedyATK = DeckManager.instance.rings[i].curATK;
                         greedyEFF = DeckManager.instance.rings[i].curEFF;
@@ -150,7 +148,7 @@ public class BattleManager : MonoBehaviour
 
                 //다운그레이드 된 링들을 50% 확률로 복구
                 for (int i = 0; i < ringDowngrade.Count; i++)
-                    if (Random.Range(0, 2) == 1) GameManager.instance.ringstoneDB[ringDowngrade[i]].Upgrade();
+                    if (Random.Range(0, 2) == 1) GameManager.instance.ringDB[ringDowngrade[i]].Upgrade();
 
                 emeraldGet = 0;
                 if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림

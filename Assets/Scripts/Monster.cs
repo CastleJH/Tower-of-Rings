@@ -143,7 +143,8 @@ public class Monster : MonoBehaviour
         barrierBlock = false;
         curseStack = 0;
         isInAmplify = false;
-        skillCoolTime = 0.0f;
+        if (IsNormalMonster() || baseMonster.type == 11) skillCoolTime = 0.0f;
+        else skillCoolTime = 5.0f;
         skillUseTime = 0.0f;
         immuneDamage = false;
         immuneInterrupt = false;
@@ -274,10 +275,10 @@ public class Monster : MonoBehaviour
                 Boss_DarkWarlock();
                 break;
             case 14:
-                Boss_Executer();
+                Boss_Spacer();
                 break;
             case 15:
-                Boss_Spacer();
+                Boss_Executer();
                 break;
             case 16:
                 Boss_King();
@@ -578,12 +579,12 @@ public class Monster : MonoBehaviour
 
     void Boss_Slime()
     {
-        Monster monster;
         skillCoolTime += Time.deltaTime;
         if (skillCoolTime >= 10.0f)
         {
             skillCoolTime = 0.0f;
 
+            Monster monster;
             float scale;
             if (FloorManager.instance.floor.floorNum == 7) scale = 4.0f;
             else scale = 0.5f * (FloorManager.instance.floor.floorNum + 1);
@@ -649,7 +650,7 @@ public class Monster : MonoBehaviour
             for (int i = 0; i < DeckManager.instance.deck.Count; i++)
             {
                 ringID = DeckManager.instance.deck[i];
-                if (GameManager.instance.ringstoneDB[ringID].level > 1)
+                if (GameManager.instance.ringDB[ringID].level > 1)
                 {
                     canDowngrade = true;
                     break;
@@ -659,21 +660,44 @@ public class Monster : MonoBehaviour
             {
                 skillCoolTime = 0.0f;
                 do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
-                while (GameManager.instance.ringstoneDB[ringID].level == 1);
-                GameManager.instance.ringstoneDB[ringID].Downgrade();
+                while (GameManager.instance.ringDB[ringID].level == 1);
+                GameManager.instance.ringDB[ringID].Downgrade();
                 BattleManager.instance.ringDowngrade.Add(ringID);
+            }
+        }
+    }
+
+    void Boss_Spacer()
+    {
+        skillCoolTime += Time.deltaTime;
+        if (skillCoolTime >= 10.0f)
+        {
+            skillCoolTime = 0.0f;
+
+            Monster monster1, monster2;
+            int monsterNum = BattleManager.instance.monsters.Count;
+            float tmp;
+            for (int i = monsterNum - 1; i >= 0; i--)
+            {
+                monster1 = BattleManager.instance.monsters[i];
+                monster2 = BattleManager.instance.monsters[Random.Range(0, monsterNum)];
+                if (!monster1.IsNormalMonster() || !monster2.IsNormalMonster()) continue;
+                tmp = monster1.movedDistance;
+                monster1.movedDistance = monster2.movedDistance;
+                monster2.movedDistance = tmp;
             }
         }
     }
 
     void Boss_Executer()
     {
+        skillCoolTime += Time.deltaTime;
+        if (skillCoolTime >= 10.0f)
+        {
+            skillCoolTime = 0.0f;
 
-    }
-
-    void Boss_Spacer()
-    {
-
+            DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[Random.Range(0, DeckManager.instance.rings.Count)]);
+        }
     }
 
     void Boss_King()

@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     //DB
     [HideInInspector]
-    public List<Ringstone> ringstoneDB;
+    public List<BaseRing> ringDB;
     [HideInInspector]
     public List<BaseMonster> monsterDB;
 
@@ -59,20 +59,20 @@ public class GameManager : MonoBehaviour
         //DB읽기
         ReadDB();
         if (monsterDB.Count != monsterSprites.Length) Debug.LogError("num of monster sprites does not match");
-        if (ringstoneDB.Count != ringSprites.Length) Debug.LogError("num of ring sprites does not match");
-        if (ringstoneDB.Count != ringAttackAudios.Length) Debug.LogError("num of audios does not match");
+        if (ringDB.Count != ringSprites.Length) Debug.LogError("num of ring sprites does not match");
+        if (ringDB.Count != ringAttackAudios.Length) Debug.LogError("num of audios does not match");
 
         //오브젝트 풀 초기화
         ringPool = new Queue<Ring>();
         monsterPool = new Queue<Monster>();
-        bulletPool = new Queue<Bullet>[ringstoneDB.Count];
-        particlePool = new Queue<ParticleChecker>[ringstoneDB.Count];
+        bulletPool = new Queue<Bullet>[ringDB.Count];
+        particlePool = new Queue<ParticleChecker>[ringDB.Count];
         barrierPool = new Queue<Barrier>();
         blizzardPool = new Queue<Blizzard>();
         amplifierPool = new Queue<Amplifier>();
         damageTextPool = new Queue<DamageText>();
 
-        for (int i = 0; i < ringstoneDB.Count; i++)
+        for (int i = 0; i < ringDB.Count; i++)
         {
             bulletPool[i] = new Queue<Bullet>();
             particlePool[i] = new Queue<ParticleChecker>();
@@ -94,10 +94,10 @@ public class GameManager : MonoBehaviour
     void ReadDB()
     {
         List<Dictionary<string, object>> dataRing = DBReader.Read("ring_db");
-        ringstoneDB = new List<Ringstone>();
+        ringDB = new List<BaseRing>();
         for (int i = 0; i < dataRing.Count; i++)
         {
-            Ringstone r = new Ringstone();
+            BaseRing r = new BaseRing();
             r.id = (int)dataRing[i]["id"];
             r.rarity = (int)dataRing[i]["rarity"];
             r.name = (string)dataRing[i]["name"];
@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
             r.different = (string)dataRing[i]["all"];
             r.level = 0;
             r.Upgrade();
-            ringstoneDB.Add(r);
+            ringDB.Add(r);
         }
 
         List<Dictionary<string, object>> dataMonster = DBReader.Read("monster_db");
@@ -125,6 +125,7 @@ public class GameManager : MonoBehaviour
             m.hp = (int)dataMonster[i]["hp"];
             m.spd = float.Parse(dataMonster[i]["spd"].ToString());
             m.description = (string)dataMonster[i]["description"];
+            m.atk = (int)dataMonster[i]["atk"];
             monsterDB.Add(m);
         }
     }
@@ -167,7 +168,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("already enqueued ring");
             return;
         }
-        ring.ringBase = null;
+        ring.baseRing = null;
         ring.isInBattle = false;
         ring.gameObject.SetActive(false);
         ringPool.Enqueue(ring);

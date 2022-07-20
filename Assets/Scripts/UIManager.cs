@@ -111,7 +111,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)
         {
             SetBattleDeckRingImage(i);
-            if (i < DeckManager.instance.deck.Count) SetBattleDeckRingRPText(i, (int)GameManager.instance.ringstoneDB[DeckManager.instance.deck[i]].baseRP);
+            if (i < DeckManager.instance.deck.Count) SetBattleDeckRingRPText(i, (int)GameManager.instance.ringDB[DeckManager.instance.deck[i]].baseRP);
             else SetBattleDeckRingRPText(i, 0);
         }
     }

@@ -33,7 +33,7 @@ public class Blizzard : MonoBehaviour
         monsters.Clear();
         parent = par;
         transform.position = new Vector3(par.transform.position.x, par.transform.position.y, -0.2f);
-        transform.localScale = new Vector3(par.ringBase.range * 2, par.ringBase.range * 2, 1);
+        transform.localScale = new Vector3(par.baseRing.range * 2, par.baseRing.range * 2, 1);
         coolTime = 0.0f;
     }
 
