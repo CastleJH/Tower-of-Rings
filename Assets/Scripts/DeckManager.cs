@@ -90,7 +90,7 @@ public class DeckManager : MonoBehaviour
         AddRingToDeck(1);
         AddRingToDeck(15);
         //AddRingToDeck(18);
-        AddRingToDeck(7);   //공
+        //AddRingToDeck(7);   //공
         //AddRingToDeck(14);  //속
         //AddRingToDeck(10);  //타
         //AddRingToDeck(3);     //효
@@ -247,6 +247,7 @@ public class DeckManager : MonoBehaviour
         if (deck.Contains(ringID)) return false;
         if (ringID < 0 || ringID >= GameManager.instance.ringDB.Count) return false;
         GameManager.instance.ringDB[ringID].level = 0;
+        GameManager.instance.ringDB[ringID].Upgrade();
         GameManager.instance.ringDB[ringID].Upgrade();
         deck.Add(ringID);
         return true;

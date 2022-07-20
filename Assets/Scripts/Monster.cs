@@ -37,10 +37,13 @@ public class Monster : MonoBehaviour
     public bool barrierBlock; //결계로부터 이동을 방해받지 않는지 여부
     public int curseStack;     //저주로부터 쌓인 스택
     public bool isInAmplify;    //증폭 범위 내에 있는지 여부
-    float skillCoolTime;    //엘리트/보스 몬스터의 스킬 쿨타임
+    float skillCoolTime1;    //엘리트/보스 몬스터의 스킬 쿨타임
+    float skillCoolTime2;
     float skillUseTime;     //엘리트/보스 몬스터의 스킬 지속된 시간
     bool immuneDamage;
     bool immuneInterrupt;
+    int king10SecCase;
+    int king5SecCase;
     int cloneID;
 
     void Awake()
@@ -143,8 +146,9 @@ public class Monster : MonoBehaviour
         barrierBlock = false;
         curseStack = 0;
         isInAmplify = false;
-        if (IsNormalMonster() || baseMonster.type == 11) skillCoolTime = 0.0f;
-        else skillCoolTime = 5.0f;
+        if (IsNormalMonster() || baseMonster.type == 11) skillCoolTime1 = 0.0f;
+        else skillCoolTime1 = 5.0f;
+        skillCoolTime2 = 0.0f;
         skillUseTime = 0.0f;
         immuneDamage = false;
         immuneInterrupt = false;
@@ -470,15 +474,15 @@ public class Monster : MonoBehaviour
             if (skillUseTime > 2.0f)
             {
                 skillUseTime = 0.0f;
-                skillCoolTime = 0.0f;
+                skillCoolTime1 = 0.0f;
             }
         }
         else
         {
-            skillCoolTime += Time.deltaTime;
-            if (skillCoolTime > 5.0f)
+            skillCoolTime1 += Time.deltaTime;
+            if (skillCoolTime1 > 5.0f)
             {
-                skillCoolTime = 0.0f;
+                skillCoolTime1 = 0.0f;
                 skillUseTime = 0.0001f;
             }
         }
@@ -504,10 +508,10 @@ public class Monster : MonoBehaviour
 
     void Elite_DarkPriest()
     {
-        skillCoolTime += Time.deltaTime;
-        if (skillCoolTime >= 1.0f)
+        skillCoolTime1 += Time.deltaTime;
+        if (skillCoolTime1 >= 1.0f)
         {
-            skillCoolTime = 0.0f;
+            skillCoolTime1 = 0.0f;
 
             Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);
             Monster monster;
@@ -540,10 +544,10 @@ public class Monster : MonoBehaviour
 
     void Elite_Predator()
     {
-        skillCoolTime += Time.deltaTime;
-        if (skillCoolTime >= 5.0f)
+        skillCoolTime1 += Time.deltaTime;
+        if (skillCoolTime1 >= 5.0f)
         {
-            skillCoolTime = 0.0f;
+            skillCoolTime1 = 0.0f;
 
             BattleManager.instance.ChangeCurrentRP((int)BattleManager.instance.rp * 0.8f);
         }
@@ -552,10 +556,10 @@ public class Monster : MonoBehaviour
     void Boss_Puppeteer()
     {
         Monster monster;
-        skillCoolTime += Time.deltaTime;
-        if (skillCoolTime >= 10.0f)
+        skillCoolTime1 += Time.deltaTime;
+        if (skillCoolTime1 >= 10.0f)
         {
-            skillCoolTime = 0.0f;
+            skillCoolTime1 = 0.0f;
 
             monster = GameManager.instance.GetMonsterFromPool();
             monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
@@ -579,10 +583,10 @@ public class Monster : MonoBehaviour
 
     void Boss_Slime()
     {
-        skillCoolTime += Time.deltaTime;
-        if (skillCoolTime >= 10.0f)
+        skillCoolTime1 += Time.deltaTime;
+        if (skillCoolTime1 >= 10.0f)
         {
-            skillCoolTime = 0.0f;
+            skillCoolTime1 = 0.0f;
 
             Monster monster;
             float scale;
@@ -610,19 +614,18 @@ public class Monster : MonoBehaviour
     {
         if (skillUseTime != 0)
         {
-            baseSPD = baseMonster.spd * 2;
             skillUseTime += Time.deltaTime;
             if (skillUseTime > 5.0f)
             {
                 skillUseTime = 0.0f;
-                skillCoolTime = 0.0f;
+                skillCoolTime1 = 0.0f;
                 for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) DeckManager.instance.rings[i].isSealed = false;
             }
         }
         else
         {
-            skillCoolTime += Time.deltaTime;
-            if (skillCoolTime >= 10.0f)
+            skillCoolTime1 += Time.deltaTime;
+            if (skillCoolTime1 >= 10.0f)
             {
                 skillUseTime = 0.001f;
                 
@@ -642,8 +645,8 @@ public class Monster : MonoBehaviour
 
     void Boss_DarkWarlock()
     {
-        skillCoolTime += Time.deltaTime;
-        if (skillCoolTime >= 10.0f)
+        skillCoolTime1 += Time.deltaTime;
+        if (skillCoolTime1 >= 10.0f)
         {
             int ringID;
             bool canDowngrade = false;
@@ -658,7 +661,7 @@ public class Monster : MonoBehaviour
             }
             if (canDowngrade)
             {
-                skillCoolTime = 0.0f;
+                skillCoolTime1 = 0.0f;
                 do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
                 while (GameManager.instance.ringDB[ringID].level == 1);
                 GameManager.instance.ringDB[ringID].Downgrade();
@@ -669,10 +672,10 @@ public class Monster : MonoBehaviour
 
     void Boss_Spacer()
     {
-        skillCoolTime += Time.deltaTime;
-        if (skillCoolTime >= 10.0f)
+        skillCoolTime1 += Time.deltaTime;
+        if (skillCoolTime1 >= 10.0f)
         {
-            skillCoolTime = 0.0f;
+            skillCoolTime1 = 0.0f;
 
             Monster monster1, monster2;
             int monsterNum = BattleManager.instance.monsters.Count;
@@ -691,10 +694,10 @@ public class Monster : MonoBehaviour
 
     void Boss_Executer()
     {
-        skillCoolTime += Time.deltaTime;
-        if (skillCoolTime >= 10.0f)
+        skillCoolTime1 += Time.deltaTime;
+        if (skillCoolTime1 >= 10.0f)
         {
-            skillCoolTime = 0.0f;
+            skillCoolTime1 = 0.0f;
 
             DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[Random.Range(0, DeckManager.instance.rings.Count)]);
         }
@@ -702,6 +705,82 @@ public class Monster : MonoBehaviour
 
     void Boss_King()
     {
+        if (skillUseTime != 0)
+        {
+            skillUseTime += Time.deltaTime;
+            if (skillUseTime > 5.0f)
+            {
+                skillUseTime = 0.0f;
+                skillCoolTime1 = 0.0f;
+                for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) DeckManager.instance.rings[i].isSealed = false;
+            }
+        }
+        else 
+        {
+            skillCoolTime1 += Time.deltaTime;
+            if (skillCoolTime1 >= 10.0f)
+            {
+                skillCoolTime1 = 0.0f;
 
+                switch (Random.Range(0, 3))
+                {
+                    case 0:
+                        DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[Random.Range(0, DeckManager.instance.rings.Count)]);
+                        break;
+                    case 1:
+                        int ringID;
+                        bool canDowngrade = false;
+                        for (int i = 0; i < DeckManager.instance.deck.Count; i++)
+                        {
+                            ringID = DeckManager.instance.deck[i];
+                            if (GameManager.instance.ringDB[ringID].level > 1)
+                            {
+                                canDowngrade = true;
+                                break;
+                            }
+                        }
+                        if (canDowngrade)
+                        {
+                            skillCoolTime1 = 0.0f;
+                            do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
+                            while (GameManager.instance.ringDB[ringID].level == 1);
+                            GameManager.instance.ringDB[ringID].Downgrade();
+                            BattleManager.instance.ringDowngrade.Add(ringID);
+                        }
+                        break;
+                    case 2:
+                        skillUseTime = 0.001f;
+
+                        int targetSealNum = DeckManager.instance.rings.Count / 2;
+                        int sealNum = 0;
+                        int tarIdx;
+                        while (sealNum < targetSealNum)
+                        {
+                            do tarIdx = Random.Range(0, DeckManager.instance.rings.Count);
+                            while (DeckManager.instance.rings[tarIdx].isSealed);
+                            DeckManager.instance.rings[tarIdx].isSealed = true;
+                            sealNum++;
+                        }
+                        break;
+                }
+            }
+        }
+
+        skillCoolTime2 += Time.deltaTime;
+        if (skillCoolTime2 >= 5.0f)
+        {
+            skillCoolTime2 = 0.0f;
+
+            switch (Random.Range(0, 2))
+            {
+                case 0:
+                    immuneInterrupt = true;
+                    break;
+                case 1:
+                    immuneInterrupt = false;
+                    AE_DecreaseHP((baseHP - curHP) * 0.05f, Color.green);
+                    break;
+            }
+        }
     }
 }
