@@ -778,6 +778,7 @@ public class Ring : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.75f);
         for (int i = 0; i < colliders.Length; i++)
         {
+            Debug.Log(colliders[i].tag);
             if (colliders[i].tag == "Land" || colliders[i].tag == "Barrier") ret = 1;
             else
             {
