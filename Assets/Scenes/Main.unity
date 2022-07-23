@@ -925,6 +925,7 @@ GameObject:
   m_Component:
   - component: {fileID: 132631827}
   - component: {fileID: 132631828}
+  - component: {fileID: 132631830}
   - component: {fileID: 132631829}
   m_Layer: 13
   m_Name: Portal 2
@@ -1014,6 +1015,25 @@ CapsuleCollider2D:
   m_Offset: {x: 0.00000047683716, y: 0.0000009536743}
   m_Size: {x: 1.86, y: 3.21}
   m_Direction: 0
+--- !u!95 &132631830
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132631826}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2d33e4046860ef847ba7a99318e45604, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &138263732
 GameObject:
   m_ObjectHideFlags: 0
@@ -4120,6 +4140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 446916086}
   - component: {fileID: 446916087}
+  - component: {fileID: 446916089}
   - component: {fileID: 446916088}
   m_Layer: 13
   m_Name: Portal 3
@@ -4209,6 +4230,25 @@ CapsuleCollider2D:
   m_Offset: {x: 0.00000047683716, y: 0}
   m_Size: {x: 1.85, y: 3.21}
   m_Direction: 0
+--- !u!95 &446916089
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446916085}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 677bcc1090985fa4089c08465eac26a5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &448816466
 GameObject:
   m_ObjectHideFlags: 0
@@ -5096,10 +5136,10 @@ MonoBehaviour:
   debugFlag: 1
   debugInt: 1
   portals:
-  - {fileID: 742702808}
-  - {fileID: 562530851}
-  - {fileID: 132631828}
-  - {fileID: 446916087}
+  - {fileID: 742702810}
+  - {fileID: 562530853}
+  - {fileID: 132631830}
+  - {fileID: 446916089}
   roomImage: {fileID: 1263004047}
   playerX: 0
   playerY: 0
@@ -5727,6 +5767,7 @@ GameObject:
   m_Component:
   - component: {fileID: 562530850}
   - component: {fileID: 562530851}
+  - component: {fileID: 562530853}
   - component: {fileID: 562530852}
   m_Layer: 13
   m_Name: Portal 1
@@ -5816,6 +5857,25 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1.85, y: 3.21}
   m_Direction: 0
+--- !u!95 &562530853
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 562530849}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7c65a3d13e5299741a5f198b4b6a7189, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &578744714
 GameObject:
   m_ObjectHideFlags: 0
@@ -7042,17 +7102,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: db4312e67e705bd4ebaa295b87c13538, type: 3}
   - {fileID: 21300000, guid: 542bee68e2f5c9746825538783a2633a, type: 3}
   - {fileID: 21300000, guid: 3a7bf5aef83245544b5a4773b0af1652, type: 3}
-  portalSprites:
-  - {fileID: 21300000, guid: aff675b508fd13b4c9b52b79fc665c5b, type: 3}
-  - {fileID: 21300000, guid: 538850a8e5f773c428a650b6607eab91, type: 3}
-  - {fileID: 21300000, guid: 89fea1eae8bacaa42af1591163a6b35d, type: 3}
-  - {fileID: 21300000, guid: 444fd3ebaa574f04fb6a699a5219ffc9, type: 3}
-  - {fileID: 21300000, guid: 67bdc34cf5a3a0b4aadaceb035592686, type: 3}
-  - {fileID: 21300000, guid: 65304999747fc5a448b771137c9128f6, type: 3}
-  - {fileID: 21300000, guid: 8befdd1ee5c8bf14d96c90049952236b, type: 3}
-  - {fileID: 21300000, guid: 428ace115a03e2f4e91f711755815552, type: 3}
-  - {fileID: 21300000, guid: 4d563d7ee8e1a1545816d8551aceba16, type: 3}
-  - {fileID: 21300000, guid: 821b9fd8fda820c42a54478b0df65342, type: 3}
   mapRoomSprites:
   - {fileID: 21300000, guid: 596044c7ae7e8324aa65c6739fd27f0b, type: 3}
   - {fileID: 21300000, guid: e406ca8f672c3104b84986a9827994af, type: 3}
@@ -7826,6 +7875,7 @@ GameObject:
   m_Component:
   - component: {fileID: 742702807}
   - component: {fileID: 742702808}
+  - component: {fileID: 742702810}
   - component: {fileID: 742702809}
   m_Layer: 13
   m_Name: Portal 0
@@ -7915,6 +7965,25 @@ CapsuleCollider2D:
   m_Offset: {x: 0.00000020861626, y: 0}
   m_Size: {x: 1.86, y: 3.21}
   m_Direction: 0
+--- !u!95 &742702810
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742702806}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 95544ba3083a92749b90cc8fc47d6817, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &751463855
 GameObject:
   m_ObjectHideFlags: 0
@@ -19114,7 +19183,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 0
       flipNormals: 0
-    vertexPathUpToDate: 1
+    vertexPathUpToDate: 0
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1

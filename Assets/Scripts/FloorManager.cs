@@ -11,7 +11,7 @@ public class FloorManager : MonoBehaviour
 
     //그래픽 관련 변수
     bool isPortalOn;
-    public SpriteRenderer[] portals;
+    public Animator[] portals;
     public SpriteRenderer roomImage;
 
     //층 관련 변수
@@ -113,12 +113,15 @@ public class FloorManager : MonoBehaviour
                 adjRoom = floor.rooms[playerX + dx[i], playerY + dy[i]];
                 if (adjRoom.type != -1 && adjRoom.type != 10)
                 {
-                    if (adjRoom.visited) portals[i].sprite = GameManager.instance.portalSprites[adjRoom.type];
-                    else if (adjRoom.type < 8) portals[i].sprite = GameManager.instance.portalSprites[1];
-                    else portals[i].sprite = GameManager.instance.portalSprites[adjRoom.type];
                     portals[i].gameObject.SetActive(true);
+                    if (adjRoom.type < 2 || adjRoom.type == 9) portals[i].SetInteger("portalType", adjRoom.type);
+                    else portals[i].SetInteger("portalType", 2);
                 }
-                else portals[i].gameObject.SetActive(false);
+                else
+                {
+                    portals[i].SetInteger("portalType", -1);
+                    portals[i].gameObject.SetActive(false);
+                }
             }
         }
         else

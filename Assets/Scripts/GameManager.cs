@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
     //스프라이트
     public Sprite[] ringSprites;
     public Sprite[] monsterSprites;
-    public Sprite[] portalSprites;
     public Sprite[] mapRoomSprites;
     public Sprite emptyRingSprite;
 
