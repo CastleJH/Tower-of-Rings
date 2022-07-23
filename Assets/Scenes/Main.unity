@@ -7050,12 +7050,12 @@ MonoBehaviour:
   amplifierPrefab: {fileID: 6058928862243412483, guid: b7218e3ac6341ad43a5ffd3bdf10c1d5, type: 3}
   damageTextPrefab: {fileID: 4119758275505345053, guid: 280ab572f05d400488ae86a667fef081, type: 3}
   ringSprites:
-  - {fileID: 21300000, guid: 6a0faaca74be83846b9c5606ce3a43a7, type: 3}
-  - {fileID: 21300000, guid: ab6079f766de8084db9044d157042b85, type: 3}
-  - {fileID: 21300000, guid: 0a5200234171c9046bae060a9bc6f733, type: 3}
-  - {fileID: 21300000, guid: f1e942a1a455c9747b6f7183c12f6ec2, type: 3}
-  - {fileID: 21300000, guid: 0abf8413dea3c0b449e8c7b58b9b2771, type: 3}
-  - {fileID: 21300000, guid: 143d3e2deb0add142b31192fa17c9d30, type: 3}
+  - {fileID: 21300000, guid: 5d872ebf82108fe4fbdd90d9f77ebadc, type: 3}
+  - {fileID: 21300000, guid: 8c1e1edba7b70f84ba90a879fa29f069, type: 3}
+  - {fileID: 21300000, guid: cd19722e62ed44f41b444a2a3ecfa5eb, type: 3}
+  - {fileID: 21300000, guid: 59189f742ac9f91419ff488cf3402b47, type: 3}
+  - {fileID: 21300000, guid: faaa91bd775db44448f6b5c876e098fb, type: 3}
+  - {fileID: 21300000, guid: c2937434a779d784dae26342d33298b7, type: 3}
   - {fileID: 21300000, guid: a4f5cebdc344dff41b5c1bb2b0168b78, type: 3}
   - {fileID: 21300000, guid: fe295c9ea41cf8b4297c2139a803745f, type: 3}
   - {fileID: 21300000, guid: df83ed01739d27b4393a4ccdd8e3baca, type: 3}
