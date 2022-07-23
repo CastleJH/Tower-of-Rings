@@ -779,7 +779,7 @@ public class Ring : MonoBehaviour
         for (int i = 0; i < colliders.Length; i++)
         {
             Debug.Log(colliders[i].tag);
-            if (colliders[i].tag == "Land" || colliders[i].tag == "Barrier") ret = 1;
+            if (colliders[i].tag == "Land" || colliders[i].tag == "Barrier" || colliders[i].tag == "Bullet") ret = 1;
             else
             {
                 if (colliders[i].tag == "Ring") ret = 2;

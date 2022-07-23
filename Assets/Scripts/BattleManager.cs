@@ -192,7 +192,7 @@ public class BattleManager : MonoBehaviour
             {
                 switch (UIManager.instance.battleDeckRingRPText[i].text)
                 {
-                    case "10.00":
+                    case "20.00":
                     case "20/20":
                         UIManager.instance.battleRPNotEnough[i].SetActive(false);
                         break;
