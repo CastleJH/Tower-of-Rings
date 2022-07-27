@@ -7081,8 +7081,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b717f88850dcf974697543440a600f8b, type: 3}
   - {fileID: 21300000, guid: 1ca0986061366ce4fbcbac405b3b5b84, type: 3}
   - {fileID: 21300000, guid: 0fc50f647b685d6458056a081f4a594b, type: 3}
-  - {fileID: 21300000, guid: d7a34cb7cc0e14247b13a76cfd2f7eca, type: 3}
-  - {fileID: 21300000, guid: 447b7aeca66c6354db010c27180d58de, type: 3}
+  - {fileID: 21300000, guid: f4e67699688c77a4289bd6c151bc7c8b, type: 3}
+  - {fileID: 21300000, guid: 16ecc98e32eab9645927ad4a7e0c7db4, type: 3}
   monsterSprites:
   - {fileID: 21300000, guid: 666a60dac37049348a311607bb90bbbb, type: 3}
   - {fileID: 21300000, guid: 299856fc7b3dfbe44a00cf510bddb471, type: 3}
