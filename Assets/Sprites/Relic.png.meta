@@ -5,6 +5,21 @@ TextureImporter:
   - first:
       213: -4027104364979835289
     second: Relic_0
+  - first:
+      213: -8546717243334140335
+    second: Relic_1
+  - first:
+      213: -2339755894066438802
+    second: Relic_2
+  - first:
+      213: 9021770732760019495
+    second: Relic_3
+  - first:
+      213: -4222241931315241794
+    second: Relic_4
+  - first:
+      213: 4853169483433701711
+    second: Relic_5
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -146,6 +161,111 @@ TextureImporter:
       bones: []
       spriteID: 76ea3f3aae9dc18c0800000000000000
       internalID: -4027104364979835289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Relic_1
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 390
+        width: 130
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15edc5b13f5f36980800000000000000
+      internalID: -8546717243334140335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Relic_2
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 390
+        width: 130
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6d1b013964878fd0800000000000000
+      internalID: -2339755894066438802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Relic_3
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 390
+        width: 130
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7223d2b9ea4c33d70800000000000000
+      internalID: 9021770732760019495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Relic_4
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 390
+        width: 130
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ebc123875559765c0800000000000000
+      internalID: -4222241931315241794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Relic_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 260
+        width: 130
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f41f4d69eebe95340800000000000000
+      internalID: 4853169483433701711
       vertices: []
       indices: 
       edges: []

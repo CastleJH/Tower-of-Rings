@@ -10,8 +10,8 @@ public class DamageText : MonoBehaviour
 
     void Awake()
     {
-        speed = 1f;
-        lifetime = 0.5f;
+        speed = 1.5f;
+        lifetime = 0.8f;
         text = GetComponent<TextMesh>();
     }
     void OnEnable()
@@ -36,6 +36,6 @@ public class DamageText : MonoBehaviour
         text.text = dmgText;
         text.color = color;
         transform.position = pos;
-        transform.Translate(Vector3.back * 9);
+        transform.Translate(new Vector3(0.0f, 0.5f, -9.0f));
     }
 }
