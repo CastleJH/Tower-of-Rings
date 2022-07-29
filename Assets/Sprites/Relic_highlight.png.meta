@@ -1,67 +1,67 @@
 fileFormatVersion: 2
-guid: 1a4423a456f22a9468a7cd8cac7887ec
+guid: 9b8ce1af43bd7c64f8e960f5a8c628cb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4027104364979835289
-    second: Relic_0
+      213: 2730154744958878550
+    second: Relic_highlight_0
   - first:
-      213: -8546717243334140335
-    second: Relic_1
+      213: 650312294965595112
+    second: Relic_highlight_1
   - first:
-      213: -2339755894066438802
-    second: Relic_2
+      213: 921833273759133976
+    second: Relic_highlight_2
   - first:
-      213: 9021770732760019495
-    second: Relic_3
+      213: -8663002583659358510
+    second: Relic_highlight_3
   - first:
-      213: -4222241931315241794
-    second: Relic_4
+      213: 4705383101640300445
+    second: Relic_highlight_4
   - first:
-      213: 4853169483433701711
-    second: Relic_5
+      213: -2792953489088502860
+    second: Relic_highlight_5
   - first:
-      213: -3814511354980702263
-    second: Relic_6
+      213: 7138393517614291322
+    second: Relic_highlight_6
   - first:
-      213: 4973029451539472568
-    second: Relic_7
+      213: 4787823267603347031
+    second: Relic_highlight_7
   - first:
-      213: 2978030535826364694
-    second: Relic_8
+      213: -2190784554242031780
+    second: Relic_highlight_8
   - first:
-      213: 390153413717766027
-    second: Relic_9
+      213: -770104585414942203
+    second: Relic_highlight_9
   - first:
-      213: 2863428418925809224
-    second: Relic_10
+      213: -8354359039116820970
+    second: Relic_highlight_10
   - first:
-      213: -737725846245457620
-    second: Relic_11
+      213: 1803719972873830413
+    second: Relic_highlight_11
   - first:
-      213: -1691632493183288167
-    second: Relic_12
+      213: 4596738017961644225
+    second: Relic_highlight_12
   - first:
-      213: -8213084724909948812
-    second: Relic_13
+      213: 5167870093895036466
+    second: Relic_highlight_13
   - first:
-      213: -2593460557256415609
-    second: Relic_14
+      213: 718899429300843161
+    second: Relic_highlight_14
   - first:
-      213: -7288311996351012389
-    second: Relic_15
+      213: 7075529136559637838
+    second: Relic_highlight_15
   - first:
-      213: 4806599608105065369
-    second: Relic_16
+      213: -3793631998922868452
+    second: Relic_highlight_16
   - first:
-      213: 2062144296369999784
-    second: Relic_17
+      213: -1344710977877852345
+    second: Relic_highlight_17
   - first:
-      213: 4272366755605893442
-    second: Relic_18
+      213: -3456894071594851580
+    second: Relic_highlight_18
   - first:
-      213: -5837952944433699207
-    second: Relic_19
+      213: -188665832897150959
+    second: Relic_highlight_19
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -187,7 +187,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Relic_0
+      name: Relic_highlight_0
       rect:
         serializedVersion: 2
         x: 0
@@ -201,14 +201,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 76ea3f3aae9dc18c0800000000000000
-      internalID: -4027104364979835289
+      spriteID: 6530f1b864573e520800000000000000
+      internalID: 2730154744958878550
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_1
+      name: Relic_highlight_1
       rect:
         serializedVersion: 2
         x: 130
@@ -222,14 +222,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 15edc5b13f5f36980800000000000000
-      internalID: -8546717243334140335
+      spriteID: 8eb4e76369f560900800000000000000
+      internalID: 650312294965595112
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_2
+      name: Relic_highlight_2
       rect:
         serializedVersion: 2
         x: 260
@@ -243,14 +243,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e6d1b013964878fd0800000000000000
-      internalID: -2339755894066438802
+      spriteID: 8117c887a720bcc00800000000000000
+      internalID: 921833273759133976
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_3
+      name: Relic_highlight_3
       rect:
         serializedVersion: 2
         x: 390
@@ -264,14 +264,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7223d2b9ea4c33d70800000000000000
-      internalID: 9021770732760019495
+      spriteID: 2d651b87c05d6c780800000000000000
+      internalID: -8663002583659358510
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_4
+      name: Relic_highlight_4
       rect:
         serializedVersion: 2
         x: 520
@@ -285,14 +285,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ebc123875559765c0800000000000000
-      internalID: -4222241931315241794
+      spriteID: d9755613001ec4140800000000000000
+      internalID: 4705383101640300445
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_5
+      name: Relic_highlight_5
       rect:
         serializedVersion: 2
         x: 0
@@ -306,14 +306,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f41f4d69eebe95340800000000000000
-      internalID: 4853169483433701711
+      spriteID: 4b321b0799f6d39d0800000000000000
+      internalID: -2792953489088502860
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_6
+      name: Relic_highlight_6
       rect:
         serializedVersion: 2
         x: 130
@@ -327,14 +327,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9c76eaef122201bc0800000000000000
-      internalID: -3814511354980702263
+      spriteID: a79d95c551ba01360800000000000000
+      internalID: 7138393517614291322
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_7
+      name: Relic_highlight_7
       rect:
         serializedVersion: 2
         x: 260
@@ -348,14 +348,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8b0e09c10ffb30540800000000000000
-      internalID: 4973029451539472568
+      spriteID: 756f8d815e3c17240800000000000000
+      internalID: 4787823267603347031
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_8
+      name: Relic_highlight_8
       rect:
         serializedVersion: 2
         x: 390
@@ -369,14 +369,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 619523a7ef6145920800000000000000
-      internalID: 2978030535826364694
+      spriteID: c5fbdf02e05c891e0800000000000000
+      internalID: -2190784554242031780
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_9
+      name: Relic_highlight_9
       rect:
         serializedVersion: 2
         x: 520
@@ -390,14 +390,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b8fad80767a1a6500800000000000000
-      internalID: 390153413717766027
+      spriteID: 5026172b5f90055f0800000000000000
+      internalID: -770104585414942203
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_10
+      name: Relic_highlight_10
       rect:
         serializedVersion: 2
         x: 0
@@ -411,14 +411,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 84ec4d5d9f0fcb720800000000000000
-      internalID: 2863428418925809224
+      spriteID: 61e3e5b97ba5f0c80800000000000000
+      internalID: -8354359039116820970
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_11
+      name: Relic_highlight_11
       rect:
         serializedVersion: 2
         x: 130
@@ -432,14 +432,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c214ae0604213c5f0800000000000000
-      internalID: -737725846245457620
+      spriteID: d000c6142c9180910800000000000000
+      internalID: 1803719972873830413
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_12
+      name: Relic_highlight_12
       rect:
         serializedVersion: 2
         x: 260
@@ -453,14 +453,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 99c3d49c53d1688e0800000000000000
-      internalID: -1691632493183288167
+      spriteID: 1c0132e6fd4eacf30800000000000000
+      internalID: 4596738017961644225
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_13
+      name: Relic_highlight_13
       rect:
         serializedVersion: 2
         x: 390
@@ -474,14 +474,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4704e8d15f2450e80800000000000000
-      internalID: -8213084724909948812
+      spriteID: 23e6af74876f7b740800000000000000
+      internalID: 5167870093895036466
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_14
+      name: Relic_highlight_14
       rect:
         serializedVersion: 2
         x: 520
@@ -495,14 +495,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 786aeb92d5d220cd0800000000000000
-      internalID: -2593460557256415609
+      spriteID: 99235b8d83b0af900800000000000000
+      internalID: 718899429300843161
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_15
+      name: Relic_highlight_15
       rect:
         serializedVersion: 2
         x: 0
@@ -516,14 +516,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bd1a74dbad6bada90800000000000000
-      internalID: -7288311996351012389
+      spriteID: e45409e0344513260800000000000000
+      internalID: 7075529136559637838
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_16
+      name: Relic_highlight_16
       rect:
         serializedVersion: 2
         x: 130
@@ -537,14 +537,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 99b52aa80e874b240800000000000000
-      internalID: 4806599608105065369
+      spriteID: c19b5a7ebcf4a5bc0800000000000000
+      internalID: -3793631998922868452
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_17
+      name: Relic_highlight_17
       rect:
         serializedVersion: 2
         x: 260
@@ -558,14 +558,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8af4bb4df453e9c10800000000000000
-      internalID: 2062144296369999784
+      spriteID: 74fb50e7d70a65de0800000000000000
+      internalID: -1344710977877852345
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_18
+      name: Relic_highlight_18
       rect:
         serializedVersion: 2
         x: 390
@@ -579,14 +579,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 241d312adee7a4b30800000000000000
-      internalID: 4272366755605893442
+      spriteID: 4036f644825a600d0800000000000000
+      internalID: -3456894071594851580
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Relic_19
+      name: Relic_highlight_19
       rect:
         serializedVersion: 2
         x: 520
@@ -600,8 +600,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 97665935abc6bfea0800000000000000
-      internalID: -5837952944433699207
+      spriteID: 11089e0bc69b16df0800000000000000
+      internalID: -188665832897150959
       vertices: []
       indices: 
       edges: []
