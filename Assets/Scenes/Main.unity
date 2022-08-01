@@ -7374,7 +7374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ringPrefab: {fileID: 671390583966524708, guid: 485b518439648114fa5cb4919d015a23, type: 3}
-  monsterPrefab: {fileID: 5298284985273157095, guid: cfdc1a0c85563be479a62cfbe72b58af, type: 3}
+  monsterPrefab: {fileID: 3796618500957756376, guid: 1a6b6cacae34af94b978fe4df4edbc92, type: 3}
   bulletPrefabs:
   - {fileID: 5983777116976546278, guid: cdbb85fac2b15e848baa5d80e0b09b02, type: 3}
   - {fileID: 5983777116976546278, guid: 8a92fad8da6984a4ca36c0ca2e9a3a90, type: 3}
