@@ -23,8 +23,8 @@ public class Monster : MonoBehaviour
 
     //그래픽
     //SpriteRenderer spriteRenderer;  //몬스터 이미지
-    public Animator anim;
-    public TextMesh hpText;   //HP 텍스트
+    private Animator anim;
+    private TextMesh hpText;   //HP 텍스트
     float prevX;
 
     //기타 변수
@@ -52,7 +52,8 @@ public class Monster : MonoBehaviour
         
         poisonTime = new Dictionary<int, float>();
         poisonDmg = new Dictionary<int, float>();
-
+        anim = GetComponentsInChildren<Animator>()[0];
+        hpText = GetComponentsInChildren<TextMesh>()[0];
     }
 
     void OnEnable()
