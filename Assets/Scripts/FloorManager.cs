@@ -94,7 +94,7 @@ public class FloorManager : MonoBehaviour
         }
         //카메라를 해당하는 전장으로 이동한다.
         Camera.main.transform.position = roomImage.transform.position;
-        Camera.main.transform.Translate(0, -2, -15);
+        Camera.main.transform.Translate(0, -1, -15);
     } 
 
     public void ChangeCurRoomToIdle()

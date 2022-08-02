@@ -151,8 +151,6 @@ public class Monster : MonoBehaviour
         movedDistance = 0.0f;
 
         //그래픽
-        //spriteRenderer.sprite = GameManager.instance.monsterSprites[baseMonster.type];
-        //spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
         SetHPText();
 
         //기타 변수
@@ -165,7 +163,7 @@ public class Monster : MonoBehaviour
         barrierBlock = false;
         curseStack = 0;
         isInAmplify = false;
-        if (IsNormalMonster() || baseMonster.type == 11) skillCoolTime1 = 0.0f;
+        if (IsNormalMonster() || baseMonster.type == 23) skillCoolTime1 = 0.0f;
         else skillCoolTime1 = 5.0f;
         skillCoolTime2 = 0.0f;
         skillUseTime = 0.0f;
@@ -258,7 +256,7 @@ public class Monster : MonoBehaviour
     //일반 몬스터인지/엘리트 몬스터인지 알려준다.
     public bool IsNormalMonster()
     {
-        if (baseMonster.type < 3) return true;
+        if (baseMonster.type < 15) return true;
         else return false;
     }
 
@@ -267,46 +265,46 @@ public class Monster : MonoBehaviour
     {
         switch (baseMonster.type)
         {
-            case 3:
+            case 15:
                 Elite_Berserker();
                 break;
-            case 4:
+            case 16:
                 Elite_Messenger();
                 break;
-            case 5:
+            case 17:
                 Elite_Giant();
                 break;
-            case 6:
+            case 18:
                 Elite_DarkPriest();
                 break;
-            case 7:
+            case 19:
                 Elite_DevilCommander();
                 break;
-            case 8:
+            case 20:
                 Elite_Purifier();
                 break;
-            case 9:
+            case 21:
                 Elite_Predator();
                 break;
-            case 10:
+            case 22:
                 Boss_Puppeteer();
                 break;
-            case 11:
-                Boss_Slime();
+            case 23:
+                Boss_CloneMage();
                 break;
-            case 12:
+            case 24:
                 Boss_Sealer();
                 break;
-            case 13:
+            case 25:
                 Boss_DarkWarlock();
                 break;
-            case 14:
+            case 26:
                 Boss_Spacer();
                 break;
-            case 15:
+            case 27:
                 Boss_Executer();
                 break;
-            case 16:
+            case 28:
                 Boss_King();
                 break;
         }
@@ -584,7 +582,7 @@ public class Monster : MonoBehaviour
             skillCoolTime1 = 0.0f;
             anim.SetTrigger("Attack");
 
-            monster = GameManager.instance.GetMonsterFromPool(17);
+            monster = GameManager.instance.GetMonsterFromPool(29);
             monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
             monster.InitializeMonster(cloneID--, FloorManager.instance.curRoom.pathID, 1.0f);    //그외에는 일반 몬스터
             monster.movedDistance = movedDistance + 1.0f;
@@ -604,7 +602,7 @@ public class Monster : MonoBehaviour
         immuneDamage = false;
     }
 
-    void Boss_Slime()
+    void Boss_CloneMage()
     {
         skillCoolTime1 += Time.deltaTime;
         if (skillCoolTime1 >= 10.0f)
@@ -617,7 +615,7 @@ public class Monster : MonoBehaviour
             if (FloorManager.instance.floor.floorNum == 7) scale = 4.0f;
             else scale = 0.5f * (FloorManager.instance.floor.floorNum + 1);
 
-            monster = GameManager.instance.GetMonsterFromPool(11);
+            monster = GameManager.instance.GetMonsterFromPool(23);
             monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
             monster.InitializeMonster(cloneID--, FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
 

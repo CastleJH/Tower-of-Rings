@@ -56,13 +56,13 @@ public class GameManager : MonoBehaviour
 
         //DB읽기
         ReadDB();
-        if (monsterDB.Count + 3 * 3 != monsterPrefabs.Length) Debug.LogError("num of monster sprites does not match");
+        if (monsterDB.Count != monsterPrefabs.Length) Debug.LogError("num of monster sprites does not match");
         if (ringDB.Count != ringSprites.Length) Debug.LogError("num of ring sprites does not match");
         if (ringDB.Count != ringAttackAudios.Length) Debug.LogError("num of audios does not match");
 
         //오브젝트 풀 초기화
         ringPool = new Queue<Ring>();
-        monsterPool = new Queue<Monster>[monsterDB.Count + 3 * 3];
+        monsterPool = new Queue<Monster>[monsterDB.Count];
         bulletPool = new Queue<Bullet>[ringDB.Count];
         particlePool = new Queue<ParticleChecker>[ringDB.Count];
         barrierPool = new Queue<Barrier>();
@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
         amplifierPool = new Queue<Amplifier>();
         damageTextPool = new Queue<DamageText>();
 
-        for (int i = 0; i < monsterDB.Count + 3 * 3; i++)
+        for (int i = 0; i < monsterDB.Count; i++)
         {
             monsterPool[i] = new Queue<Monster>();
         }
@@ -139,9 +139,7 @@ public class GameManager : MonoBehaviour
         if (monsterPool[id].Count > 0) return monsterPool[id].Dequeue();
         else
         {
-            int instID = id;
-            if (id < 3) instID += 18 + Random.Range(0, 4) * 3;
-            Monster monster = Instantiate(monsterPrefabs[instID]).GetComponent<Monster>();
+            Monster monster = Instantiate(monsterPrefabs[id]).GetComponent<Monster>();
             monster.baseMonster = monsterDB[id];
             return monster;
         }
