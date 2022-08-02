@@ -144,16 +144,16 @@ public class SPUM_SpriteList : MonoBehaviour
 
     public void SyncPath(List<SpriteRenderer> _objList, List<string> _pathList)
     {
-        for(var i = 0 ; i < _pathList.Count ; i++)
+        for (var i = 0; i < _pathList.Count; i++)
         {
-            if(_pathList[i].Length > 1 ) 
+            if (_pathList[i].Length > 1)
             {
                 string tPath = _pathList[i];
-                tPath = tPath.Replace("Assets/Resources/","");
-                tPath = tPath.Replace(".png","");
-                
+                tPath = tPath.Replace("Assets/Resources/", "");
+                tPath = tPath.Replace(".png", "");
+
                 Sprite[] tSP = Resources.LoadAll<Sprite>(tPath);
-                if(tSP.Length > 1)
+                if (tSP.Length > 1)
                 {
                     _objList[i].sprite = tSP[i];
                 }
@@ -166,6 +166,38 @@ public class SPUM_SpriteList : MonoBehaviour
             {
                 _objList[i].sprite = null;
             }
+        }
+    }
+
+    public void CopyDataFromBase()
+    {
+        int idx;
+        if (int.TryParse(transform.parent.parent.gameObject.name.Substring(8), out idx))
+        {
+            SPUM_Prefabs _baseData = Resources.Load<SPUM_Prefabs>(string.Format("SPUM/SPUM_Units/Unit{0:D3}", idx));
+            if (_baseData == null) Debug.LogError(string.Format("SPUM named Unit{0:D3} does not exist in Assets/Resources/SPUM/SPUM_Units", idx));
+            else
+            {
+                SyncSprites(_itemList, _baseData._spriteOBj._itemList);
+                SyncSprites(_eyeList, _baseData._spriteOBj._eyeList);
+                SyncSprites(_hairList, _baseData._spriteOBj._hairList);
+                SyncSprites(_bodyList, _baseData._spriteOBj._bodyList);
+                SyncSprites(_clothList, _baseData._spriteOBj._clothList);
+                SyncSprites(_armorList, _baseData._spriteOBj._armorList);
+                SyncSprites(_pantList, _baseData._spriteOBj._pantList);
+                SyncSprites(_weaponList, _baseData._spriteOBj._weaponList);
+                SyncSprites(_backList, _baseData._spriteOBj._backList);
+            }
+        }
+        else Debug.LogError("Wrong Name Format: must be [Monster N]");
+    }
+
+    private void SyncSprites(List<SpriteRenderer> _target, List<SpriteRenderer> _base)
+    {
+        for (int i = _base.Count - 1; i >= 0; i--)
+        {
+            _target[i].sprite = _base[i].sprite;
+            _target[i].color = _base[i].color;
         }
     }
 }

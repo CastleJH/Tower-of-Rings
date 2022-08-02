@@ -23,8 +23,9 @@ public class Monster : MonoBehaviour
 
     //그래픽
     //SpriteRenderer spriteRenderer;  //몬스터 이미지
-    private Animator anim;
-    private TextMesh hpText;   //HP 텍스트
+    //public SPUM_SpriteList spumSprites;
+    public Animator anim;
+    public TextMesh hpText;   //HP 텍스트
     float prevX;
 
     //기타 변수
@@ -47,13 +48,9 @@ public class Monster : MonoBehaviour
     int cloneID;
 
     void Awake()
-    {
-        //spriteRenderer = GetComponent<SpriteRenderer>();
-        
+    {        
         poisonTime = new Dictionary<int, float>();
         poisonDmg = new Dictionary<int, float>();
-        anim = GetComponentsInChildren<Animator>()[0];
-        hpText = GetComponentsInChildren<TextMesh>()[0];
     }
 
     void OnEnable()
@@ -152,6 +149,7 @@ public class Monster : MonoBehaviour
         movedDistance = 0.0f;
 
         //그래픽
+        //CopySPUMDataFromBase();
         SetHPText();
 
         //기타 변수
@@ -818,4 +816,31 @@ public class Monster : MonoBehaviour
             }
         }
     }
+
+    /*private void CopySPUMDataFromBase()
+    {
+        SPUM_Prefabs _baseData = Resources.Load<SPUM_Prefabs>(string.Format("SPUM/SPUM_Units/Unit{0:D3}", baseMonster.type));
+        if (_baseData == null) Debug.LogError(string.Format("SPUM named Unit{0:D3} does not exist in Assets/Resources/SPUM/SPUM_Units", baseMonster.type));
+        else
+        {
+            SyncSprites(spumSprites._itemList, _baseData._spriteOBj._itemList);
+            SyncSprites(spumSprites._eyeList, _baseData._spriteOBj._eyeList);
+            SyncSprites(spumSprites._hairList, _baseData._spriteOBj._hairList);
+            SyncSprites(spumSprites._bodyList, _baseData._spriteOBj._bodyList);
+            SyncSprites(spumSprites._clothList, _baseData._spriteOBj._clothList);
+            SyncSprites(spumSprites._armorList, _baseData._spriteOBj._armorList);
+            SyncSprites(spumSprites._pantList, _baseData._spriteOBj._pantList);
+            SyncSprites(spumSprites._weaponList, _baseData._spriteOBj._weaponList);
+            SyncSprites(spumSprites._backList, _baseData._spriteOBj._backList);
+        }
+    }
+
+    private void SyncSprites(List<SpriteRenderer> _target, List<SpriteRenderer> _base)
+    {
+        for (int i = _base.Count - 1; i >= 0; i--)
+        {
+            _target[i].sprite = _base[i].sprite;
+            _target[i].color = _base[i].color;
+        }
+    }*/
 }

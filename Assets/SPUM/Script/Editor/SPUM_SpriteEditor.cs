@@ -25,9 +25,13 @@ public class SPUM_PrefabEditor : Editor
             if(SPB._spriteOBj._backList[0] == null)
             {
                 EditorGUILayout.HelpBox("Your sprite sync data deleted, please resync",MessageType.Error);
-                if (GUILayout.Button("Sync Sprites",GUILayout.Height(50))) 
+                if (GUILayout.Button("Sync Sprites", GUILayout.Height(50)))
                 {
                     SPB._spriteOBj.ResyncData();
+                }
+                else if (GUILayout.Button("Reload Sprites", GUILayout.Height(50)))
+                {
+                    SPB._spriteOBj.CopyDataFromBase();
                 }
             }
             else
@@ -36,6 +40,10 @@ public class SPUM_PrefabEditor : Editor
                 if (GUILayout.Button("Resync Sprites",GUILayout.Height(50))) 
                 {
                     SPB._spriteOBj.ResyncData();
+                }
+                else if (GUILayout.Button("Reload Sprites", GUILayout.Height(50)))
+                {
+                    SPB._spriteOBj.CopyDataFromBase();
                 }
                 base.OnInspectorGUI();
             }

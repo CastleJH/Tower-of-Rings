@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public SPUM_Prefabs[] spum_prefabs;
+
     //ÇÁ¸®ÆÕ
     public GameObject ringPrefab;
     public GameObject[] monsterPrefabs;
