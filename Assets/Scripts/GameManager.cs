@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     //프리팹
     public GameObject ringPrefab;
-    public GameObject monsterPrefab;
+    public GameObject[] monsterPrefabs;
     public GameObject[] bulletPrefabs;
     public GameObject[] particlePrefabs;
     public GameObject barrierPrefab;
@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
 
     //스프라이트
     public Sprite[] ringSprites;
-    public Sprite[] monsterSprites;
     public Sprite[] mapRoomSprites;
     public Sprite emptyRingSprite;
 
@@ -37,7 +36,7 @@ public class GameManager : MonoBehaviour
 
     //오브젝트 풀
     private Queue<Ring> ringPool;
-    private Queue<Monster> monsterPool;
+    private Queue<Monster>[] monsterPool;
     private Queue<Bullet>[] bulletPool;
     private Queue<ParticleChecker>[] particlePool;
     private Queue<Barrier> barrierPool;
@@ -57,19 +56,24 @@ public class GameManager : MonoBehaviour
 
         //DB읽기
         ReadDB();
-        if (monsterDB.Count != monsterSprites.Length) Debug.LogError("num of monster sprites does not match");
+        if (monsterDB.Count + 3 * 3 != monsterPrefabs.Length) Debug.LogError("num of monster sprites does not match");
         if (ringDB.Count != ringSprites.Length) Debug.LogError("num of ring sprites does not match");
         if (ringDB.Count != ringAttackAudios.Length) Debug.LogError("num of audios does not match");
 
         //오브젝트 풀 초기화
         ringPool = new Queue<Ring>();
-        monsterPool = new Queue<Monster>();
+        monsterPool = new Queue<Monster>[monsterDB.Count + 3 * 3];
         bulletPool = new Queue<Bullet>[ringDB.Count];
         particlePool = new Queue<ParticleChecker>[ringDB.Count];
         barrierPool = new Queue<Barrier>();
         blizzardPool = new Queue<Blizzard>();
         amplifierPool = new Queue<Amplifier>();
         damageTextPool = new Queue<DamageText>();
+
+        for (int i = 0; i < monsterDB.Count + 3 * 3; i++)
+        {
+            monsterPool[i] = new Queue<Monster>();
+        }
 
         for (int i = 0; i < ringDB.Count; i++)
         {
@@ -130,10 +134,17 @@ public class GameManager : MonoBehaviour
     }
 
     //몬스터를 오브젝트 풀에서 받아온다. disabled 상태로 준다.
-    public Monster GetMonsterFromPool()
+    public Monster GetMonsterFromPool(int id)
     {
-        if (monsterPool.Count > 0) return monsterPool.Dequeue();
-        else return Instantiate(monsterPrefab).GetComponent<Monster>();
+        if (monsterPool[id].Count > 0) return monsterPool[id].Dequeue();
+        else
+        {
+            int instID = id;
+            if (id < 3) instID += 18 + Random.Range(0, 4) * 3;
+            Monster monster = Instantiate(monsterPrefabs[instID]).GetComponent<Monster>();
+            monster.baseMonster = monsterDB[id];
+            return monster;
+        }
     }
 
 
@@ -141,13 +152,13 @@ public class GameManager : MonoBehaviour
     public void ReturnMonsterToPool(Monster monster)
     {
         /*추가 구현 필요 - 예외처리 제거할 것*/
-        if (monsterPool.Contains(monster))
+        if (monsterPool[monster.baseMonster.type].Contains(monster))
         {
             Debug.LogError("already enqueued monster");
             return;
         }
         monster.gameObject.SetActive(false);
-        monsterPool.Enqueue(monster);
+        monsterPool[monster.baseMonster.type].Enqueue(monster);
     }
 
     //링을 오브젝트 풀에서 받아온다. disabled 상태로 준다.

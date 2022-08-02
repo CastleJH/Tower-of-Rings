@@ -7374,7 +7374,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ringPrefab: {fileID: 671390583966524708, guid: 485b518439648114fa5cb4919d015a23, type: 3}
-  monsterPrefab: {fileID: 3796618500957756376, guid: 1a6b6cacae34af94b978fe4df4edbc92, type: 3}
+  monsterPrefabs:
+  - {fileID: 839259009105881570, guid: fd9bfa41be3e3f241bd1a5773ef63a93, type: 3}
+  - {fileID: 839259009105881570, guid: cc4e4d64c11d10a45819c3215aa731fe, type: 3}
+  - {fileID: 839259009105881570, guid: 2c8d21672db823b44980ad946834e417, type: 3}
+  - {fileID: 839259009105881570, guid: 93b43ec5515ceb14fb5cdcb6ee8da5cd, type: 3}
+  - {fileID: 839259009105881570, guid: 1a5979fda6497c849ab2d80379e47f3c, type: 3}
+  - {fileID: 839259009105881570, guid: 23f8ec7919747594b8cf044d7c5eef07, type: 3}
+  - {fileID: 839259009105881570, guid: 3795b71444564884b87c42bcdb0c307d, type: 3}
+  - {fileID: 839259009105881570, guid: 4de68c6300eae2849a4324a88a631792, type: 3}
+  - {fileID: 839259009105881570, guid: 08ca0dac9e061a34e9e0effa7fb80247, type: 3}
+  - {fileID: 839259009105881570, guid: 68ca542844cf9b24fb062bae7453f3c0, type: 3}
+  - {fileID: 839259009105881570, guid: 1248ceb98ece23e47818a6cb6776ee70, type: 3}
+  - {fileID: 839259009105881570, guid: 2267f12d4ecf38847b665bc5f82a6e5b, type: 3}
+  - {fileID: 839259009105881570, guid: d18ac5ec960ee5d46b3091d409ee6eef, type: 3}
+  - {fileID: 839259009105881570, guid: 401c006940ae6f84ca3dd77f77fe04cb, type: 3}
+  - {fileID: 839259009105881570, guid: aac1b99ea1219824890f40027c9cffd4, type: 3}
+  - {fileID: 839259009105881570, guid: 947fc7fd133ed0d45b397041ebd829b2, type: 3}
+  - {fileID: 839259009105881570, guid: e227a1c9f4ff9414ba44eba5ae7d2e2c, type: 3}
+  - {fileID: 839259009105881570, guid: 328940576af5411428e40beaa0d3318c, type: 3}
+  - {fileID: 839259009105881570, guid: dc5c8c57d4e98ab43b2e3c7f9e9e0f03, type: 3}
+  - {fileID: 839259009105881570, guid: 6d32355064f73b04f92475573dc6a772, type: 3}
+  - {fileID: 839259009105881570, guid: f2b82c59038106143bb6e5259e63c733, type: 3}
+  - {fileID: 839259009105881570, guid: 206bc3da03f263c49b61acd5197f6dfb, type: 3}
+  - {fileID: 839259009105881570, guid: 335af23667d09fe478eb04f06d834a6b, type: 3}
+  - {fileID: 839259009105881570, guid: 6366f215ca82d41448ca353bf5167714, type: 3}
+  - {fileID: 839259009105881570, guid: 21cfa000660bbbc4b97b98b84396c939, type: 3}
+  - {fileID: 839259009105881570, guid: a0c44c48da4d6d54c8745a821dea6e29, type: 3}
+  - {fileID: 839259009105881570, guid: 240db11cb116c8c4c89324fadf18cfb8, type: 3}
   bulletPrefabs:
   - {fileID: 5983777116976546278, guid: cdbb85fac2b15e848baa5d80e0b09b02, type: 3}
   - {fileID: 5983777116976546278, guid: 8a92fad8da6984a4ca36c0ca2e9a3a90, type: 3}
@@ -7481,25 +7508,6 @@ MonoBehaviour:
   - {fileID: -3673113815009815638, guid: d861016f580e7c7429c8c68a0f796860, type: 3}
   - {fileID: -5512384134514566226, guid: d861016f580e7c7429c8c68a0f796860, type: 3}
   - {fileID: 3275805373080368544, guid: d861016f580e7c7429c8c68a0f796860, type: 3}
-  monsterSprites:
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
-  - {fileID: 21300000, guid: aa80b6fe84e5e994ea6a907e72941163, type: 3}
   mapRoomSprites:
   - {fileID: 21300000, guid: 596044c7ae7e8324aa65c6739fd27f0b, type: 3}
   - {fileID: 21300000, guid: e406ca8f672c3104b84986a9827994af, type: 3}

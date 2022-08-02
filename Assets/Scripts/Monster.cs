@@ -22,8 +22,10 @@ public class Monster : MonoBehaviour
     public float movedDistance; //맵에서의 이동 거리
 
     //그래픽
-    SpriteRenderer spriteRenderer;  //몬스터 이미지
+    //SpriteRenderer spriteRenderer;  //몬스터 이미지
+    public Animator anim;
     public TextMesh hpText;   //HP 텍스트
+    float prevX;
 
     //기타 변수
     bool isInBattle;     //살아서 전투에 참여중인지 여부
@@ -42,16 +44,20 @@ public class Monster : MonoBehaviour
     float skillUseTime;     //엘리트/보스 몬스터의 스킬 지속된 시간
     bool immuneDamage;
     bool immuneInterrupt;
-    int king10SecCase;
-    int king5SecCase;
     int cloneID;
 
     void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        //spriteRenderer = GetComponent<SpriteRenderer>();
         
         poisonTime = new Dictionary<int, float>();
         poisonDmg = new Dictionary<int, float>();
+
+    }
+
+    void OnEnable()
+    {
+        anim.SetTrigger("AddScene");
     }
 
     void Update()
@@ -62,7 +68,7 @@ public class Monster : MonoBehaviour
             if (!IsNormalMonster()) UseMonsterSkill();
             curSPD = baseSPD;
 
-            spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
+            //spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
 
             if (!immuneInterrupt)
             {
@@ -70,21 +76,21 @@ public class Monster : MonoBehaviour
                 if (isInBlizzard) //눈보라 속이라면
                 {
                     curSPD = baseSPD * 0.7f;
-                    spriteRenderer.color = Color.cyan;
+                    //spriteRenderer.color = Color.cyan;
                 }
 
                 if (snowTime < snowEndTime) //눈꽃 링의 둔화가 적용중이라면
                 {
                     curSPD = baseSPD * 0.5f;
                     snowTime += Time.deltaTime;
-                    spriteRenderer.color = Color.cyan;
+                    //spriteRenderer.color = Color.cyan;
                 }
 
                 if (paralyzeTime < paralyzeEndTime) //마비 링의 마비가 적용중이라면
                 {
                     curSPD = 0;
                     paralyzeTime += Time.deltaTime;
-                    spriteRenderer.color = Color.yellow;
+                    //spriteRenderer.color = Color.yellow;
                 }
 
                 if (barrierBlock) curSPD = 0;
@@ -92,7 +98,7 @@ public class Monster : MonoBehaviour
 
             if (poisonDmg.Count > 0)  //맹독 중첩이 하나라도 있다면
             {
-                spriteRenderer.color = Color.green;
+                //spriteRenderer.color = Color.green;
                 List<int> list = poisonDmg.Keys.ToList();
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -107,22 +113,35 @@ public class Monster : MonoBehaviour
                 }
             }
 
-            if (curseStack != 0) spriteRenderer.color = Color.gray;     //저주 중첩이 하나라도 있다면
+            //if (curseStack != 0) spriteRenderer.color = Color.gray;     //저주 중첩이 하나라도 있다면
 
             movedDistance += curSPD * Time.deltaTime;
+            anim.speed = curSPD;
+
+            prevX = transform.position.x;
             transform.position = path.path.GetPointAtDistance(movedDistance);
             transform.Translate(0.0f, 0.0f, id * 0.001f);
+
+            if (prevX > transform.position.x)
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+                hpText.transform.localScale = new Vector3(0.1f, 0.1f, 1);
+            }
+            else
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+                hpText.transform.localScale = new Vector3(-0.1f, 0.1f, 1);
+            }
         }
     }
 
     //몬스터를 초기화한다.
-    public void InitializeMonster(int _id, BaseMonster monster, int pathID, float scale)
+    public void InitializeMonster(int _id, int pathID, float scale)
     {
         //아이디
         id = _id;
 
         //스탯
-        baseMonster = monster;
         baseHP = baseMonster.hp * scale;
         curHP = baseHP;
         baseSPD = baseMonster.spd;
@@ -132,8 +151,8 @@ public class Monster : MonoBehaviour
         movedDistance = 0.0f;
 
         //그래픽
-        spriteRenderer.sprite = GameManager.instance.monsterSprites[baseMonster.type];
-        spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
+        //spriteRenderer.sprite = GameManager.instance.monsterSprites[baseMonster.type];
+        //spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
         SetHPText();
 
         //기타 변수
@@ -192,8 +211,11 @@ public class Monster : MonoBehaviour
         BattleManager.instance.monsters.Remove(this);
         if (isDead)
         {
+            anim.ResetTrigger("AddScene");
+            anim.speed = 0.8f;
+            anim.SetTrigger("Die");
             ApplyDeadEffect();
-            Invoke("InvokeReturnMonsterToPool", 0.5f);
+            Invoke("InvokeReturnMonsterToPool", 1.0f);
         }
         else InvokeReturnMonsterToPool();
     }
@@ -560,10 +582,11 @@ public class Monster : MonoBehaviour
         if (skillCoolTime1 >= 10.0f)
         {
             skillCoolTime1 = 0.0f;
+            anim.SetTrigger("Attack");
 
-            monster = GameManager.instance.GetMonsterFromPool();
+            monster = GameManager.instance.GetMonsterFromPool(17);
             monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
-            monster.InitializeMonster(cloneID--, GameManager.instance.monsterDB[17], FloorManager.instance.curRoom.pathID, 1.0f);    //그외에는 일반 몬스터
+            monster.InitializeMonster(cloneID--, FloorManager.instance.curRoom.pathID, 1.0f);    //그외에는 일반 몬스터
             monster.movedDistance = movedDistance + 1.0f;
             monster.gameObject.SetActive(true);
             BattleManager.instance.monsters.Add(monster);
@@ -587,15 +610,16 @@ public class Monster : MonoBehaviour
         if (skillCoolTime1 >= 10.0f)
         {
             skillCoolTime1 = 0.0f;
+            anim.SetTrigger("Attack");
 
             Monster monster;
             float scale;
             if (FloorManager.instance.floor.floorNum == 7) scale = 4.0f;
             else scale = 0.5f * (FloorManager.instance.floor.floorNum + 1);
 
-            monster = GameManager.instance.GetMonsterFromPool();
+            monster = GameManager.instance.GetMonsterFromPool(11);
             monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
-            monster.InitializeMonster(cloneID--, GameManager.instance.monsterDB[11], FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
+            monster.InitializeMonster(cloneID--, FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
 
             monster.movedDistance = movedDistance + 0.5f;
             monster.curHP = curHP * 0.666f;
@@ -628,7 +652,8 @@ public class Monster : MonoBehaviour
             if (skillCoolTime1 >= 10.0f)
             {
                 skillUseTime = 0.001f;
-                
+                anim.SetTrigger("Attack");
+
                 int targetSealNum = DeckManager.instance.rings.Count / 2;
                 int sealNum = 0;
                 int tarIdx;
@@ -662,6 +687,8 @@ public class Monster : MonoBehaviour
             if (canDowngrade)
             {
                 skillCoolTime1 = 0.0f;
+                anim.SetTrigger("Attack");
+
                 do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
                 while (GameManager.instance.ringDB[ringID].level == 1);
                 GameManager.instance.ringDB[ringID].Downgrade();
@@ -676,6 +703,7 @@ public class Monster : MonoBehaviour
         if (skillCoolTime1 >= 10.0f)
         {
             skillCoolTime1 = 0.0f;
+            anim.SetTrigger("Attack");
 
             Monster monster1, monster2;
             int monsterNum = BattleManager.instance.monsters.Count;
@@ -698,6 +726,7 @@ public class Monster : MonoBehaviour
         if (skillCoolTime1 >= 10.0f)
         {
             skillCoolTime1 = 0.0f;
+            anim.SetTrigger("Attack");
 
             DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[Random.Range(0, DeckManager.instance.rings.Count)]);
         }
@@ -721,6 +750,7 @@ public class Monster : MonoBehaviour
             if (skillCoolTime1 >= 10.0f)
             {
                 skillCoolTime1 = 0.0f;
+                anim.SetTrigger("Attack");
 
                 bool canDowngrade = false;
                 do
@@ -775,6 +805,7 @@ public class Monster : MonoBehaviour
         if (skillCoolTime2 >= 5.0f)
         {
             skillCoolTime2 = 0.0f;
+            anim.SetTrigger("Attack");
 
             switch (Random.Range(0, 2))
             {
