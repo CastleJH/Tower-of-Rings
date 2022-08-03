@@ -120,8 +120,11 @@ public class UIManager : MonoBehaviour
     public void InitializeMap()
     {
         for (int i = 1; i <= 9; i++)
-            for (int j = 1; j <= 9; j++) 
+            for (int j = 1; j <= 9; j++)
+            {
+                if (FloorManager.instance.floor.rooms[i, j].type != -1) maps[i][j].sprite = GameManager.instance.mapRoomSprites[FloorManager.instance.floor.rooms[i, j].type];
                 maps[i][j].color = new Color32(0, 0, 0, 0);
+            }
     }
 
     //맵의 일부분을 밝히고, 마커를 해당 위치로 이동한다.
@@ -141,9 +144,10 @@ public class UIManager : MonoBehaviour
             ny = y + dy[i];
             if (FloorManager.instance.floor.rooms[nx, ny].type != -1 && FloorManager.instance.floor.rooms[nx, ny].type != 10 && !FloorManager.instance.floor.rooms[nx, ny].visited)
             {
-                if (FloorManager.instance.floor.rooms[nx, ny].type < 8) maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[0];
-                else maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[FloorManager.instance.floor.rooms[nx, ny].type];
-                maps[nx][ny].color = Color.gray;
+                //if (FloorManager.instance.floor.rooms[nx, ny].type < 8) maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[0];
+                //else maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[FloorManager.instance.floor.rooms[nx, ny].type];
+                //maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[FloorManager.instance.floor.rooms[nx, ny].type];
+                maps[nx][ny].color = Color.white;
             }
         }
     }
