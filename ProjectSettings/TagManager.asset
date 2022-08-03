@@ -12,6 +12,7 @@ TagManager:
   - Ring
   - Barrier
   - Portal
+  - RP
   layers:
   - Default
   - TransparentFX
@@ -27,7 +28,7 @@ TagManager:
   - Ring
   - Barrier
   - Portal
-  - 
+  - RP
   - 
   - 
   - 

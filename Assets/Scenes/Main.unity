@@ -7926,6 +7926,7 @@ MonoBehaviour:
   blizzardPrefab: {fileID: 583379645925316701, guid: 4cf6c666fdd27c84e8fc1d68ed198c5a, type: 3}
   amplifierPrefab: {fileID: 6058928862243412483, guid: b7218e3ac6341ad43a5ffd3bdf10c1d5, type: 3}
   damageTextPrefab: {fileID: 4119758275505345053, guid: 280ab572f05d400488ae86a667fef081, type: 3}
+  dropRPPrefab: {fileID: 1611598209913470115, guid: a6d2ba205f3d31740847b05203c3da12, type: 3}
   ringSprites:
   - {fileID: 4004708080983207187, guid: d861016f580e7c7429c8c68a0f796860, type: 3}
   - {fileID: -5400542443128171897, guid: d861016f580e7c7429c8c68a0f796860, type: 3}
@@ -8094,7 +8095,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &676791129
@@ -11928,7 +11929,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 0
       flipNormals: 0
-    vertexPathUpToDate: 1
+    vertexPathUpToDate: 0
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1
@@ -12104,7 +12105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -17758,7 +17759,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -18477,6 +18478,7 @@ MonoBehaviour:
   debugFlag: 0
   debugVariable: 0
   monsters: []
+  dropRPs: []
   isBattlePlaying: 0
   rp: 0
   goldGet: 0

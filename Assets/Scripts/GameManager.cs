@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public GameObject blizzardPrefab;
     public GameObject amplifierPrefab;
     public GameObject damageTextPrefab;
+    public GameObject dropRPPrefab;
 
     //스프라이트
     public Sprite[] ringSprites;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
     private Queue<Blizzard> blizzardPool;
     private Queue<Amplifier> amplifierPool;
     private Queue<DamageText> damageTextPool;
+    private Queue<DropRP> dropRPPool;
 
     //게임 진행상황 관련 변수
     private int playerMaxHP;
@@ -71,6 +73,7 @@ public class GameManager : MonoBehaviour
         blizzardPool = new Queue<Blizzard>();
         amplifierPool = new Queue<Amplifier>();
         damageTextPool = new Queue<DamageText>();
+        dropRPPool = new Queue<DropRP>();
 
         for (int i = 0; i < monsterDB.Count; i++)
         {
@@ -321,6 +324,27 @@ public class GameManager : MonoBehaviour
         }
         damageText.gameObject.SetActive(false);
         damageTextPool.Enqueue(damageText);
+    }
+
+    //링을 오브젝트 풀에서 받아온다. disabled 상태로 준다.
+    public DropRP GetDropRPFromPool()
+    {
+        if (dropRPPool.Count > 0) return dropRPPool.Dequeue();
+        else return Instantiate(dropRPPrefab).GetComponent<DropRP>();
+    }
+
+
+    //링을 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
+    public void ReturnDropRPToPool(DropRP dropRP)
+    {
+        /*추가 구현 필요 - 예외처리 제거할 것*/
+        if (dropRPPool.Contains(dropRP))
+        {
+            Debug.LogError("already enqueued dropRP");
+            return;
+        }
+        dropRP.gameObject.SetActive(false);
+        dropRPPool.Enqueue(dropRP);
     }
 
     //플레이어의 현재 HP를 바꾼다. 0이라면 게임오버.

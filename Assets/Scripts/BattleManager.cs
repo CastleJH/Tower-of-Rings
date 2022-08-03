@@ -10,6 +10,7 @@ public class BattleManager : MonoBehaviour
     public int debugVariable;
 
     public List<Monster> monsters; //현재 스테이지의 몬스터들
+    public List<DropRP> dropRPs;
 
     //전투 별 변수
     public bool isBattlePlaying;  //게임 진행 중인지 여부
@@ -17,6 +18,7 @@ public class BattleManager : MonoBehaviour
     public int goldGet;
     public int emeraldGet;
     public List<int> ringDowngrade;
+    float rpGeneratePos;
 
     //웨이브 별 변수
     public int wave;   //현재 웨이브
@@ -27,6 +29,7 @@ public class BattleManager : MonoBehaviour
     {
         instance = this;
         monsters = new List<Monster>();
+        dropRPs = new List<DropRP>();
         ringDowngrade = new List<int>();
     }
 
@@ -39,6 +42,22 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        if (isBattlePlaying)    //전투 중인 경우
+        {
+            rpGeneratePos += 0.00001f; 
+            if (rpGeneratePos > 0.004f || Random.Range(0.0f, 1.0f) < 0.001f)
+            {
+                rpGeneratePos = 0.0f;
+                DropRP dropRP = GameManager.instance.GetDropRPFromPool();
+                dropRP.InitializeDropRP();
+                dropRPs.Add(dropRP);
+                dropRP.gameObject.SetActive(true);
+            }
+        }
+    }
+
     //전투를 시작한다.
     public void StartBattle()
     {
@@ -47,6 +66,7 @@ public class BattleManager : MonoBehaviour
         goldGet = 0;
         emeraldGet = 0;
         ringDowngrade.Clear();
+        rpGeneratePos = 0;
 
         //전장을 킨다.
         UIManager.instance.TurnMapOnOff(false);
@@ -57,7 +77,7 @@ public class BattleManager : MonoBehaviour
         UIManager.instance.SetBattleDeckRingImageAndRPAll();
 
         //초기 RP를 정하고 UI를 업데이트한다.
-        ChangeCurrentRP(500);   //원활한 테스트를 위해 초기 RP를 넉넉하게 줬다. 실제로는 보유 유물 여부등에 따라 80 근처에서 시작함.
+        ChangeCurrentRP(50);
 
         //덱 매니저의 전투 관련 변수들을 초기화한다.
         DeckManager.instance.PrepareBattle();
@@ -127,6 +147,11 @@ public class BattleManager : MonoBehaviour
                 /*for (int i = monsters.Count - 1; i >= 0; i--)
                     monsters[i].RemoveFromBattle(0.0f);
                 monsters.Clear();*/
+
+                //링의 정수 정리
+                for (int i = dropRPs.Count - 1; i >= 0; i--)
+                    GameManager.instance.ReturnDropRPToPool(dropRPs[i]);
+                dropRPs.Clear();
 
                 float greedyATK = -1.0f;
                 float greedyEFF = 0.0f;

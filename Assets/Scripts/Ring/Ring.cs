@@ -102,6 +102,7 @@ public class Ring : MonoBehaviour
         baseRing = GameManager.instance.ringDB[id];
 
         //그래픽
+        transform.localScale = Vector3.one;
         spriteRenderer.sprite = GameManager.instance.ringSprites[id];
         rangeRenderer.transform.localScale = new Vector2(baseRing.range * 2, baseRing.range * 2);
         rangeRenderer.color = new Color(0, 0, 0, 0);
@@ -206,6 +207,7 @@ public class Ring : MonoBehaviour
                             maxDist = targets[i].movedDistance;
                             mIdx = i;
                         }
+                    if (mIdx == -1) return;
                     bullet = GameManager.instance.GetBulletFromPool(baseRing.id);
                     bullet.InitializeBullet(this, targets[mIdx]);
                     bullet.gameObject.SetActive(true);
@@ -688,31 +690,27 @@ public class Ring : MonoBehaviour
     //배치 가능 범위인지 확인한다.
     public bool CanBePlaced()
     {
-        int ret = 3;
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.75f);
+        
         for (int i = 0; i < colliders.Length; i++)
         {
-            if (colliders[i].tag == "Land" || colliders[i].tag == "Barrier" || colliders[i].tag == "Bullet" || colliders[i].tag == "Monster") ret = 1;
-            else
+            if (colliders[i].tag == "Monster Path")
             {
-                if (colliders[i].tag == "Ring") ret = 2;
-                else ret = 3;
-                break;
+                UIManager.instance.SetBattleArrangeFail("올바르지 않은 위치입니다.");
+                rangeRenderer.color = new Color32(255, 0, 0, 50);
+                return false;
+            }
+            else if (colliders[i].tag == "Ring")
+            {
+                UIManager.instance.SetBattleArrangeFail("다른 링과 너무 가깝습니다.");
+                rangeRenderer.color = new Color32(255, 0, 0, 50);
+                return false;
             }
         }
-        if (ret == 1)
-        {
-            rangeRenderer.color = new Color32(0, 255, 0, 50);
-            UIManager.instance.SetBattleArrangeFail(null);
-            return true;
-        }
-        else
-        {
-            if (ret == 2) UIManager.instance.SetBattleArrangeFail("다른 링과 너무 가깝습니다.");
-            else UIManager.instance.SetBattleArrangeFail("올바르지 않은 위치입니다.");
-            rangeRenderer.color = new Color32(255, 0, 0, 50);
-            return false;
-        }
+
+        rangeRenderer.color = new Color32(0, 255, 0, 50);
+        UIManager.instance.SetBattleArrangeFail(null);
+        return true;
     }
 
     //공격 타겟들을 얻는다.
