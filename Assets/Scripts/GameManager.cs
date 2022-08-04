@@ -98,6 +98,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void GameStart()
+    {
+        InitializeGame();
+        FloorManager.instance.CreateAndMoveToFloor(1);
+    }
+
     public void InitializeGame()
     {
         playerMaxHP = 100;
@@ -107,7 +113,6 @@ public class GameManager : MonoBehaviour
         diamond = 0;
         ChangeDiamond(0);
         DeckManager.instance.InitializeDeck();
-        FloorManager.instance.CreateAndMoveToFloor(1);
     }
 
     //"*_db.csv"를 읽어온다.

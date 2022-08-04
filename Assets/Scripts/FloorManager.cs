@@ -37,20 +37,22 @@ public class FloorManager : MonoBehaviour
     //해당 층을 새로 생성하고 이동한다.
     public void CreateAndMoveToFloor(int f)
     {
-        floor.Generate(f);
+        UIManager.instance.nextFloorButton.SetActive(false);
+        floor.Generate(f); 
         UIManager.instance.InitializeMap();
 
         for (int i = 1; i <= 9; i++)
             for (int j = 1; j <= 9; j++)
                 floor.rooms[i, j].visited = false;
 
-        MoveToRoom(floor.startX, floor.startY);
-        TurnPortalsOnOff(true);
+        SceneChanger.instance.ChangeScene(MoveToRoom, floor.startX, floor.startY);
     }
 
     //해당 방으로 이동한다.
-    void MoveToRoom(int x, int y)
+    public void MoveToRoom(int x, int y)
     {
+        UIManager.instance.gameStartPanel.SetActive(false);
+
         if (curRoom != null) curRoom.HideItems();
 
         //현재 위치/방 관련 변수를 바꾼다.
@@ -64,6 +66,7 @@ public class FloorManager : MonoBehaviour
                 TurnPortalsOnOff(true);
                 break;
             case 1:
+                Debug.Log("Battle Start");
                 TurnPortalsOnOff(false);
                 roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
                 BattleManager.instance.StartBattle();
@@ -138,6 +141,7 @@ public class FloorManager : MonoBehaviour
                 TurnPortalsOnOff(true);
                 break;
             case 9:
+                Debug.Log("Battle Start");
                 TurnPortalsOnOff(false);
                 roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
                 BattleManager.instance.StartBattle();
@@ -207,8 +211,8 @@ public class FloorManager : MonoBehaviour
             if (hit.collider != null)
             {
                 if (hit.collider.tag != "Portal" || Time.timeScale == 0) return;
-                int dir = hit.collider.name[hit.collider.name.Length - 1] - '0';
-                MoveToRoom(playerX + dx[dir], playerY + dy[dir]);
+                int dir = hit.collider.name[hit.collider.name.Length - 1] - '0'; 
+                SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir]);
             }
 
         }

@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public GameObject gameStartPanel;
+    public Image sceneChanger;
 
     public GameObject mapPanel;
     public Image[] mapRow1, mapRow2, mapRow3, mapRow4, mapRow5, mapRow6, mapRow7, mapRow8, mapRow9;
@@ -445,8 +446,7 @@ public class UIManager : MonoBehaviour
 
     public void ButtonGameStart()
     {
-        gameStartPanel.SetActive(false);
-        GameManager.instance.InitializeGame();
+        GameManager.instance.GameStart();
     }
 
     public void ButtonNextFloor()

@@ -43,7 +43,8 @@ public class BattleManager : MonoBehaviour
 
             if (Time.timeScale != 0)
             {
-                rpGenerateTime += Time.unscaledDeltaTime;
+                //rpGenerateTime += Time.unscaledDeltaTime;
+                rpGenerateTime += Time.deltaTime;
                 if (rpGenerateTime > rpNextGenerateTime)
                 {
                     rpGenerateTime = 0.0f;
@@ -99,8 +100,10 @@ public class BattleManager : MonoBehaviour
     //몬스터를 생성한다.
     IEnumerator GenerateMonster()
     {
+        Debug.Log("Start Coroutine");
         while (newMonsterID < numGenMonster)
         {
+            Debug.Log("Gen Monster");
             //몬스터 능력치 배율을 조정한다.
             float scale;
             scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) + 0.05f * (wave - 1);
@@ -147,58 +150,9 @@ public class BattleManager : MonoBehaviour
                     monsters[i].RemoveFromBattle(0.0f);
                 monsters.Clear();*/
 
-                //링의 정수 정리
-                for (int i = dropRPs.Count - 1; i >= 0; i--)
-                    GameManager.instance.ReturnDropRPToPool(dropRPs[i]);
-                dropRPs.Clear();
+                SceneChanger.instance.changeFunc += ChangeSceneAfterBattle;
+                SceneChanger.instance.ChangeScene(FloorManager.instance.MoveToRoom, FloorManager.instance.playerX, FloorManager.instance.playerY);
 
-                float greedyATK = -1.0f;
-                float greedyEFF = 0.0f;
-
-                //덱 정리
-                for (int i = 0; i < DeckManager.instance.rings.Count; i++)
-                {
-                    if (DeckManager.instance.rings[i].baseRing.id == 17)
-                    {
-                        greedyATK = DeckManager.instance.rings[i].curATK;
-                        greedyEFF = DeckManager.instance.rings[i].curEFF;
-                    }
-                    GameManager.instance.ReturnRingToPool(DeckManager.instance.rings[i]);
-                }
-                DeckManager.instance.rings.Clear();
-
-                //링 생성/제거 중이었다면 이것도 정리
-                if (DeckManager.instance.isEditRing)
-                {
-                    if (DeckManager.instance.genRing != null) GameManager.instance.ReturnRingToPool(DeckManager.instance.genRing);
-                    else DeckManager.instance.ringRemover.transform.position = new Vector3(100, 100, 0);
-                }
-
-                //다운그레이드 된 링들을 50% 확률로 복구
-                for (int i = 0; i < ringDowngrade.Count; i++)
-                    if (Random.Range(0, 2) == 1) GameManager.instance.ringDB[ringDowngrade[i]].Upgrade();
-
-                diamondGet = 0;
-                if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림
-                {
-                    goldGet += (int)(goldGet * greedyATK * 0.01f);
-                    if (Random.Range(0.0f, 1.0f) <= greedyATK * 0.01f + greedyEFF) diamondGet = Random.Range(3, 6);
-                }
-                GameManager.instance.ChangeGold(goldGet);
-                GameManager.instance.ChangeDiamond(diamondGet);
-
-                //전장을 끄고 맵을 갱신하고 포탈을 보여준다.
-                GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(false);
-                UIManager.instance.ClosePanel(0);
-                FloorManager.instance.ChangeCurRoomToIdle();
-                UIManager.instance.RevealMapArea(FloorManager.instance.playerX, FloorManager.instance.playerY);
-                UIManager.instance.TurnMapOnOff(true);
-                FloorManager.instance.TurnPortalsOnOff(true);
-
-                if (FloorManager.instance.curRoom.type == 9)
-                {
-                    UIManager.instance.nextFloorButton.SetActive(true);
-                }
             }
             else
             {
@@ -206,6 +160,63 @@ public class BattleManager : MonoBehaviour
                 StartWave();
             }
         }
+    }
+
+    void ChangeSceneAfterBattle(int a, int b)
+    {
+
+        if (FloorManager.instance.curRoom.type == 9)
+        {
+            UIManager.instance.nextFloorButton.SetActive(true);
+        }
+        FloorManager.instance.ChangeCurRoomToIdle();
+
+        //링의 정수 정리
+        for (int i = dropRPs.Count - 1; i >= 0; i--)
+            GameManager.instance.ReturnDropRPToPool(dropRPs[i]);
+        dropRPs.Clear();
+
+        float greedyATK = -1.0f;
+        float greedyEFF = 0.0f;
+
+        //덱 정리
+        for (int i = 0; i < DeckManager.instance.rings.Count; i++)
+        {
+            if (DeckManager.instance.rings[i].baseRing.id == 17)
+            {
+                greedyATK = DeckManager.instance.rings[i].curATK;
+                greedyEFF = DeckManager.instance.rings[i].curEFF;
+            }
+            GameManager.instance.ReturnRingToPool(DeckManager.instance.rings[i]);
+        }
+        DeckManager.instance.rings.Clear();
+
+        //링 생성/제거 중이었다면 이것도 정리
+        if (DeckManager.instance.isEditRing)
+        {
+            if (DeckManager.instance.genRing != null) GameManager.instance.ReturnRingToPool(DeckManager.instance.genRing);
+            else DeckManager.instance.ringRemover.transform.position = new Vector3(100, 100, 0);
+        }
+
+        //다운그레이드 된 링들을 50% 확률로 복구
+        for (int i = 0; i < ringDowngrade.Count; i++)
+            if (Random.Range(0, 2) == 1) GameManager.instance.ringDB[ringDowngrade[i]].Upgrade();
+
+        diamondGet = 0;
+        if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림
+        {
+            goldGet += (int)(goldGet * greedyATK * 0.01f);
+            if (Random.Range(0.0f, 1.0f) <= greedyATK * 0.01f + greedyEFF) diamondGet = Random.Range(3, 6);
+        }
+        GameManager.instance.ChangeGold(goldGet);
+        GameManager.instance.ChangeDiamond(diamondGet);
+
+        //전장을 끄고 맵을 갱신하고 포탈을 보여준다.
+        GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(false);
+        UIManager.instance.ClosePanel(0);
+        UIManager.instance.RevealMapArea(FloorManager.instance.playerX, FloorManager.instance.playerY);
+        UIManager.instance.TurnMapOnOff(true);
+        FloorManager.instance.TurnPortalsOnOff(true);
     }
 
     //현재 RP량을 바꾼다.
