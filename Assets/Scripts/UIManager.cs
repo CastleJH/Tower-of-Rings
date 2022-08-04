@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
 
     public TextMeshProUGUI playerGoldText;
     public TextMeshProUGUI playerDiamondText;
+    public TextMeshProUGUI playerHPText;
 
     public GameObject battleArrangeFail;
     public TextMeshProUGUI battleArrangeFailText;

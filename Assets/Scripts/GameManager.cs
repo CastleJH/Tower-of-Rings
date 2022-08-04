@@ -399,6 +399,7 @@ public class GameManager : MonoBehaviour
     public void ChangePlayerCurHP(int _HP)
     {
         playerCurHP = Mathf.Clamp(playerCurHP + _HP, 0, playerMaxHP);
+        UIManager.instance.playerHPText.text = playerCurHP.ToString() + "/" + playerMaxHP.ToString();
         if (playerCurHP == 0)
         {
             Time.timeScale = 0.0f;
