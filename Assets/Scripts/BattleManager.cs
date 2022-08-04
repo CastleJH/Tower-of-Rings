@@ -16,7 +16,7 @@ public class BattleManager : MonoBehaviour
     public bool isBattlePlaying;  //게임 진행 중인지 여부
     public float rp;        //현재 보유 RP
     public int goldGet;
-    public int emeraldGet;
+    public int diamondGet;
     public List<int> ringDowngrade;
     float rpGeneratePos;
 
@@ -64,7 +64,7 @@ public class BattleManager : MonoBehaviour
         //전투 별 변수 초기화
         isBattlePlaying = true;
         goldGet = 0;
-        emeraldGet = 0;
+        diamondGet = 0;
         ringDowngrade.Clear();
         rpGeneratePos = 0;
 
@@ -134,6 +134,8 @@ public class BattleManager : MonoBehaviour
         {
             if (wave == 3)     //마지막 웨이브였다면 보상을 주고 전투를 종료한다.
             {
+                Time.timeScale = 1;
+
                 //배틀을 종료한다.
                 isBattlePlaying = false;
 
@@ -176,14 +178,14 @@ public class BattleManager : MonoBehaviour
                 for (int i = 0; i < ringDowngrade.Count; i++)
                     if (Random.Range(0, 2) == 1) GameManager.instance.ringDB[ringDowngrade[i]].Upgrade();
 
-                emeraldGet = 0;
+                diamondGet = 0;
                 if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림
                 {
                     goldGet += (int)(goldGet * greedyATK * 0.01f);
-                    if (Random.Range(0.0f, 1.0f) <= greedyATK * 0.01f + greedyEFF) emeraldGet = Random.Range(3, 6);
+                    if (Random.Range(0.0f, 1.0f) <= greedyATK * 0.01f + greedyEFF) diamondGet = Random.Range(3, 6);
                 }
                 GameManager.instance.ChangeGold(goldGet);
-                GameManager.instance.ChangeEmerald(emeraldGet);
+                GameManager.instance.ChangeDiamond(diamondGet);
 
                 //전장을 끄고 맵을 갱신하고 포탈을 보여준다.
                 GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(false);
@@ -192,6 +194,11 @@ public class BattleManager : MonoBehaviour
                 UIManager.instance.RevealMapArea(FloorManager.instance.playerX, FloorManager.instance.playerY);
                 UIManager.instance.TurnMapOnOff(true);
                 FloorManager.instance.TurnPortalsOnOff(true);
+
+                if (FloorManager.instance.curRoom.type == 9)
+                {
+                    UIManager.instance.nextFloorButton.SetActive(true);
+                }
             }
             else
             {

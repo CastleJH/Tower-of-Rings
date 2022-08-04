@@ -8,13 +8,19 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    public GameObject gameStartPanel;
+
     public GameObject mapPanel;
     public Image[] mapRow1, mapRow2, mapRow3, mapRow4, mapRow5, mapRow6, mapRow7, mapRow8, mapRow9;
     public Image[][] maps;
     public RectTransform playerMarker;
 
+    public TextMeshProUGUI playerGoldText;
+    public TextMeshProUGUI playerDiamondText;
+
     public GameObject battleArrangeFail;
     public TextMeshProUGUI battleArrangeFailText;
+    public GameObject nextFloorButton;
 
     public GameObject battleDeckPanel;
     public TextMeshProUGUI battleHaveRPText;
@@ -221,6 +227,8 @@ public class UIManager : MonoBehaviour
 
             ringSelectionButtonImage[i].gameObject.SetActive(false);
         }
+
+        ringSelectionPanel.SetActive(true);
     }
 
     public void OpenPlayerStatusPanel()
@@ -354,7 +362,27 @@ public class UIManager : MonoBehaviour
     {
         if (deckIdx < DeckManager.instance.deck.Count)
         {
-            Debug.Log("Select!");
+            if (ringSelectionButtonText[0].text == "ÆÄ±«")
+            {
+                DeckManager.instance.RemoveRingFromDeck(DeckManager.instance.deck[deckIdx]);
+                for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
+                    if (FloorManager.instance.curRoom.items[i].itemType == 1)
+                    {
+                        FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.curRoom.items[i]);
+                        break;
+                    }
+            }
+            else
+            {
+                GameManager.instance.ringDB[DeckManager.instance.deck[deckIdx]].Upgrade();
+                for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
+                    if (FloorManager.instance.curRoom.items[i].itemType == 0)
+                    {
+                        FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.curRoom.items[i]);
+                        break;
+                    }
+            }
+            ringSelectionPanel.SetActive(false);
         }
     }
 
@@ -369,7 +397,6 @@ public class UIManager : MonoBehaviour
             }
 
         DeckManager.instance.AddRingToDeck(type);
-
 
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
             if (FloorManager.instance.curRoom.items[i].itemType == 1000 + type)
@@ -400,5 +427,27 @@ public class UIManager : MonoBehaviour
                 break;
             }
         ClosePanel(4);
+    }
+
+    public void ButtonFasterSpeed()
+    {
+        if (BattleManager.instance.isBattlePlaying && Time.timeScale < 3.5f) Time.timeScale++;
+    }
+
+    public void ButtonNormalSpeed()
+    {
+        Time.timeScale = 1.0f;
+    }
+
+    public void ButtonGameStart()
+    {
+        gameStartPanel.SetActive(false);
+        GameManager.instance.InitializeGame();
+    }
+
+    public void ButtonNextFloor()
+    {
+        nextFloorButton.SetActive(false);
+        FloorManager.instance.CreateAndMoveToFloor(FloorManager.instance.floor.floorNum);
     }
 }

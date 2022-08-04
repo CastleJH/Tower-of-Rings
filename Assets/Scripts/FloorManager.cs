@@ -31,16 +31,11 @@ public class FloorManager : MonoBehaviour
 
     void Update()
     {
-        if (debugFlag)
-        {
-            debugFlag = false;
-            CreateAndMoveToFloor(debugInt);
-        }
         if (isPortalOn) GetInput();
     }
 
     //해당 층을 새로 생성하고 이동한다.
-    void CreateAndMoveToFloor(int f)
+    public void CreateAndMoveToFloor(int f)
     {
         floor.Generate(f);
         UIManager.instance.InitializeMap();
@@ -56,17 +51,12 @@ public class FloorManager : MonoBehaviour
     //해당 방으로 이동한다.
     void MoveToRoom(int x, int y)
     {
+        if (curRoom != null) curRoom.HideItems();
+
         //현재 위치/방 관련 변수를 바꾼다.
         playerX = x;
         playerY = y;
         curRoom = floor.rooms[playerX, playerY];
-        curRoom.visited = true;
-
-        //지도에 변화를 준다.
-        UIManager.instance.RevealMapArea(playerX, playerY);
-
-        //스프라이트를 올바른 모양으로 바꾼다.
-        roomImage.sprite = GameManager.instance.sceneRoomSprites[floor.floorNum];
 
         switch (curRoom.type)
         {
@@ -79,11 +69,69 @@ public class FloorManager : MonoBehaviour
                 BattleManager.instance.StartBattle();
                 break;
             case 2:
+                if (!curRoom.visited)
+                {
+                    Item item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(0, Vector3.forward, 0, 0);
+                    curRoom.AddItem(item);
+                }
+                curRoom.ShowItems();
+                TurnPortalsOnOff(true);
+                break;
             case 3:
+                if (!curRoom.visited)
+                {
+                    Item item = GameManager.instance.GetItemFromPool();
+                    int ringID;
+                    do ringID = Random.Range(0, GameManager.instance.ringDB.Count);
+                    while (DeckManager.instance.deck.Contains(ringID));
+                    item.InitializeItem(1000 + ringID, Vector3.forward, 0, 0);
+                    curRoom.AddItem(item);
+                }
+                curRoom.ShowItems();
+                TurnPortalsOnOff(true);
+                break;
             case 4:
+                if (!curRoom.visited)
+                {
+                    Item item = GameManager.instance.GetItemFromPool();
+                    int relicID;
+                    do relicID = Random.Range(0, GameManager.instance.relicDB.Count);
+                    while (GameManager.instance.relics.Contains(relicID));
+                    item.InitializeItem(2000 + relicID, Vector3.forward, 0, 0);
+                    curRoom.AddItem(item);
+                }
+                curRoom.ShowItems();
+                TurnPortalsOnOff(true);
+                break;
             case 5:
+                if (!curRoom.visited)
+                {
+                    Item item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(1, Vector3.forward, 0, 0);
+                    curRoom.AddItem(item);
+                }
+                curRoom.ShowItems();
+                TurnPortalsOnOff(true);
+                break;
             case 6:
+                if (!curRoom.visited)
+                {
+                    Item item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(3, Vector3.forward, 0, 0);
+                    curRoom.AddItem(item);
+                }
+                curRoom.ShowItems();
+                TurnPortalsOnOff(true);
+                break;
             case 7:
+                if (!curRoom.visited)
+                {
+                    Item item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(2, Vector3.forward, 0, 0);
+                    curRoom.AddItem(item);
+                }
+                curRoom.ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 8:
@@ -95,6 +143,14 @@ public class FloorManager : MonoBehaviour
                 BattleManager.instance.StartBattle();
                 break;
         }
+        curRoom.visited = true;
+
+        //지도에 변화를 준다.
+        UIManager.instance.RevealMapArea(playerX, playerY);
+
+        //스프라이트를 올바른 모양으로 바꾼다.
+        roomImage.sprite = GameManager.instance.sceneRoomSprites[floor.floorNum];
+
         //카메라를 해당하는 전장으로 이동한다.
         Camera.main.transform.position = roomImage.transform.position;
         Camera.main.transform.Translate(0, 1.5f, -15);

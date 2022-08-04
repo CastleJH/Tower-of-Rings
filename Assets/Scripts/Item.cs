@@ -10,7 +10,7 @@ public class Item : MonoBehaviour
     public TextMesh costText;
 
     public int itemType;
-    private Vector3 pos;
+    public Vector3 pos;
     private float animationTime;
 
     public bool debugFlag;
@@ -21,7 +21,6 @@ public class Item : MonoBehaviour
     public void InitializeItem(int _type, Vector3 _pos, int costType, int cost)
     {
         pos = _pos;
-        transform.position = pos + Camera.main.transform.position;
         itemType = _type;
         animationTime = 0.0f;
         if (itemType < 1000) spriteRenderer.sprite = GameManager.instance.itemSprites[itemType];
@@ -74,10 +73,32 @@ public class Item : MonoBehaviour
 
     void GiveThisToPlayer()
     {
-        Debug.Log("To Player!");
         if (itemType < 1000)
         {
-
+            switch (itemType)
+            {
+                case 0:
+                    UIManager.instance.OpenRingSelectionPanel(1);
+                    break;
+                case 1:
+                    UIManager.instance.OpenRingSelectionPanel(0);
+                    break;
+                case 2:
+                    GameManager.instance.ChangePlayerCurHP((int)(GameManager.instance.playerMaxHP * Random.Range(0.15f, 0.3f)));
+                    break;
+                case 3:
+                    GameManager.instance.ChangeGold(100);
+                    FloorManager.instance.curRoom.RemoveItem(this);
+                    break;
+                case 4:
+                    GameManager.instance.ChangeGold(100);
+                    FloorManager.instance.curRoom.RemoveItem(this);
+                    break;
+                case 5:
+                    GameManager.instance.ChangeDiamond(1);
+                    FloorManager.instance.curRoom.RemoveItem(this);
+                    break;
+            }
         }
         else if (itemType < 2000)
         {

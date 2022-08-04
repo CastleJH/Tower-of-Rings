@@ -40,8 +40,6 @@ public class DeckManager : MonoBehaviour
 
         deck = new List<int>();
         rings = new List<Ring>();
-        
-        InitializeDeck();
 
         ringLayerMask = 1 << LayerMask.NameToLayer("Ring");
     }

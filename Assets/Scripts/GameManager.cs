@@ -58,10 +58,10 @@ public class GameManager : MonoBehaviour
     private Queue<Item> itemPool;
 
     //게임 진행상황 관련 변수
-    private int playerMaxHP;
+    public int playerMaxHP;
     private int playerCurHP;
     public int gold;
-    public int emerald;
+    public int diamond;
     public List<int> relics;
     void Awake()
     {
@@ -96,17 +96,18 @@ public class GameManager : MonoBehaviour
             bulletPool[i] = new Queue<Bullet>();
             particlePool[i] = new Queue<ParticleChecker>();
         }
-
-        InitializeGame();
     }
 
-    //게임을 초기화한다.
-    void InitializeGame()
+    public void InitializeGame()
     {
         playerMaxHP = 100;
         playerCurHP = 100;
         gold = 0;
-        emerald = 0;
+        ChangeGold(0);
+        diamond = 0;
+        ChangeDiamond(0);
+        DeckManager.instance.InitializeDeck();
+        FloorManager.instance.CreateAndMoveToFloor(1);
     }
 
     //"*_db.csv"를 읽어온다.
@@ -410,14 +411,16 @@ public class GameManager : MonoBehaviour
     {
         if (gold + _gold < 0) return false;
         gold += _gold;
+        UIManager.instance.playerGoldText.text = gold.ToString();
         return true;
     }
     
-    //에메랄드를 바꾼다.
-    public bool ChangeEmerald(int _emerald)
+    //다이아몬드를 바꾼다.
+    public bool ChangeDiamond(int _diamond)
     {
-        if (emerald + _emerald < 0) return false;
-        emerald += _emerald;
+        if (diamond + _diamond < 0) return false;
+        diamond += _diamond;
+        UIManager.instance.playerDiamondText.text = diamond.ToString();
         return true;
     }
 

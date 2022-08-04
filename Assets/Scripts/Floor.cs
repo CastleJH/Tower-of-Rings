@@ -25,10 +25,24 @@ public class Room
 		GameManager.instance.ReturnItemToPool(item);
     }
 
-	public void ShowItems(Item item)
-    {
-		for (int i = 0; i < items.Count; i++) items[i].gameObject.SetActive(true);
-    }
+	public void ShowItems()
+	{
+		for (int i = 0; i < items.Count; i++)
+		{
+			items[i].transform.position = Camera.main.transform.position + items[i].pos;
+			items[i].gameObject.SetActive(true);
+		}
+	}
+
+	public void HideItems()
+	{
+		for (int i = 0; i < items.Count; i++) items[i].gameObject.SetActive(false);
+	}
+	public void RemoveAllItems()
+	{
+		for (int i = items.Count - 1; i >= 0; i--) GameManager.instance.ReturnItemToPool(items[i]);
+		items.Clear();
+	}
 }
 
 public class Floor
