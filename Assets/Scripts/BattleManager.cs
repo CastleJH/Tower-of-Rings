@@ -101,7 +101,7 @@ public class BattleManager : MonoBehaviour
     IEnumerator GenerateMonster()
     {
         Debug.Log("Start Coroutine");
-        while (newMonsterID < numGenMonster)
+        while (newMonsterID <= numGenMonster)
         {
             Debug.Log("Gen Monster");
             //몬스터 능력치 배율을 조정한다.

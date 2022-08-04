@@ -452,6 +452,6 @@ public class UIManager : MonoBehaviour
     public void ButtonNextFloor()
     {
         nextFloorButton.SetActive(false);
-        FloorManager.instance.CreateAndMoveToFloor(FloorManager.instance.floor.floorNum);
+        FloorManager.instance.CreateAndMoveToFloor(FloorManager.instance.floor.floorNum + 1);
     }
 }
