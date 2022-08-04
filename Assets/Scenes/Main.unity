@@ -6115,6 +6115,7 @@ MonoBehaviour:
   - {fileID: 1740428}
   - {fileID: 984850831}
   ringSelectionPanel: {fileID: 1717283357}
+  ringSelectionTypeText: {fileID: 1214105900}
   ringSelectionRingImage:
   - {fileID: 2130317728}
   - {fileID: 349159020}
@@ -31101,7 +31102,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1630713583
 RectTransform:
   m_ObjectHideFlags: 0

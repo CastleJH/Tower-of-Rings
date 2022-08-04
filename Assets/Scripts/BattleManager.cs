@@ -18,7 +18,8 @@ public class BattleManager : MonoBehaviour
     public int goldGet;
     public int diamondGet;
     public List<int> ringDowngrade;
-    float rpGeneratePos;
+    float rpGenerateTime;
+    float rpNextGenerateTime;
 
     //웨이브 별 변수
     public int wave;   //현재 웨이브
@@ -39,21 +40,19 @@ public class BattleManager : MonoBehaviour
         {
             //전투 종료 여부 확인
             CheckBattleOver();
-        }
-    }
 
-    void FixedUpdate()
-    {
-        if (isBattlePlaying)    //전투 중인 경우
-        {
-            rpGeneratePos += 0.00001f; 
-            if (rpGeneratePos > 0.004f || Random.Range(0.0f, 1.0f) < 0.001f)
+            if (Time.timeScale != 0)
             {
-                rpGeneratePos = 0.0f;
-                DropRP dropRP = GameManager.instance.GetDropRPFromPool();
-                dropRP.InitializeDropRP();
-                dropRPs.Add(dropRP);
-                dropRP.gameObject.SetActive(true);
+                rpGenerateTime += Time.unscaledDeltaTime;
+                if (rpGenerateTime > rpNextGenerateTime)
+                {
+                    rpGenerateTime = 0.0f;
+                    rpNextGenerateTime = Random.Range(10.0f, 14.0f);
+                    DropRP dropRP = GameManager.instance.GetDropRPFromPool();
+                    dropRP.InitializeDropRP();
+                    dropRPs.Add(dropRP);
+                    dropRP.gameObject.SetActive(true);
+                }
             }
         }
     }
@@ -66,7 +65,8 @@ public class BattleManager : MonoBehaviour
         goldGet = 0;
         diamondGet = 0;
         ringDowngrade.Clear();
-        rpGeneratePos = 0;
+        rpGenerateTime = 0.0f;
+        rpNextGenerateTime = Random.Range(10.0f, 14.0f);
 
         //전장을 킨다.
         UIManager.instance.TurnMapOnOff(false);

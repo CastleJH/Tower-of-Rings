@@ -32,6 +32,7 @@ public class UIManager : MonoBehaviour
     public GameObject[] battleDeckRPNotEnoughCover;
 
     public GameObject ringSelectionPanel;
+    public TextMeshProUGUI ringSelectionTypeText;
     public Image[] ringSelectionRingImage;
     public Image[] ringSelectionRingUpgradeImage;
     public GameObject[] ringSelectionRP;
@@ -206,6 +207,8 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0;
         int i;
         int type;
+        if (isUpgrade == 0) ringSelectionTypeText.text = "파괴할 링을 선택하세요.";
+        else ringSelectionTypeText.text = "제련할 링을 선택하세요.";
         for (i = 0; i < DeckManager.instance.deck.Count; i++)
         {
             type = DeckManager.instance.deck[i];
