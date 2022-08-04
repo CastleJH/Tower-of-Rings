@@ -57,6 +57,7 @@ public class Ring : MonoBehaviour
 
     void Update()
     {
+        //if (Time.timeScale == 0) return;
         if (isInBattle)
         {
             if (!isSealed)

@@ -20,12 +20,14 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI battleHaveRPText;
     public Image[] battleDeckRingImage;
     public Image[] battleDeckRingUpgradeImage;
+    public GameObject[] battleDeckRingRP;
     public TextMeshProUGUI[] battleDeckRingRPText;
     public GameObject[] battleDeckRPNotEnoughCover;
 
     public GameObject ringSelectionPanel;
     public Image[] ringSelectionRingImage;
     public Image[] ringSelectionRingUpgradeImage;
+    public GameObject[] ringSelectionRP;
     public TextMeshProUGUI[] ringSelectionRPText;
     public Image[] ringSelectionButtonImage;
     public TextMeshProUGUI[] ringSelectionButtonText;
@@ -33,6 +35,7 @@ public class UIManager : MonoBehaviour
     public GameObject playerStatusPanel;
     public Image[] playerStatusRingImage;
     public Image[] playerStatusRingUpgradeImage;
+    public GameObject[] playerStatusRP;
     public TextMeshProUGUI[] playerStatusRPText;
     public Image[] playerStatusRelicImage;
 
@@ -80,7 +83,7 @@ public class UIManager : MonoBehaviour
     public void ButtonGenerateRing(int index)
     {
         if (Input.touchCount > 1) return;
-        if (BattleManager.instance.isBattlePlaying)
+        if (BattleManager.instance.isBattlePlaying && Time.timeScale != 0)
         {
             if (battleDeckRPNotEnoughCover[index].activeSelf) return;
             DeckManager.instance.isEditRing = true;
@@ -164,12 +167,13 @@ public class UIManager : MonoBehaviour
             battleDeckRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
             battleDeckRingRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
             battleDeckRingUpgradeImage[i].gameObject.SetActive(true);
-            battleDeckRingRPText[i].gameObject.SetActive(true);
+            battleDeckRingRP[i].SetActive(true);
         }
         for (; i < battleDeckRingImage.Length; i++)
         {
             battleDeckRingImage[i].sprite = GameManager.instance.emptyRingSprite;
             battleDeckRingUpgradeImage[i].gameObject.SetActive(false);
+            battleDeckRingRP[i].SetActive(false);
         }
         battleDeckPanel.SetActive(true);
     }
@@ -192,6 +196,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenRingSelectionPanel(int isUpgrade)
     {
+        Time.timeScale = 0;
         int i;
         int type;
         for (i = 0; i < DeckManager.instance.deck.Count; i++)
@@ -201,7 +206,7 @@ public class UIManager : MonoBehaviour
             ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
             ringSelectionRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
             ringSelectionRingUpgradeImage[i].gameObject.SetActive(true);
-            ringSelectionRPText[i].gameObject.SetActive(true);
+            ringSelectionRP[i].SetActive(true);
 
             ringSelectionButtonImage[i].sprite = GameManager.instance.buttonSprites[isUpgrade];
             if (isUpgrade == 0) ringSelectionButtonText[i].text = "ÆÄ±«";
@@ -212,7 +217,7 @@ public class UIManager : MonoBehaviour
         {
             ringSelectionRingImage[i].sprite = GameManager.instance.emptyRingSprite;
             ringSelectionRingUpgradeImage[i].gameObject.SetActive(false);
-            ringSelectionRPText[i].gameObject.SetActive(false);
+            ringSelectionRP[i].SetActive(false);
 
             ringSelectionButtonImage[i].gameObject.SetActive(false);
         }
@@ -220,6 +225,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenPlayerStatusPanel()
     {
+        Time.timeScale = 0;
         int i;
         int type;
         for (i = 0; i < DeckManager.instance.deck.Count; i++)
@@ -229,13 +235,13 @@ public class UIManager : MonoBehaviour
             playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
             playerStatusRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
             playerStatusRingUpgradeImage[i].gameObject.SetActive(true);
-            playerStatusRPText[i].gameObject.SetActive(true);
+            playerStatusRP[i].SetActive(true);
         }
         for (;i < playerStatusRingImage.Length; i++)
         {
             playerStatusRingImage[i].sprite = GameManager.instance.emptyRingSprite;
             playerStatusRingUpgradeImage[i].gameObject.SetActive(false);
-            playerStatusRPText[i].gameObject.SetActive(false);
+            playerStatusRP[i].SetActive(false);
         }
 
         for (i = 0; i < GameManager.instance.relics.Count; i++)
@@ -251,6 +257,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenRingInfoPanel(int id)
     {
+        Time.timeScale = 0;
         BaseRing baseRing = GameManager.instance.ringDB[id];
         ringInfoRingImage.sprite = GameManager.instance.ringSprites[id];
         ringInfoRingUpgradeImage.sprite = GameManager.instance.ringUpgradeSprites[baseRing.level];
@@ -271,6 +278,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenRelicInfoPanel(int id)
     {
+        Time.timeScale = 0;
         BaseRelic baseRelic = GameManager.instance.relicDB[id];
 
         relicInfoRelicImage.sprite = GameManager.instance.relicSprites[id];
@@ -303,15 +311,19 @@ public class UIManager : MonoBehaviour
                 battleDeckPanel.SetActive(false);
                 break;
             case 1:
+                Time.timeScale = 1;
                 ringSelectionPanel.SetActive(false);
                 break;
             case 2:
+                Time.timeScale = 1;
                 playerStatusPanel.SetActive(false);
                 break;
             case 3:
+                if (!playerStatusPanel.activeSelf && !ringSelectionPanel.activeSelf) Time.timeScale = 1;
                 ringInfoPanel.SetActive(false);
                 break;
             case 4:
+                if (!playerStatusPanel.activeSelf) Time.timeScale = 1;
                 relicInfoPanel.SetActive(false);
                 break;
         }

@@ -22,6 +22,7 @@ public class DropRP : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0) return;
         if (Input.GetMouseButtonUp(0))
         {
             Vector2 touchPos;

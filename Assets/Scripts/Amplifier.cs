@@ -15,6 +15,7 @@ public class Amplifier : MonoBehaviour
 
     void Update()
     {
+        //if (Time.timeScale == 0) return;
         coolTime += Time.deltaTime;
         //증폭끼리 영역이 겹쳤을 때 하나가 삭제되면 일시적으로 isInAmplify가 false로 변경될 수 있다. 따라서 매 프레임 계속 true로 바꿔줘야 함.
         for (int i = monsters.Count - 1; i >= 0; i--) monsters[i].isInAmplify = true;

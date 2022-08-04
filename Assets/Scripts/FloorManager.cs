@@ -150,7 +150,7 @@ public class FloorManager : MonoBehaviour
 
             if (hit.collider != null)
             {
-                if (hit.collider.tag != "Portal") return;
+                if (hit.collider.tag != "Portal" || Time.timeScale == 0) return;
                 int dir = hit.collider.name[hit.collider.name.Length - 1] - '0';
                 MoveToRoom(playerX + dx[dir], playerY + dy[dir]);
             }

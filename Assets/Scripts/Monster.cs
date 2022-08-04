@@ -125,7 +125,7 @@ public class Monster : MonoBehaviour
                 transform.localScale = new Vector3(1, 1, 1);
                 hpText.transform.localScale = new Vector3(0.1f, 0.1f, 1);
             }
-            else
+            else if (prevX < transform.position.x)
             {
                 transform.localScale = new Vector3(-1, 1, 1);
                 hpText.transform.localScale = new Vector3(-0.1f, 0.1f, 1);
