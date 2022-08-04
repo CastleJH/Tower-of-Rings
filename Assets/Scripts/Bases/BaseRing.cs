@@ -16,6 +16,7 @@ public class BaseRing
     //DB의 스탯
     public float dbATK;
     public float dbSPD;
+    public float dbRP;
 
     //실제 게임에서의 기본 스탯
     public float baseATK;
@@ -32,8 +33,8 @@ public class BaseRing
     public string description;
 
     //시너지
-    public string identical;
-    public string different;
+    public string toSame;
+    public string toAll;
 
     public int level = 0;
 

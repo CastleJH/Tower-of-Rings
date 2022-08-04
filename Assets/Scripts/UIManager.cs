@@ -20,8 +20,40 @@ public class UIManager : MonoBehaviour
     public Image[][] maps;
     public RectTransform playerMarker;
 
-    //bool checkBattleRingDetailOn;
-    //float battleRingDetailLongClickTime;
+    public GameObject playerStatusPanel;
+    public Image[] playerStatusRingImage;
+    public Image[] playerStatusRingUpgradeImage;
+    public TextMeshProUGUI[] playerStatusRPText;
+    public Image[] playerStatusRelicImage;
+
+    public GameObject ringInfoPanel;
+    public Image ringInfoRingImage;
+    public Image ringInfoRingUpgradeImage;
+    public TextMeshProUGUI ringInfoRPText;
+    public TextMeshProUGUI ringInfoNameText;
+    public TextMeshProUGUI ringInfoATKText;
+    public TextMeshProUGUI ringInfoSPDText;
+    public TextMeshProUGUI ringInfoRNGText;
+    public TextMeshProUGUI ringInfoTARText;
+    public TextMeshProUGUI ringInfoBaseText;
+    public TextMeshProUGUI ringInfoSameSynergyText;
+    public TextMeshProUGUI ringInfoAllSynergyText;
+    public GameObject ringInfoTakeButton;
+
+    public GameObject relicInfoPanel;
+    public Image relicInfoRelicImage;
+    public TextMeshProUGUI relicInfoBaseEffectText;
+    public TextMeshProUGUI relicInfoCursedEffectText;
+    public GameObject relicInfoCursedNotify;
+    public GameObject relicInfoTakeButton;
+
+    public GameObject ringSelectionPanel;
+    public Image[] ringSelectionRingImage;
+    public Image[] ringSelectionRingUpgradeImage;
+    public TextMeshProUGUI[] ringSelectionRPText;
+    public Image[] ringSelectionButtonImage;
+    public TextMeshProUGUI[] ringSelectionButtonText;
+
     void Awake()
     {
         instance = this;
@@ -159,5 +191,66 @@ public class UIManager : MonoBehaviour
     public void TurnMapOnOff(bool isOn)
     {
         mapPanel.SetActive(isOn);
+    }
+
+    public void OpenPlayerStatusPanel()
+    {
+        int i;
+        int type;
+        for (i = 0; i < DeckManager.instance.deck.Count; i++)
+        {
+            type = DeckManager.instance.deck[i];
+            playerStatusRingImage[i].sprite = GameManager.instance.ringSprites[type];
+            playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
+            playerStatusRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
+            playerStatusRingUpgradeImage[i].gameObject.SetActive(true);
+            playerStatusRPText[i].gameObject.SetActive(true);
+        }
+        for (;i < playerStatusRingImage.Length; i++)
+        {
+            playerStatusRingImage[i].sprite = GameManager.instance.emptyRingSprite;
+            playerStatusRingUpgradeImage[i].gameObject.SetActive(false);
+            playerStatusRPText[i].gameObject.SetActive(false);
+        }
+
+        for (i = 0; i < GameManager.instance.relics.Count; i++)
+        {
+            playerStatusRelicImage[i].sprite = GameManager.instance.relicSprites[GameManager.instance.relics[i]];
+            playerStatusRelicImage[i].gameObject.SetActive(true);
+        }
+        for (; i < playerStatusRelicImage.Length; i++)
+            playerStatusRelicImage[i].gameObject.SetActive(false);
+
+        playerStatusPanel.SetActive(true);
+    }
+
+    public void OpenRingInfoPanel(int id)
+    {
+        BaseRing baseRing = GameManager.instance.ringDB[id];
+        ringInfoRingImage.sprite = GameManager.instance.ringSprites[id];
+        ringInfoRingUpgradeImage.sprite = GameManager.instance.ringUpgradeSprites[baseRing.level];
+        ringInfoRPText.text = ((int)baseRing.baseRP).ToString();
+        ringInfoNameText.text = baseRing.name;
+        ringInfoATKText.text = baseRing.baseATK.ToString();
+        ringInfoSPDText.text = baseRing.baseSPD.ToString();
+        ringInfoRNGText.text = baseRing.range.ToString();
+        ringInfoTARText.text = baseRing.baseNumTarget.ToString();
+        ringInfoBaseText.text = baseRing.description;
+        ringInfoSameSynergyText.text = baseRing.toSame;
+        ringInfoAllSynergyText.text = baseRing.toAll;
+
+        ringInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf);
+
+        ringInfoPanel.SetActive(true);
+    }
+
+    public void OpenRelicInfoPanel(int id, bool takeButtonOn)
+    {
+        BaseRelic baseRelic = GameManager.instance.relicDB[id];
+
+
+        relicInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf);
+
+        relicInfoPanel.SetActive(true);
     }
 }

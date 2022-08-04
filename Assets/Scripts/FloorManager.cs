@@ -65,6 +65,9 @@ public class FloorManager : MonoBehaviour
         //지도에 변화를 준다.
         UIManager.instance.RevealMapArea(playerX, playerY);
 
+        //스프라이트를 올바른 모양으로 바꾼다.
+        roomImage.sprite = GameManager.instance.sceneRoomSprites[floor.floorNum];
+
         switch (curRoom.type)
         {
             case 0:
@@ -72,7 +75,7 @@ public class FloorManager : MonoBehaviour
                 break;
             case 1:
                 TurnPortalsOnOff(false);
-                roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y, roomImage.transform.position.z);
+                roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
                 BattleManager.instance.StartBattle();
                 break;
             case 2:
@@ -88,13 +91,13 @@ public class FloorManager : MonoBehaviour
                 break;
             case 9:
                 TurnPortalsOnOff(false);
-                roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y, roomImage.transform.position.z);
+                roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
                 BattleManager.instance.StartBattle();
                 break;
         }
         //카메라를 해당하는 전장으로 이동한다.
         Camera.main.transform.position = roomImage.transform.position;
-        Camera.main.transform.Translate(0, -1, -15);
+        Camera.main.transform.Translate(0, 1.5f, -15);
     } 
 
     public void ChangeCurRoomToIdle()
@@ -147,11 +150,7 @@ public class FloorManager : MonoBehaviour
 
             if (hit.collider != null)
             {
-                if (hit.collider.tag != "Portal")
-                {
-                    Debug.Log(hit.collider.tag);
-                    return;
-                }
+                if (hit.collider.tag != "Portal") return;
                 int dir = hit.collider.name[hit.collider.name.Length - 1] - '0';
                 MoveToRoom(playerX + dx[dir], playerY + dy[dir]);
             }

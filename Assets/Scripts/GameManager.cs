@@ -21,8 +21,12 @@ public class GameManager : MonoBehaviour
     public GameObject dropRPPrefab;
 
     //스프라이트
+    public Sprite[] itemSprites;
     public Sprite[] ringSprites;
+    public Sprite[] relicSprites;
+    public Sprite[] sceneRoomSprites;
     public Sprite[] mapRoomSprites;
+    public Sprite[] ringUpgradeSprites;
     public Sprite emptyRingSprite;
 
     //사운드
@@ -36,6 +40,8 @@ public class GameManager : MonoBehaviour
     public List<BaseRing> ringDB;
     [HideInInspector]
     public List<BaseMonster> monsterDB;
+    [HideInInspector]
+    public List<BaseRelic> relicDB;
 
     //오브젝트 풀
     private Queue<Ring> ringPool;
@@ -53,7 +59,7 @@ public class GameManager : MonoBehaviour
     private int playerCurHP;
     public int gold;
     public int emerald;
-
+    public List<int> relics;
     void Awake()
     {
         instance = this;
@@ -63,6 +69,7 @@ public class GameManager : MonoBehaviour
         if (monsterDB.Count != monsterPrefabs.Length) Debug.LogError("num of monster sprites does not match");
         if (ringDB.Count != ringSprites.Length) Debug.LogError("num of ring sprites does not match");
         if (ringDB.Count != ringAttackAudios.Length) Debug.LogError("num of audios does not match");
+        if (relicDB.Count != relicSprites.Length) Debug.LogError("num of relic sprites does not match");
 
         //오브젝트 풀 초기화
         ringPool = new Queue<Ring>();
@@ -112,12 +119,13 @@ public class GameManager : MonoBehaviour
             r.dbATK = (int)dataRing[i]["atk"];
             r.dbSPD = float.Parse(dataRing[i]["spd"].ToString());
             r.baseNumTarget = (int)dataRing[i]["target"];
-            r.baseRP = (int)dataRing[i]["rp"];
+            r.dbRP = (int)dataRing[i]["rp"];
+            r.baseRP = r.dbRP;
             r.baseEFF = float.Parse(dataRing[i]["eff"].ToString());
             r.description = (string)dataRing[i]["description"];
             r.range = (int)dataRing[i]["range"];
-            r.identical = (string)dataRing[i]["identical"];
-            r.different = (string)dataRing[i]["all"];
+            r.toSame = (string)dataRing[i]["identical"];
+            r.toAll = (string)dataRing[i]["all"];
             r.level = 0;
             r.Upgrade();
             ringDB.Add(r);
@@ -135,6 +143,20 @@ public class GameManager : MonoBehaviour
             m.description = (string)dataMonster[i]["description"];
             m.atk = (int)dataMonster[i]["atk"];
             monsterDB.Add(m);
+        }
+
+        List<Dictionary<string, object>> dataRelic = DBReader.Read("relic_db");
+        relicDB = new List<BaseRelic>();
+        for (int i = 0; i < dataRelic.Count; i++)
+        {
+            BaseRelic r = new BaseRelic();
+            r.id = (int)dataRelic[i]["id"];
+            r.name = (string)dataRelic[i]["name"];
+            r.have = false;
+            r.isCursed = false;
+            r.pureDescription = (string)dataRelic[i]["effect"];
+            r.cursedDescription = (string)dataRelic[i]["effect_cursed"];
+            relicDB.Add(r);
         }
     }
 
@@ -371,6 +393,14 @@ public class GameManager : MonoBehaviour
     {
         if (emerald + _emerald < 0) return false;
         emerald += _emerald;
+        return true;
+    }
+
+    public bool AddRelicToDeck(int id)
+    {
+        if (relics.Contains(id)) return false;
+        relics.Add(id);
+        relicDB[id].have = true;
         return true;
     }
 }
