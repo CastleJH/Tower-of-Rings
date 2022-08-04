@@ -91,8 +91,6 @@ public class BattleManager : MonoBehaviour
     {
         if (wave == 2) numGenMonster = 45;
         else numGenMonster = 30;
-        //지우세요!
-        //numGenMonster = 1;
         newMonsterID = 0;
         StartCoroutine(GenerateMonster());
     }
@@ -101,9 +99,8 @@ public class BattleManager : MonoBehaviour
     IEnumerator GenerateMonster()
     {
         Debug.Log("Start Coroutine");
-        while (newMonsterID <= numGenMonster)
+        while (newMonsterID < numGenMonster)
         {
-            Debug.Log("Gen Monster");
             //몬스터 능력치 배율을 조정한다.
             float scale;
             scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) + 0.05f * (wave - 1);
