@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject amplifierPrefab;
     public GameObject damageTextPrefab;
     public GameObject dropRPPrefab;
+    public GameObject itemPrefab;
 
     //스프라이트
     public Sprite[] itemSprites;
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
     public Sprite[] sceneRoomSprites;
     public Sprite[] mapRoomSprites;
     public Sprite[] ringUpgradeSprites;
+    public Sprite[] buttonSprites;
     public Sprite emptyRingSprite;
 
     //사운드
@@ -53,6 +55,7 @@ public class GameManager : MonoBehaviour
     private Queue<Amplifier> amplifierPool;
     private Queue<DamageText> damageTextPool;
     private Queue<DropRP> dropRPPool;
+    private Queue<Item> itemPool;
 
     //게임 진행상황 관련 변수
     private int playerMaxHP;
@@ -81,6 +84,7 @@ public class GameManager : MonoBehaviour
         amplifierPool = new Queue<Amplifier>();
         damageTextPool = new Queue<DamageText>();
         dropRPPool = new Queue<DropRP>();
+        itemPool = new Queue<Item>();
 
         for (int i = 0; i < monsterDB.Count; i++)
         {
@@ -348,7 +352,7 @@ public class GameManager : MonoBehaviour
         damageTextPool.Enqueue(damageText);
     }
 
-    //링을 오브젝트 풀에서 받아온다. disabled 상태로 준다.
+    //링의 정수를 오브젝트 풀에서 받아온다. disabled 상태로 준다.
     public DropRP GetDropRPFromPool()
     {
         if (dropRPPool.Count > 0) return dropRPPool.Dequeue();
@@ -356,7 +360,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //링을 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
+    //링의 정수를 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
     public void ReturnDropRPToPool(DropRP dropRP)
     {
         /*추가 구현 필요 - 예외처리 제거할 것*/
@@ -367,6 +371,27 @@ public class GameManager : MonoBehaviour
         }
         dropRP.gameObject.SetActive(false);
         dropRPPool.Enqueue(dropRP);
+    }
+
+    //아이템을 오브젝트 풀에서 받아온다. disabled 상태로 준다.
+    public Item GetItemFromPool()
+    {
+        if (itemPool.Count > 0) return itemPool.Dequeue();
+        else return Instantiate(itemPrefab).GetComponent<Item>();
+    }
+
+
+    //아이템을 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
+    public void ReturnItemToPool(Item item)
+    {
+        /*추가 구현 필요 - 예외처리 제거할 것*/
+        if (itemPool.Contains(item))
+        {
+            Debug.LogError("already enqueued item");
+            return;
+        }
+        item.gameObject.SetActive(false);
+        itemPool.Enqueue(item);
     }
 
     //플레이어의 현재 HP를 바꾼다. 0이라면 게임오버.

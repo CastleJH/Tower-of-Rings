@@ -81,13 +81,11 @@ public class Item : MonoBehaviour
         }
         else if (itemType < 2000)
         {
-            DeckManager.instance.AddRingToDeck(itemType - 1000);
-            gameObject.SetActive(false);
+            UIManager.instance.OpenRingInfoPanel(itemType - 1000);
         }
         else if (itemType < 3000)
         {
-            GameManager.instance.AddRelicToDeck(itemType - 2000);
-            gameObject.SetActive(false);
+            UIManager.instance.OpenRelicInfoPanel(itemType - 2000);
         }
     }
 }

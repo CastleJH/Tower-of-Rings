@@ -7,13 +7,28 @@ public class Room
     public int type;
 	public bool visited;
 	public int pathID;
-	public int upgrade;
-	public int ring;
-	public int relic;
-	public int destroy;
-	public int gold;
-	public int emerald;
-	public float recover;
+	public List<Item> items;
+
+    public Room()
+    {
+		items = new List<Item>();
+    }
+
+	public void AddItem(Item item)
+	{
+		items.Add(item);
+	}
+
+	public void RemoveItem(Item item)
+    {
+		items.Remove(item);
+		GameManager.instance.ReturnItemToPool(item);
+    }
+
+	public void ShowItems(Item item)
+    {
+		for (int i = 0; i < items.Count; i++) items[i].gameObject.SetActive(true);
+    }
 }
 
 public class Floor

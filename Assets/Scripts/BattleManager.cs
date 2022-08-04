@@ -71,10 +71,7 @@ public class BattleManager : MonoBehaviour
         //전장을 킨다.
         UIManager.instance.TurnMapOnOff(false);
         GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(true);
-        UIManager.instance.TurnDeckOnOff(true);
-
-        //덱의 이미지/RP 비용등을 초기화한다.
-        UIManager.instance.SetBattleDeckRingImageAndRPAll();
+        UIManager.instance.OpenBattleDeckPanel();
 
         //초기 RP를 정하고 UI를 업데이트한다.
         ChangeCurrentRP(50);
@@ -190,7 +187,7 @@ public class BattleManager : MonoBehaviour
 
                 //전장을 끄고 맵을 갱신하고 포탈을 보여준다.
                 GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(false);
-                UIManager.instance.TurnDeckOnOff(false);
+                UIManager.instance.ClosePanel(0);
                 FloorManager.instance.ChangeCurRoomToIdle();
                 UIManager.instance.RevealMapArea(FloorManager.instance.playerX, FloorManager.instance.playerY);
                 UIManager.instance.TurnMapOnOff(true);
@@ -209,13 +206,13 @@ public class BattleManager : MonoBehaviour
     {
         int consumeRP;
         rp = _rp;
-        UIManager.instance.battleRPText.text = ((int)rp).ToString();
+        UIManager.instance.battleHaveRPText.text = ((int)rp).ToString();
         for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)    //RP값 변경 후 생성 가능한 링만 버튼 활성화(=버튼 가림막 비활성화)
         {
             if (int.TryParse(UIManager.instance.battleDeckRingRPText[i].text, out consumeRP))
             {
-                if (consumeRP <= rp) UIManager.instance.battleRPNotEnough[i].SetActive(false);
-                else UIManager.instance.battleRPNotEnough[i].SetActive(true);
+                if (consumeRP <= rp) UIManager.instance.battleDeckRPNotEnoughCover[i].SetActive(false);
+                else UIManager.instance.battleDeckRPNotEnoughCover[i].SetActive(true);
             }
             else
             {
@@ -223,15 +220,15 @@ public class BattleManager : MonoBehaviour
                 {
                     case "20.00":
                     case "20/20":
-                        UIManager.instance.battleRPNotEnough[i].SetActive(false);
+                        UIManager.instance.battleDeckRPNotEnoughCover[i].SetActive(false);
                         break;
                     default:
-                        UIManager.instance.battleRPNotEnough[i].SetActive(true);
+                        UIManager.instance.battleDeckRPNotEnoughCover[i].SetActive(true);
                         break;
                 }
             }
         }
-        if (rp < 10) UIManager.instance.battleRPNotEnough[DeckManager.instance.maxDeckLength].SetActive(true);
-        else UIManager.instance.battleRPNotEnough[DeckManager.instance.maxDeckLength].SetActive(false);
+        if (rp < 10) UIManager.instance.battleDeckRPNotEnoughCover[DeckManager.instance.maxDeckLength].SetActive(true);
+        else UIManager.instance.battleDeckRPNotEnoughCover[DeckManager.instance.maxDeckLength].SetActive(false);
     }
 }
