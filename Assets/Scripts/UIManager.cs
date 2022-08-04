@@ -386,7 +386,7 @@ public class UIManager : MonoBehaviour
                         break;
                     }
             }
-            ringSelectionPanel.SetActive(false);
+            ClosePanel(1);
         }
     }
 
