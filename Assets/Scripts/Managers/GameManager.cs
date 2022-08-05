@@ -29,13 +29,15 @@ public class GameManager : MonoBehaviour
     public Sprite[] mapRoomSprites;
     public Sprite[] ringUpgradeSprites;
     public Sprite[] buttonSprites;
-    public Sprite emptyRingSprite;
+    public Sprite emptyRingSprite; 
 
     //사운드
     public AudioClip[] ringAttackAudios;
 
     //몬스터 이동 경로
     public PathCreator[] monsterPaths;
+    public SpriteRenderer[] monsterPathImages;
+    public GameObject[] monsterPathEndlines;
 
     //DB
     [HideInInspector]

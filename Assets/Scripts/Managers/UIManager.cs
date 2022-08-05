@@ -22,7 +22,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject battleArrangeFail;
     public TextMeshProUGUI battleArrangeFailText;
-    public GameObject nextFloorButton;
+    //public GameObject nextFloorButton;
 
     public GameObject battleDeckPanel;
     public TextMeshProUGUI battleHaveRPText;
@@ -444,11 +444,5 @@ public class UIManager : MonoBehaviour
     public void ButtonGameStart()
     {
         GameManager.instance.GameStart();
-    }
-
-    public void ButtonNextFloor()
-    {
-        nextFloorButton.SetActive(false);
-        FloorManager.instance.CreateAndMoveToFloor(FloorManager.instance.floor.floorNum + 1);
     }
 }

@@ -692,7 +692,17 @@ public class Ring : MonoBehaviour
     public bool CanBePlaced()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.75f);
-        
+
+        int deckIdx = DeckManager.instance.deck.IndexOf(baseRing.id);
+        int rpCost;
+        if (!int.TryParse(UIManager.instance.battleDeckRingRPText[deckIdx].text, out rpCost)) rpCost = 0;
+        if (rpCost > BattleManager.instance.rp)
+        {
+            UIManager.instance.SetBattleArrangeFail("RP가 부족합니다.");
+            rangeRenderer.color = new Color32(255, 0, 0, 50);
+            return false;
+        }
+
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].tag == "Monster Path")

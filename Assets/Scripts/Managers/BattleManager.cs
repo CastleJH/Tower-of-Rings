@@ -20,6 +20,7 @@ public class BattleManager : MonoBehaviour
     public List<int> ringDowngrade;
     float rpGenerateTime;
     float rpNextGenerateTime;
+    byte pathAlpha;
 
     //웨이브 별 변수
     public int wave;   //현재 웨이브
@@ -40,6 +41,13 @@ public class BattleManager : MonoBehaviour
         {
             //전투 종료 여부 확인
             CheckBattleOver();
+            
+            if (pathAlpha < 255)
+            {
+                pathAlpha += 3;
+                GameManager.instance.monsterPathImages[FloorManager.instance.curRoom.pathID].color = new Color32(255, 255, 255, pathAlpha);
+                if (pathAlpha == 255) StartWave();
+            }
 
             if (Time.timeScale != 0)
             {
@@ -62,15 +70,16 @@ public class BattleManager : MonoBehaviour
     public void StartBattle()
     {
         //전투 별 변수 초기화
-        isBattlePlaying = true;
         goldGet = 0;
         diamondGet = 0;
         ringDowngrade.Clear();
         rpGenerateTime = 0.0f;
         rpNextGenerateTime = Random.Range(10.0f, 14.0f);
+        pathAlpha = 0;
 
         //전장을 킨다.
         UIManager.instance.TurnMapOnOff(false);
+        GameManager.instance.monsterPathImages[FloorManager.instance.curRoom.pathID].color = new Color(255, 255, 255, 0);
         GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(true);
         UIManager.instance.OpenBattleDeckPanel();
 
@@ -81,9 +90,9 @@ public class BattleManager : MonoBehaviour
         DeckManager.instance.PrepareBattle();
 
         wave = 1;
-        //지우세요!
-        //wave = 3;
-        StartWave();
+        newMonsterID = 0;
+        numGenMonster = 30;
+        isBattlePlaying = true;
     }
 
     //웨이브를 시작한다. 관련 변수를 초기화하고 몬스터 생성 코루틴을 시작한다.
@@ -101,6 +110,7 @@ public class BattleManager : MonoBehaviour
         Debug.Log("Start Coroutine");
         while (newMonsterID < numGenMonster)
         {
+            Debug.Log("gen!");
             //몬스터 능력치 배율을 조정한다.
             float scale;
             scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) + 0.05f * (wave - 1);
@@ -155,7 +165,6 @@ public class BattleManager : MonoBehaviour
 
     void ReloadBattleRoom(int x, int y)
     {
-        if (FloorManager.instance.curRoom.type == 9 && FloorManager.instance.curRoom.visited) UIManager.instance.nextFloorButton.SetActive(true);
         //FloorManager.instance.ChangeCurRoomToIdle();
 
         //링의 정수 정리

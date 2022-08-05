@@ -28,8 +28,8 @@ public class SceneChanger : MonoBehaviour
     {
         if (image.raycastTarget)
         {
-            if (isDarker) alpha += 0.006f;
-            else alpha -= 0.006f;
+            if (isDarker) alpha += 0.012f;
+            else alpha -= 0.012f;
             alpha = Mathf.Clamp01(alpha);
             image.color = new Color(0, 0, 0, alpha);
             if (alpha == 0) image.raycastTarget = false;

@@ -31,13 +31,12 @@ public class FloorManager : MonoBehaviour
 
     void Update()
     {
-        if (isPortalOn) GetInput();
+        if (isPortalOn && !SceneChanger.instance.image.raycastTarget) GetInput();
     }
 
     //해당 층을 새로 생성하고 이동한다.
     public void CreateAndMoveToFloor(int f)
     {
-        UIManager.instance.nextFloorButton.SetActive(false);
         floor.Generate(f); 
         UIManager.instance.InitializeMap();
 
@@ -66,7 +65,6 @@ public class FloorManager : MonoBehaviour
                 TurnPortalsOnOff(true);
                 break;
             case 1:
-                Debug.Log("Battle Start");
                 roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
                 if (!curRoom.visited) BattleManager.instance.StartBattle();
                 TurnPortalsOnOff(curRoom.visited);
@@ -141,7 +139,6 @@ public class FloorManager : MonoBehaviour
                 TurnPortalsOnOff(true);
                 break;
             case 9:
-                Debug.Log("Battle Start");
                 roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
                 if (!curRoom.visited) BattleManager.instance.StartBattle();
                 TurnPortalsOnOff(curRoom.visited);
@@ -217,7 +214,8 @@ public class FloorManager : MonoBehaviour
             {
                 if (hit.collider.tag != "Portal" || Time.timeScale == 0) return;
                 int dir = hit.collider.name[hit.collider.name.Length - 1] - '0'; 
-                SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir]);
+                if (hit.collider.gameObject != portals[4].gameObject) SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir]);
+                else CreateAndMoveToFloor(floor.floorNum + 1);
             }
 
         }
