@@ -142,13 +142,7 @@ public class BattleManager : MonoBehaviour
                 //몬스터 생성 종료
                 StopAllCoroutines();
 
-                //몬스터 리스트 정리
-                /*for (int i = monsters.Count - 1; i >= 0; i--)
-                    monsters[i].RemoveFromBattle(0.0f);
-                monsters.Clear();*/
-
-                SceneChanger.instance.changeFunc += ChangeSceneAfterBattle;
-                SceneChanger.instance.ChangeScene(FloorManager.instance.MoveToRoom, FloorManager.instance.playerX, FloorManager.instance.playerY);
+                SceneChanger.instance.ChangeScene(ReloadBattleRoom, FloorManager.instance.playerX, FloorManager.instance.playerY);
 
             }
             else
@@ -159,14 +153,10 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    void ChangeSceneAfterBattle(int a, int b)
+    void ReloadBattleRoom(int x, int y)
     {
-
-        if (FloorManager.instance.curRoom.type == 9)
-        {
-            UIManager.instance.nextFloorButton.SetActive(true);
-        }
-        FloorManager.instance.ChangeCurRoomToIdle();
+        if (FloorManager.instance.curRoom.type == 9 && FloorManager.instance.curRoom.visited) UIManager.instance.nextFloorButton.SetActive(true);
+        //FloorManager.instance.ChangeCurRoomToIdle();
 
         //링의 정수 정리
         for (int i = dropRPs.Count - 1; i >= 0; i--)
@@ -213,7 +203,8 @@ public class BattleManager : MonoBehaviour
         UIManager.instance.ClosePanel(0);
         UIManager.instance.RevealMapArea(FloorManager.instance.playerX, FloorManager.instance.playerY);
         UIManager.instance.TurnMapOnOff(true);
-        FloorManager.instance.TurnPortalsOnOff(true);
+
+        FloorManager.instance.MoveToRoom(x, y);
     }
 
     //현재 RP량을 바꾼다.

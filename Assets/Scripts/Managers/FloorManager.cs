@@ -67,9 +67,9 @@ public class FloorManager : MonoBehaviour
                 break;
             case 1:
                 Debug.Log("Battle Start");
-                TurnPortalsOnOff(false);
                 roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
-                BattleManager.instance.StartBattle();
+                if (!curRoom.visited) BattleManager.instance.StartBattle();
+                TurnPortalsOnOff(curRoom.visited);
                 break;
             case 2:
                 if (!curRoom.visited)
@@ -142,9 +142,9 @@ public class FloorManager : MonoBehaviour
                 break;
             case 9:
                 Debug.Log("Battle Start");
-                TurnPortalsOnOff(false);
                 roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
-                BattleManager.instance.StartBattle();
+                if (!curRoom.visited) BattleManager.instance.StartBattle();
+                TurnPortalsOnOff(curRoom.visited);
                 break;
         }
         curRoom.visited = true;
@@ -165,7 +165,7 @@ public class FloorManager : MonoBehaviour
         curRoom.type = 0;
     }
 
-    public void TurnPortalsOnOff(bool isOn)
+    private void TurnPortalsOnOff(bool isOn)
     {
         isPortalOn = isOn;
         if (isOn)
@@ -177,23 +177,28 @@ public class FloorManager : MonoBehaviour
                 if (adjRoom.type != -1 && adjRoom.type != 10)
                 {
                     portals[i].gameObject.SetActive(true);
-                    if (adjRoom.type < 2 || adjRoom.type == 9) portals[i].SetInteger("portalType", adjRoom.type);
-                    else portals[i].SetInteger("portalType", 2);
+                    if (adjRoom.type == 0 || ((adjRoom.type == 1 || adjRoom.type == 9) && adjRoom.visited)) portals[i].SetFloat("portalColor", 0);
+                    else if (adjRoom.type == 1) portals[i].SetFloat("portalColor", 0.2f);
+                    else if (adjRoom.type == 9) portals[i].SetFloat("portalColor", 0.6f);
+                    else if (adjRoom.type != 8 && adjRoom.visited && adjRoom.items.Count == 0) portals[i].SetFloat("portalColor", 0);
+                    else portals[i].SetFloat("portalColor", 0.4f);
                 }
                 else
                 {
-                    portals[i].SetInteger("portalType", -1);
                     portals[i].gameObject.SetActive(false);
                 }
             }
         }
         else
         {
-            for (int i = 0; i < 4; i++)
-            {
-                portals[i].gameObject.SetActive(false);
-            }
+            for (int i = 0; i < 4; i++) portals[i].gameObject.SetActive(false);
         }
+        if (curRoom.visited && curRoom.type == 9)
+        {
+            portals[4].gameObject.SetActive(true);
+            portals[4].SetFloat("portalColor", 0.8f);
+        }
+        else portals[4].gameObject.SetActive(false);
     }
 
     public void GetInput()

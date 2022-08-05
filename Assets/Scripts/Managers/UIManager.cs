@@ -129,32 +129,29 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 1; i <= 9; i++)
             for (int j = 1; j <= 9; j++)
-            {
-                if (FloorManager.instance.floor.rooms[i, j].type != -1) maps[i][j].sprite = GameManager.instance.mapRoomSprites[FloorManager.instance.floor.rooms[i, j].type];
                 maps[i][j].color = new Color32(0, 0, 0, 0);
-            }
     }
 
     //맵의 일부분을 밝히고, 마커를 해당 위치로 이동한다.
     public void RevealMapArea(int x, int y)
     {
-        int[] dx = { 0, 0, -1, 1 };
-        int[] dy = { -1, 1, 0, 0 };
+        int[] dx = { 0, 0, 0, -1, 1 };
+        int[] dy = { 0, -1, 1, 0, 0 };
         int nx, ny;
+        Room room;
 
-        maps[x][y].sprite = GameManager.instance.mapRoomSprites[FloorManager.instance.floor.rooms[x, y].type];
-        maps[x][y].color = Color.white;
         playerMarker.anchoredPosition = maps[x][y].rectTransform.anchoredPosition;
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
         {
             nx = x + dx[i];
             ny = y + dy[i];
-            if (FloorManager.instance.floor.rooms[nx, ny].type != -1 && FloorManager.instance.floor.rooms[nx, ny].type != 10 && !FloorManager.instance.floor.rooms[nx, ny].visited)
+            room = FloorManager.instance.floor.rooms[nx, ny];
+            if (room.type != -1 && room.type != 10)
             {
-                //if (FloorManager.instance.floor.rooms[nx, ny].type < 8) maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[0];
-                //else maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[FloorManager.instance.floor.rooms[nx, ny].type];
-                //maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[FloorManager.instance.floor.rooms[nx, ny].type];
+                maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[room.type];
+                if (room.visited && (room.type == 1 || room.type == 9)) maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[0];
+                else if (room.type != 8 && room.visited && room.items.Count == 0) maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[0];
                 maps[nx][ny].color = Color.white;
             }
         }

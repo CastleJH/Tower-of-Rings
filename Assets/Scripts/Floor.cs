@@ -22,6 +22,7 @@ public class Room
 	public void RemoveItem(Item item)
     {
 		items.Remove(item);
+		if (FloorManager.instance.curRoom == this) UIManager.instance.RevealMapArea(FloorManager.instance.playerX, FloorManager.instance.playerY);
 		GameManager.instance.ReturnItemToPool(item);
     }
 
