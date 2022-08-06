@@ -13,6 +13,7 @@ public class FloorManager : MonoBehaviour
     bool isPortalOn;
     public Animator[] portals;
     public SpriteRenderer roomImage;
+    float portalScale;
 
     //층 관련 변수
     public Floor floor;
@@ -27,11 +28,23 @@ public class FloorManager : MonoBehaviour
     {
         instance = this;
         floor = new Floor();
+        portalScale = 0;
     }
 
     void Update()
     {
-        if (isPortalOn && !SceneChanger.instance.image.raycastTarget) GetInput();
+        if (isPortalOn)
+        {
+            if (portalScale < 1)
+            {
+                if (portalScale < 0.1f) portalScale += 0.002f;
+                else if (portalScale < 0.3f) portalScale += 0.015f;
+                else portalScale += 0.06f;
+                portalScale = Mathf.Clamp01(portalScale);
+                for (int i = 0; i < 5; i++) portals[i].gameObject.transform.localScale = new Vector3(portalScale, portalScale, 1);
+            }
+            if (!SceneChanger.instance.image.raycastTarget) GetInput();
+        }
     }
 
     //해당 층을 새로 생성하고 이동한다.
@@ -167,12 +180,14 @@ public class FloorManager : MonoBehaviour
         isPortalOn = isOn;
         if (isOn)
         {
+            portalScale = 0.0f;
             Room adjRoom;
             for (int i = 0; i < 4; i++)
             {
                 adjRoom = floor.rooms[playerX + dx[i], playerY + dy[i]];
                 if (adjRoom.type != -1 && adjRoom.type != 10)
                 {
+                    portals[i].gameObject.transform.localScale = Vector3.forward;
                     portals[i].gameObject.SetActive(true);
                     if (adjRoom.type == 0 || ((adjRoom.type == 1 || adjRoom.type == 9) && adjRoom.visited)) portals[i].SetFloat("portalColor", 0);
                     else if (adjRoom.type == 1) portals[i].SetFloat("portalColor", 0.2f);
@@ -192,6 +207,7 @@ public class FloorManager : MonoBehaviour
         }
         if (curRoom.visited && curRoom.type == 9)
         {
+            portals[4].gameObject.transform.localScale = Vector3.zero;
             portals[4].gameObject.SetActive(true);
             portals[4].SetFloat("portalColor", 0.8f);
         }

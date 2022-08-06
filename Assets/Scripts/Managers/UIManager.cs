@@ -275,7 +275,7 @@ public class UIManager : MonoBehaviour
         ringInfoNameText.text = baseRing.name;
         ringInfoATKText.text = baseRing.baseATK.ToString();
         ringInfoSPDText.text = baseRing.baseSPD.ToString();
-        ringInfoRNGText.text = baseRing.range.ToString();
+        ringInfoRNGText.text = (baseRing.range - 2).ToString();
         ringInfoTARText.text = baseRing.baseNumTarget.ToString();
         ringInfoBaseText.text = baseRing.description;
         ringInfoSameSynergyText.text = baseRing.toSame;
@@ -325,7 +325,7 @@ public class UIManager : MonoBehaviour
                 ringSelectionPanel.SetActive(false);
                 break;
             case 2:
-                Time.timeScale = 1;
+                if (!BattleManager.instance.isBattlePlaying) Time.timeScale = 1;
                 playerStatusPanel.SetActive(false);
                 break;
             case 3:

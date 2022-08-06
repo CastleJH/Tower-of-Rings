@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     //게임 진행상황 관련 변수
     public int playerMaxHP;
-    private int playerCurHP;
+    public int playerCurHP;
     public int gold;
     public int diamond;
     public List<int> relics;
@@ -405,7 +405,10 @@ public class GameManager : MonoBehaviour
     //플레이어의 현재 HP를 바꾼다. 0이라면 게임오버.
     public void ChangePlayerCurHP(int _HP)
     {
+        if (playerCurHP == playerMaxHP && _HP > 0) return;
         playerCurHP = Mathf.Clamp(playerCurHP + _HP, 0, playerMaxHP);
+        if (playerCurHP <= playerMaxHP * 0.2f) UIManager.instance.playerHPText.color = Color.red;
+        else UIManager.instance.playerHPText.color = Color.white;
         UIManager.instance.playerHPText.text = playerCurHP.ToString() + "/" + playerMaxHP.ToString();
         if (playerCurHP == 0)
         {

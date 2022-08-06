@@ -239,7 +239,7 @@ public class Monster : MonoBehaviour
                 {
                     DeckManager.instance.necroCount = 20;
                     UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, "20/20");
-                    BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp);
+                    BattleManager.instance.ChangePlayerRP(0);
                 }
                 else UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, DeckManager.instance.necroCount.ToString() + "/20");
             }
@@ -578,7 +578,7 @@ public class Monster : MonoBehaviour
         {
             skillCoolTime1 = 0.0f;
 
-            BattleManager.instance.ChangeCurrentRP((int)BattleManager.instance.rp * 0.8f);
+            BattleManager.instance.ChangePlayerRP(-BattleManager.instance.rp * 0.2f);
         }
     }
 
@@ -699,6 +699,7 @@ public class Monster : MonoBehaviour
                 do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
                 while (GameManager.instance.ringDB[ringID].level == 1);
                 GameManager.instance.ringDB[ringID].Downgrade();
+                UIManager.instance.OpenBattleDeckPanel();
                 BattleManager.instance.ringDowngrade.Add(ringID);
             }
         }
@@ -785,6 +786,7 @@ public class Monster : MonoBehaviour
                                 do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
                                 while (GameManager.instance.ringDB[ringID].level == 1);
                                 GameManager.instance.ringDB[ringID].Downgrade();
+                                UIManager.instance.OpenBattleDeckPanel();
                                 BattleManager.instance.ringDowngrade.Add(ringID);
                             }
                             break;

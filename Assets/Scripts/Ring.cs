@@ -781,7 +781,7 @@ public class Ring : MonoBehaviour
         }
 
         //RP를 생산하고 UI를 업데이트 한다.
-        BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp + genRP);
+        BattleManager.instance.ChangePlayerRP(genRP);
 
         //파티클을 생성한다.
         rpGenerationParticle = GameManager.instance.GetParticleFromPool(7);

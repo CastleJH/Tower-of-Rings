@@ -62,7 +62,7 @@ public class DeckManager : MonoBehaviour
                     {
                         plantCoolTime = 10.0f;
                         UIManager.instance.SetBattleDeckRingRPText(plantIdx, "10.00");
-                        BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp);
+                        BattleManager.instance.ChangePlayerRP(0);
                     }
                     else UIManager.instance.SetBattleDeckRingRPText(plantIdx, string.Format("{0:0.00}", plantCoolTime));
                 }
@@ -157,9 +157,11 @@ public class DeckManager : MonoBehaviour
                 Ring ring;
                 if (hit.collider != null && hit.collider.tag == "Ring" && BattleManager.instance.rp >= 10) //마지막 터치 지점에 링이 있다면 제거한다.
                 {
-                    ring = hit.collider.gameObject.GetComponent<Ring>();
-                    RemoveRingFromBattle(ring);
-                    BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - 10);
+                    if (BattleManager.instance.ChangePlayerRP(-10))
+                    {
+                        ring = hit.collider.gameObject.GetComponent<Ring>();
+                        RemoveRingFromBattle(ring);
+                    }
                 }
                 ringRemover.transform.position = new Vector3(100, 100, 0);
             }
@@ -185,7 +187,7 @@ public class DeckManager : MonoBehaviour
         if (!int.TryParse(UIManager.instance.battleDeckRingRPText[deckIdx].text, out rpCost)) rpCost = 0;
 
         //충분한 rp가 있다면 더 자세하게 생성 가능 여부 확인. 아니면 취소
-        if (rpCost <= BattleManager.instance.rp)
+        if (BattleManager.instance.ChangePlayerRP(-rpCost))
         {
             if (genRing.baseRing.id == 17)  //탐욕링이라면 앞으로 생성 불가하게 막음
             {
@@ -226,7 +228,6 @@ public class DeckManager : MonoBehaviour
             genRing.PutIntoBattle(ringNumber++);
             rings.Add(genRing);
             GetCommanderNearestForAllRings();
-            BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp - rpCost);
         }
         else GameManager.instance.ReturnRingToPool(genRing);
     }

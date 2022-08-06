@@ -45,7 +45,7 @@ public class DropRP : MonoBehaviour
     {
         if (++click > 0)
         {
-            BattleManager.instance.ChangeCurrentRP(BattleManager.instance.rp + Random.Range(3, 6));
+            BattleManager.instance.ChangePlayerRP(Random.Range(3, 6));
             BattleManager.instance.dropRPs.Remove(this);
             GameManager.instance.ReturnDropRPToPool(this);
         }

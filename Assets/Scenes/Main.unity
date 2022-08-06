@@ -6076,7 +6076,6 @@ MonoBehaviour:
   playerHPText: {fileID: 1776338913}
   battleArrangeFail: {fileID: 2124997109}
   battleArrangeFailText: {fileID: 1229108012}
-  nextFloorButton: {fileID: 1152097732}
   battleDeckPanel: {fileID: 1578581223}
   battleHaveRPText: {fileID: 1692468670}
   battleDeckRingImage:
@@ -13042,6 +13041,7 @@ MonoBehaviour:
   - {fileID: 489912894}
   monsterPathEndlines: []
   playerMaxHP: 0
+  playerCurHP: 0
   gold: 0
   diamond: 0
   relics: 

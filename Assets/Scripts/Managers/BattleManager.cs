@@ -84,7 +84,8 @@ public class BattleManager : MonoBehaviour
         UIManager.instance.OpenBattleDeckPanel();
 
         //초기 RP를 정하고 UI를 업데이트한다.
-        ChangeCurrentRP(50);
+        rp = 50;
+        ChangePlayerRP(0);
 
         //덱 매니저의 전투 관련 변수들을 초기화한다.
         DeckManager.instance.PrepareBattle();
@@ -144,7 +145,7 @@ public class BattleManager : MonoBehaviour
         {
             if (wave == 3)     //마지막 웨이브였다면 보상을 주고 전투를 종료한다.
             {
-                Time.timeScale = 1;
+                if (GameManager.instance.playerCurHP > 0) Time.timeScale = 1;
 
                 //배틀을 종료한다.
                 isBattlePlaying = false;
@@ -217,11 +218,12 @@ public class BattleManager : MonoBehaviour
     }
 
     //현재 RP량을 바꾼다.
-    public void ChangeCurrentRP(float _rp)
+    public bool ChangePlayerRP(float _rp)
     {
-        int consumeRP;
-        rp = _rp;
+        if (rp + _rp < 0) return false;
+        rp += _rp;
         UIManager.instance.battleHaveRPText.text = ((int)rp).ToString();
+        int consumeRP;
         for (int i = 0; i < DeckManager.instance.maxDeckLength; i++)    //RP값 변경 후 생성 가능한 링만 버튼 활성화(=버튼 가림막 비활성화)
         {
             if (int.TryParse(UIManager.instance.battleDeckRingRPText[i].text, out consumeRP))
@@ -245,5 +247,7 @@ public class BattleManager : MonoBehaviour
         }
         if (rp < 10) UIManager.instance.battleDeckRPNotEnoughCover[DeckManager.instance.maxDeckLength].SetActive(true);
         else UIManager.instance.battleDeckRPNotEnoughCover[DeckManager.instance.maxDeckLength].SetActive(false);
+
+        return true;
     }
 }
