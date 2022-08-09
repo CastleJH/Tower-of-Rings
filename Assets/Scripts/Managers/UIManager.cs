@@ -31,6 +31,7 @@ public class UIManager : MonoBehaviour
     public GameObject[] battleDeckRingRP;
     public TextMeshProUGUI[] battleDeckRingRPText;
     public GameObject[] battleDeckRPNotEnoughCover;
+    public Image battleDeckSpeedButtonImage;
 
     public GameObject ringSelectionPanel;
     public TextMeshProUGUI ringSelectionTypeText;
@@ -47,6 +48,7 @@ public class UIManager : MonoBehaviour
     public GameObject[] playerStatusRP;
     public TextMeshProUGUI[] playerStatusRPText;
     public Image[] playerStatusRelicImage;
+    public GameObject[] playerStatusRelicCursedImage;
 
     public GameObject ringInfoPanel;
     public Image ringInfoRingImage;
@@ -67,6 +69,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI relicInfoNameText;
     public TextMeshProUGUI relicInfoBaseEffectText;
     public TextMeshProUGUI relicInfoCursedEffectText;
+    public GameObject relicInfoCursedImage;
     public GameObject relicInfoCursedNotify;
     public GameObject relicInfoTakeButton;
 
@@ -166,6 +169,7 @@ public class UIManager : MonoBehaviour
     {
         int i;
         int type;
+        battleDeckSpeedButtonImage.sprite = GameManager.instance.speedSprites[0];
         for (i = 0; i < DeckManager.instance.deck.Count; i++)
         {
             type = DeckManager.instance.deck[i];
@@ -257,6 +261,7 @@ public class UIManager : MonoBehaviour
         for (i = 0; i < GameManager.instance.relics.Count; i++)
         {
             playerStatusRelicImage[i].sprite = GameManager.instance.relicSprites[GameManager.instance.relics[i]];
+            playerStatusRelicCursedImage[i].SetActive(GameManager.instance.relicDB[GameManager.instance.relics[i]].isCursed);
             playerStatusRelicImage[i].gameObject.SetActive(true);
         }
         for (; i < playerStatusRelicImage.Length; i++)
@@ -297,6 +302,7 @@ public class UIManager : MonoBehaviour
         relicInfoCursedEffectText.text = baseRelic.cursedDescription;
 
         relicInfoCursedNotify.gameObject.SetActive(baseRelic.isCursed);
+        relicInfoCursedImage.gameObject.SetActive(baseRelic.isCursed);
         if (baseRelic.isCursed)
         {
             relicInfoBaseEffectText.color = new Color32(70, 70, 70, 255);
@@ -433,12 +439,20 @@ public class UIManager : MonoBehaviour
 
     public void ButtonFasterSpeed()
     {
-        if (BattleManager.instance.isBattlePlaying && Time.timeScale < 3.5f) Time.timeScale++;
+        if (BattleManager.instance.isBattlePlaying)
+        {
+            if (Time.timeScale < 7.5) Time.timeScale += Time.timeScale;
+            else Time.timeScale = 1;
+            battleDeckSpeedButtonImage.sprite = GameManager.instance.speedSprites[(int)Mathf.Round(Time.timeScale) / 2];
+        }
     }
-
     public void ButtonNormalSpeed()
     {
-        Time.timeScale = 1.0f;
+        if (BattleManager.instance.isBattlePlaying)
+        {
+            battleDeckSpeedButtonImage.sprite = GameManager.instance.speedSprites[0];
+            Time.timeScale = 1;
+        }
     }
 
     public void ButtonGameStart()

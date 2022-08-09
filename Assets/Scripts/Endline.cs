@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Endline : MonoBehaviour
 {
+    Animator anim;
+
+    void Awake()
+    {
+        anim = GetComponent<Animator>();    
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Monster")
@@ -19,6 +26,7 @@ public class Endline : MonoBehaviour
             {
                 Monster monster = collision.GetComponent<Monster>();
                 GameManager.instance.ChangePlayerCurHP(-monster.baseMonster.atk);
+                anim.SetTrigger("isAttacked");
                 monster.RemoveFromBattle(false);
             }
         }

@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public Sprite[] mapRoomSprites;
     public Sprite[] ringUpgradeSprites;
     public Sprite[] buttonSprites;
+    public Sprite[] speedSprites;
     public Sprite emptyRingSprite; 
 
     //»ç¿îµå
