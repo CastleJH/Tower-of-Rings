@@ -9,6 +9,9 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public GameObject gameStartPanel;
+    public GameObject gameStartText;
+    public GameObject lobbyPanel;
+    public GameObject gameEndingPanel;
     
     public GameObject mapPanel;
     public Image[] mapRow1, mapRow2, mapRow3, mapRow4, mapRow5, mapRow6, mapRow7, mapRow8, mapRow9;
@@ -73,6 +76,8 @@ public class UIManager : MonoBehaviour
     public GameObject relicInfoTakeButton;
 
 
+    float titleTextBlinkTime;
+
     void Awake()
     {
         instance = this;
@@ -88,6 +93,21 @@ public class UIManager : MonoBehaviour
         maps[9] = mapRow9;
         //checkBattleRingDetailOn = false;
         //battleRingDetailLongClickTime = 0.0f;
+
+        titleTextBlinkTime = 0.0f;
+    }
+
+    void Update()
+    {
+        if (gameStartPanel.activeSelf)
+        {
+            titleTextBlinkTime += Time.deltaTime;
+            if (titleTextBlinkTime > 0.5f)
+            {
+                titleTextBlinkTime = 0;
+                gameStartText.SetActive(!gameStartText.activeSelf);
+            }
+        }
     }
 
     //전투에서 링 생성 버튼이 눌린 경우에 불린다.
@@ -472,8 +492,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ButtonGameStart()
+    public void ButtonStartGame()
     {
-        GameManager.instance.GameStart();
+        SceneChanger.instance.ChangeScene(ChangeSceneFromStartToLobby, 0, 0);
+    }
+
+    void ChangeSceneFromStartToLobby(int a, int b)
+    {
+        gameStartPanel.SetActive(false);
+        lobbyPanel.SetActive(true);
+    }
+
+    public void ButtonEnterTower()
+    {
+        GameManager.instance.TowerStart();
     }
 }

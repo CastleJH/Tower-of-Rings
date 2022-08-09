@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GameStart()
+    public void TowerStart()
     {
         InitializeGame();
         FloorManager.instance.CreateAndMoveToFloor(1);

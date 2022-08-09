@@ -37,7 +37,7 @@ public class FloorManager : MonoBehaviour
         {
             if (portalScale < 1)
             {
-                if (portalScale < 0.1f) portalScale += 0.002f;
+                if (portalScale < 0.1f) portalScale += 0.003f;
                 else if (portalScale < 0.3f) portalScale += 0.015f;
                 else portalScale += 0.06f;
                 portalScale = Mathf.Clamp01(portalScale);
@@ -63,7 +63,7 @@ public class FloorManager : MonoBehaviour
     //해당 방으로 이동한다.
     public void MoveToRoom(int x, int y)
     {
-        UIManager.instance.gameStartPanel.SetActive(false);
+        UIManager.instance.lobbyPanel.SetActive(false);
 
         if (curRoom != null) curRoom.HideItems();
 
