@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public Sprite[] sceneRoomSprites;
     public Sprite[] mapRoomSprites;
     public Sprite[] ringUpgradeSprites;
+    public Sprite[] ringInfoUpgradeSprites;
     public Sprite[] buttonSprites;
     public Sprite[] speedSprites;
     public Sprite emptyRingSprite; 
@@ -38,7 +39,6 @@ public class GameManager : MonoBehaviour
     //몬스터 이동 경로
     public PathCreator[] monsterPaths;
     public SpriteRenderer[] monsterPathImages;
-    public GameObject[] monsterPathEndlines;
 
     //DB
     [HideInInspector]
@@ -129,6 +129,7 @@ public class GameManager : MonoBehaviour
             r.id = (int)dataRing[i]["id"];
             r.rarity = (int)dataRing[i]["rarity"];
             r.name = (string)dataRing[i]["name"];
+            r.maxlvl = (int)dataRing[i]["maxlvl"];
             r.dbATK = (int)dataRing[i]["atk"];
             r.dbSPD = float.Parse(dataRing[i]["spd"].ToString());
             r.baseNumTarget = (int)dataRing[i]["target"];
@@ -403,10 +404,10 @@ public class GameManager : MonoBehaviour
         itemPool.Enqueue(item);
     }
 
-    //플레이어의 현재 HP를 바꾼다. 0이라면 게임오버.
-    public void ChangePlayerCurHP(int _HP)
+    //플레이어의 현재 HP를 바꾼다. false를 반환하면 HP 변화가 없는 경우이다. 바꾼 후의 HP가 0이라면 게임오버로 넘어간다. 
+    public bool ChangePlayerCurHP(int _HP)
     {
-        if (playerCurHP == playerMaxHP && _HP > 0) return;
+        if ((playerCurHP == playerMaxHP) && (_HP > 0)) return false;
         playerCurHP = Mathf.Clamp(playerCurHP + _HP, 0, playerMaxHP);
         if (playerCurHP <= playerMaxHP * 0.2f) UIManager.instance.playerHPText.color = Color.red;
         else UIManager.instance.playerHPText.color = Color.white;
@@ -416,6 +417,8 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0.0f;
             Debug.Log("GAME OVER!!!");
         }
+        if (_HP == 0) return false;
+        return true;
     }
 
     //골드를 바꾼다.

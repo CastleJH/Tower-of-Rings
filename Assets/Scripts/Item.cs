@@ -84,8 +84,8 @@ public class Item : MonoBehaviour
                     UIManager.instance.OpenRingSelectionPanel(0);
                     break;
                 case 2:
-                    GameManager.instance.ChangePlayerCurHP((int)(GameManager.instance.playerMaxHP * Random.Range(0.15f, 0.3f)));
-                    FloorManager.instance.curRoom.RemoveItem(this);
+                    if (GameManager.instance.ChangePlayerCurHP((int)(GameManager.instance.playerMaxHP * Random.Range(0.15f, 0.3f))))
+                        FloorManager.instance.curRoom.RemoveItem(this);
                     break;
                 case 3:
                     GameManager.instance.ChangeGold(100);

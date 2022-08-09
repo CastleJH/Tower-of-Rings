@@ -13,6 +13,9 @@ public class BaseRing
     //이름
     public string name;
 
+    //최대 강화레벨
+    public int maxlvl;
+
     //DB의 스탯
     public float dbATK;
     public float dbSPD;

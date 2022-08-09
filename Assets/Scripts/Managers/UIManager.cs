@@ -9,8 +9,7 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public GameObject gameStartPanel;
-    public Image sceneChanger;
-
+    
     public GameObject mapPanel;
     public Image[] mapRow1, mapRow2, mapRow3, mapRow4, mapRow5, mapRow6, mapRow7, mapRow8, mapRow9;
     public Image[][] maps;
@@ -174,7 +173,8 @@ public class UIManager : MonoBehaviour
         {
             type = DeckManager.instance.deck[i];
             battleDeckRingImage[i].sprite = GameManager.instance.ringSprites[type];
-            battleDeckRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
+            if (GameManager.instance.ringDB[type].level == GameManager.instance.ringDB[type].maxlvl) battleDeckRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
+            else battleDeckRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
             battleDeckRingRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
             battleDeckRingUpgradeImage[i].gameObject.SetActive(true);
             battleDeckRingRP[i].SetActive(true);
@@ -215,7 +215,8 @@ public class UIManager : MonoBehaviour
         {
             type = DeckManager.instance.deck[i];
             ringSelectionRingImage[i].sprite = GameManager.instance.ringSprites[type];
-            ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
+            if (GameManager.instance.ringDB[type].level == GameManager.instance.ringDB[type].maxlvl) ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
+            else ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
             ringSelectionRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
             ringSelectionRingUpgradeImage[i].gameObject.SetActive(true);
             ringSelectionRP[i].SetActive(true);
@@ -246,7 +247,8 @@ public class UIManager : MonoBehaviour
         {
             type = DeckManager.instance.deck[i];
             playerStatusRingImage[i].sprite = GameManager.instance.ringSprites[type];
-            playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
+            if (GameManager.instance.ringDB[type].level == GameManager.instance.ringDB[type].maxlvl) playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
+            else playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
             playerStatusRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
             playerStatusRingUpgradeImage[i].gameObject.SetActive(true);
             playerStatusRP[i].SetActive(true);
@@ -275,7 +277,8 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0;
         BaseRing baseRing = GameManager.instance.ringDB[id];
         ringInfoRingImage.sprite = GameManager.instance.ringSprites[id];
-        ringInfoRingUpgradeImage.sprite = GameManager.instance.ringUpgradeSprites[baseRing.level];
+        if (baseRing.level == baseRing.maxlvl) ringInfoRingUpgradeImage.sprite = GameManager.instance.ringInfoUpgradeSprites[0];
+        else ringInfoRingUpgradeImage.sprite = GameManager.instance.ringInfoUpgradeSprites[baseRing.level];
         ringInfoRPText.text = ((int)baseRing.baseRP).ToString();
         ringInfoNameText.text = baseRing.name;
         ringInfoATKText.text = baseRing.baseATK.ToString();
@@ -332,6 +335,16 @@ public class UIManager : MonoBehaviour
                 break;
             case 2:
                 if (!BattleManager.instance.isBattlePlaying) Time.timeScale = 1;
+                else
+                {
+                    Time.timeScale = 1;
+                    for (int i = GameManager.instance.speedSprites.Length - 1; i > 0; i--)
+                        if (battleDeckSpeedButtonImage.sprite == GameManager.instance.speedSprites[i])
+                        {
+                            Time.timeScale = i * 2;
+                            break;
+                        }
+                }
                 playerStatusPanel.SetActive(false);
                 break;
             case 3:
@@ -339,7 +352,7 @@ public class UIManager : MonoBehaviour
                 ringInfoPanel.SetActive(false);
                 break;
             case 4:
-                if (!playerStatusPanel.activeSelf) Time.timeScale = 1;
+                if (!playerStatusPanel.activeSelf && !ringSelectionPanel.activeSelf) Time.timeScale = 1;
                 relicInfoPanel.SetActive(false);
                 break;
         }
