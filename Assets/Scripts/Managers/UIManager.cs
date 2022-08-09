@@ -215,7 +215,12 @@ public class UIManager : MonoBehaviour
         {
             type = DeckManager.instance.deck[i];
             ringSelectionRingImage[i].sprite = GameManager.instance.ringSprites[type];
-            if (GameManager.instance.ringDB[type].level == GameManager.instance.ringDB[type].maxlvl) ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
+            ringSelectionButtonImage[i].gameObject.SetActive(true);
+            if (GameManager.instance.ringDB[type].level == GameManager.instance.ringDB[type].maxlvl)
+            {
+                ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
+                if (isUpgrade != 0) ringSelectionButtonImage[i].gameObject.SetActive(false);
+            }
             else ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
             ringSelectionRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
             ringSelectionRingUpgradeImage[i].gameObject.SetActive(true);
@@ -224,7 +229,6 @@ public class UIManager : MonoBehaviour
             ringSelectionButtonImage[i].sprite = GameManager.instance.buttonSprites[isUpgrade];
             if (isUpgrade == 0) ringSelectionButtonText[i].text = "ÆÄ±«";
             else ringSelectionButtonText[i].text = "Á¦·Ã";
-            ringSelectionButtonImage[i].gameObject.SetActive(true);
         }
         for (; i < ringSelectionRingImage.Length; i++)
         {
