@@ -9,7 +9,6 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public ParticleSystem touchParticle;
-    public int closePanelNum;
 
     public GameObject gameStartPanel;
     public GameObject gameStartText;
@@ -46,6 +45,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI[] ringSelectionRPText;
     public Image[] ringSelectionButtonImage;
     public TextMeshProUGUI[] ringSelectionButtonText;
+    public Image ringSelectionEffectImage;
+    public Animation ringSelectionEffectAnimation;
 
     public GameObject playerStatusPanel;
     public Image[] playerStatusRingImage;
@@ -236,13 +237,15 @@ public class UIManager : MonoBehaviour
         battleDeckRingRPText[index].text = str;
     }
 
-    public void OpenRingSelectionPanel(int isUpgrade)
+    public void OpenRingSelectionPanel(int mode)
     {
-        Time.timeScale = 0;
+
+        ringSelectionEffectAnimation.gameObject.SetActive(false);
+
         int i;
         int type;
-        if (isUpgrade == 0) ringSelectionTypeText.text = "파괴할 링을 선택하세요.";
-        else ringSelectionTypeText.text = "제련할 링을 선택하세요.";
+        if (mode == 0) ringSelectionTypeText.text = "파괴할 링을 선택하세요.";
+        else if (mode == 1) ringSelectionTypeText.text = "제련할 링을 선택하세요.";
         for (i = 0; i < DeckManager.instance.deck.Count; i++)
         {
             type = DeckManager.instance.deck[i];
@@ -251,16 +254,17 @@ public class UIManager : MonoBehaviour
             if (GameManager.instance.ringDB[type].level == GameManager.instance.ringDB[type].maxlvl)
             {
                 ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
-                if (isUpgrade != 0) ringSelectionButtonImage[i].gameObject.SetActive(false);
+                if (mode == 1) ringSelectionButtonImage[i].gameObject.SetActive(false);
             }
             else ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
             ringSelectionRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
             ringSelectionRingUpgradeImage[i].gameObject.SetActive(true);
             ringSelectionRP[i].SetActive(true);
 
-            ringSelectionButtonImage[i].sprite = GameManager.instance.buttonSprites[isUpgrade];
-            if (isUpgrade == 0) ringSelectionButtonText[i].text = "파괴";
-            else ringSelectionButtonText[i].text = "제련";
+            if (mode != -1) ringSelectionButtonImage[i].sprite = GameManager.instance.buttonSprites[mode];
+            else ringSelectionButtonImage[i].gameObject.SetActive(false);
+            if (mode == 0) ringSelectionButtonText[i].text = "파괴";
+            else if (mode == 1) ringSelectionButtonText[i].text = "제련";
         }
         for (; i < ringSelectionRingImage.Length; i++)
         {
@@ -310,7 +314,6 @@ public class UIManager : MonoBehaviour
 
     public void OpenRingInfoPanel(int id)
     {
-        Time.timeScale = 0;
         BaseRing baseRing = GameManager.instance.ringDB[id];
         ringInfoRingImage.sprite = GameManager.instance.ringSprites[id];
         if (baseRing.level == baseRing.maxlvl) ringInfoRingUpgradeImage.sprite = GameManager.instance.ringInfoUpgradeSprites[0];
@@ -325,14 +328,13 @@ public class UIManager : MonoBehaviour
         ringInfoSameSynergyText.text = baseRing.toSame;
         ringInfoAllSynergyText.text = baseRing.toAll;
 
-        ringInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf);
+        ringInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf && !ringSelectionPanel.activeSelf);
 
         ringInfoPanel.SetActive(true);
     }
 
     public void OpenRelicInfoPanel(int id)
     {
-        Time.timeScale = 0;
         BaseRelic baseRelic = GameManager.instance.relicDB[id];
 
         relicInfoRelicImage.sprite = GameManager.instance.relicSprites[id];
@@ -358,10 +360,6 @@ public class UIManager : MonoBehaviour
         relicInfoPanel.SetActive(true);
     }
 
-    public void InvokeClosePanelAfterSec()
-    {
-        ClosePanel(closePanelNum);
-    }
     public void ClosePanel(int panelNum)
     {
         switch (panelNum)
@@ -370,7 +368,6 @@ public class UIManager : MonoBehaviour
                 battleDeckPanel.SetActive(false);
                 break;
             case 1:
-                Time.timeScale = 1;
                 ringSelectionPanel.SetActive(false);
                 break;
             case 2:
@@ -388,11 +385,9 @@ public class UIManager : MonoBehaviour
                 playerStatusPanel.SetActive(false);
                 break;
             case 3:
-                if (!playerStatusPanel.activeSelf && !ringSelectionPanel.activeSelf) Time.timeScale = 1;
                 ringInfoPanel.SetActive(false);
                 break;
             case 4:
-                if (!playerStatusPanel.activeSelf && !ringSelectionPanel.activeSelf) Time.timeScale = 1;
                 relicInfoPanel.SetActive(false);
                 break;
         }
@@ -425,17 +420,21 @@ public class UIManager : MonoBehaviour
         {
             if (ringSelectionButtonText[0].text == "파괴")
             {
-                DeckManager.instance.RemoveRingFromDeck(DeckManager.instance.deck[deckIdx]);
+                DeckManager.instance.RemoveRingFromDeck(deckIdx);
                 FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.lastTouchItem);
+                ringSelectionEffectImage.sprite = GameManager.instance.itemSprites[1];
             }
             else
             {
                 GameManager.instance.ringDB[DeckManager.instance.deck[deckIdx]].Upgrade();
                 FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.lastTouchItem);
+                ringSelectionEffectImage.sprite = GameManager.instance.itemSprites[0];
             }
             for (int i = 0; i < ringSelectionButtonImage.Length; i++) ringSelectionButtonImage[i].gameObject.SetActive(false);
-            closePanelNum = 1;
-            Invoke("InvokeClosePanelAfterSec", 1.0f);
+            ringSelectionEffectAnimation.gameObject.SetActive(true);
+            ringSelectionEffectImage.rectTransform.anchoredPosition = new Vector2(ringSelectionRingImage[deckIdx].rectTransform.anchoredPosition.x + 50, 105);
+            ringSelectionEffectAnimation.Play();
+            Invoke("InvokeReloadAndCloseRingSelectionPanel", 1.0f);
         }
     }
 
@@ -515,5 +514,16 @@ public class UIManager : MonoBehaviour
     public void ButtonEnterTower()
     {
         GameManager.instance.TowerStart();
+    }
+
+    void InvokeReloadAndCloseRingSelectionPanel()
+    {
+        OpenRingSelectionPanel(-1);
+        Invoke("InvokeCloseRingSelectionPanel", 0.5f);
+    }
+
+    void InvokeCloseRingSelectionPanel()
+    {
+        ClosePanel(1);
     }
 }

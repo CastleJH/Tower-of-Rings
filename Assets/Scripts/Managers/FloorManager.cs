@@ -44,7 +44,11 @@ public class FloorManager : MonoBehaviour
                 portalScale = Mathf.Clamp01(portalScale);
                 for (int i = 0; i < 5; i++) portals[i].gameObject.transform.localScale = new Vector3(portalScale, portalScale, 1);
             }
-            if (!SceneChanger.instance.image.raycastTarget) GetInput();
+            if (!SceneChanger.instance.image.raycastTarget 
+                && !UIManager.instance.relicInfoPanel.activeSelf 
+                && !UIManager.instance.ringInfoPanel.activeSelf 
+                && !UIManager.instance.playerStatusPanel.activeSelf 
+                && !UIManager.instance.ringSelectionPanel.activeSelf) GetInput();
         }
     }
 
