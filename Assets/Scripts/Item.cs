@@ -75,6 +75,7 @@ public class Item : MonoBehaviour
     {
         if (itemType < 1000)
         {
+            FloorManager.instance.lastTouchItem = this;
             switch (itemType)
             {
                 case 0:

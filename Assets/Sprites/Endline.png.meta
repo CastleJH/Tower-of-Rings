@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: bc7109b609cae9d4798343621ade4b2c
+guid: 3baf38845d68b60489b5061cd665fe2f
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -157,10 +157,10 @@ TextureImporter:
       name: Endline_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 120
-        width: 60
-        height: 60
+        x: 2
+        y: 242
+        width: 116
+        height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,10 +178,10 @@ TextureImporter:
       name: Endline_1
       rect:
         serializedVersion: 2
-        x: 60
-        y: 120
-        width: 60
-        height: 60
+        x: 122
+        y: 242
+        width: 116
+        height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -199,10 +199,10 @@ TextureImporter:
       name: Endline_2
       rect:
         serializedVersion: 2
-        x: 120
-        y: 120
-        width: 60
-        height: 60
+        x: 242
+        y: 242
+        width: 116
+        height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -220,10 +220,10 @@ TextureImporter:
       name: Endline_3
       rect:
         serializedVersion: 2
-        x: 0
-        y: 60
-        width: 60
-        height: 60
+        x: 2
+        y: 122
+        width: 116
+        height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,10 +241,10 @@ TextureImporter:
       name: Endline_4
       rect:
         serializedVersion: 2
-        x: 60
-        y: 60
-        width: 60
-        height: 60
+        x: 122
+        y: 122
+        width: 116
+        height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -262,10 +262,10 @@ TextureImporter:
       name: Endline_5
       rect:
         serializedVersion: 2
-        x: 120
-        y: 60
-        width: 60
-        height: 60
+        x: 242
+        y: 122
+        width: 116
+        height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -283,10 +283,10 @@ TextureImporter:
       name: Endline_6
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 60
-        height: 60
+        x: 2
+        y: 2
+        width: 116
+        height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -304,10 +304,10 @@ TextureImporter:
       name: Endline_7
       rect:
         serializedVersion: 2
-        x: 60
-        y: 0
-        width: 60
-        height: 60
+        x: 122
+        y: 2
+        width: 116
+        height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -325,10 +325,10 @@ TextureImporter:
       name: Endline_8
       rect:
         serializedVersion: 2
-        x: 120
-        y: 0
-        width: 60
-        height: 60
+        x: 242
+        y: 2
+        width: 116
+        height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

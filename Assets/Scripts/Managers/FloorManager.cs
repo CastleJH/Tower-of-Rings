@@ -19,6 +19,7 @@ public class FloorManager : MonoBehaviour
     public Floor floor;
     public Room curRoom;
     public int playerX, playerY;
+    public Item lastTouchItem;
 
     //상하좌우 체크용
     int[] dx = { 0, 0, -1, 1 };
@@ -233,7 +234,6 @@ public class FloorManager : MonoBehaviour
                 if (hit.collider.gameObject != portals[4].gameObject) SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir]);
                 else CreateAndMoveToFloor(floor.floorNum + 1);
             }
-
         }
     }
 }

@@ -8,6 +8,9 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    public ParticleSystem touchParticle;
+    public int closePanelNum;
+
     public GameObject gameStartPanel;
     public GameObject gameStartText;
     public GameObject lobbyPanel;
@@ -91,14 +94,23 @@ public class UIManager : MonoBehaviour
         maps[7] = mapRow7;
         maps[8] = mapRow8;
         maps[9] = mapRow9;
-        //checkBattleRingDetailOn = false;
-        //battleRingDetailLongClickTime = 0.0f;
 
         titleTextBlinkTime = 0.0f;
     }
 
     void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector2 touchPos;
+
+            if (Input.touchCount > 0) touchPos = Input.touches[0].position;
+            else touchPos = Input.mousePosition;
+            touchParticle.gameObject.transform.position = Camera.main.ScreenToWorldPoint(touchPos);
+            touchParticle.transform.Translate(Vector3.forward);
+            touchParticle.Play();
+        }
+    
         if (gameStartPanel.activeSelf)
         {
             titleTextBlinkTime += Time.deltaTime;
@@ -346,6 +358,10 @@ public class UIManager : MonoBehaviour
         relicInfoPanel.SetActive(true);
     }
 
+    public void InvokeClosePanelAfterSec()
+    {
+        ClosePanel(closePanelNum);
+    }
     public void ClosePanel(int panelNum)
     {
         switch (panelNum)
@@ -410,26 +426,19 @@ public class UIManager : MonoBehaviour
             if (ringSelectionButtonText[0].text == "ÆÄ±«")
             {
                 DeckManager.instance.RemoveRingFromDeck(DeckManager.instance.deck[deckIdx]);
-                for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
-                    if (FloorManager.instance.curRoom.items[i].itemType == 1)
-                    {
-                        FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.curRoom.items[i]);
-                        break;
-                    }
+                FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.lastTouchItem);
             }
             else
             {
                 GameManager.instance.ringDB[DeckManager.instance.deck[deckIdx]].Upgrade();
-                for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
-                    if (FloorManager.instance.curRoom.items[i].itemType == 0)
-                    {
-                        FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.curRoom.items[i]);
-                        break;
-                    }
+                FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.lastTouchItem);
             }
-            ClosePanel(1);
+            for (int i = 0; i < ringSelectionButtonImage.Length; i++) ringSelectionButtonImage[i].gameObject.SetActive(false);
+            closePanelNum = 1;
+            Invoke("InvokeClosePanelAfterSec", 1.0f);
         }
     }
+
 
     public void ButtonTakeRing()
     {
