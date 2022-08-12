@@ -18,10 +18,15 @@ public class Item : MonoBehaviour
     public int debugCostType;
     public int debugCost;
 
-    public void InitializeItem(int _type, Vector3 _pos, int costType, int cost)
+    int costType;
+    int cost;
+    public void InitializeItem(int _type, Vector3 _pos, int _costType, int _cost)
     {
         pos = _pos;
         itemType = _type;
+        costType = _costType;
+        cost = _cost;
+
         if (itemType < 1000) spriteRenderer.sprite = GameManager.instance.itemSprites[itemType];
         else if (itemType < 2000) spriteRenderer.sprite = GameManager.instance.ringSprites[itemType - 1000];
         else if (itemType < 3000) spriteRenderer.sprite = GameManager.instance.relicSprites[itemType - 2000];
@@ -47,7 +52,7 @@ public class Item : MonoBehaviour
             debugFlag = false;
             InitializeItem(debugType, new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), 1), debugCostType, debugCost);
         }
-        if (Input.GetMouseButtonUp(0) && FloorManager.instance.curRoom.items.Contains(this))
+        if (Input.GetMouseButtonUp(0) && !UIManager.instance.playerStatusPanel.activeSelf && !UIManager.instance.relicInfoPanel.activeSelf && !UIManager.instance.ringInfoPanel.activeSelf && !UIManager.instance.ringSelectionPanel.activeSelf && FloorManager.instance.curRoom.items.Contains(this))
         {
             Vector2 touchPos;
             if (Input.touchCount > 0) touchPos = Input.touches[0].position;
@@ -58,8 +63,18 @@ public class Item : MonoBehaviour
         }
     }
 
-    void GiveThisToPlayer()
+    //재화가 부족하다면 false 반환
+    bool GiveThisToPlayer()
     {
+        if (costType == 1)
+        {
+            if (GameManager.instance.gold < cost) return false;
+        }
+        else if (costType == 2)
+        {
+            if (GameManager.instance.diamond < cost) return false;
+        }
+
         if (itemType < 1000)
         {
             FloorManager.instance.lastTouchItem = this;
@@ -97,5 +112,18 @@ public class Item : MonoBehaviour
         {
             UIManager.instance.OpenRelicInfoPanel(itemType - 2000);
         }
+
+        return true;
+    }
+
+    public void Pay()
+    {
+        if (costType == 1) GameManager.instance.ChangeGold(-cost);
+        else if (costType == 2) GameManager.instance.ChangeDiamond(-cost);
+    }
+
+    void InvokeReturnItemToPool()
+    {
+        GameManager.instance.ReturnItemToPool(this);
     }
 }

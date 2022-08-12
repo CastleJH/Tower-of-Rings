@@ -14,7 +14,6 @@ public class FloorManager : MonoBehaviour
     public Animator[] portals;
     public SpriteRenderer roomImage;
     float portalScale;
-    Item lastTouchedItem;
 
     //층 관련 변수
     public Floor floor;
@@ -25,6 +24,10 @@ public class FloorManager : MonoBehaviour
     //상하좌우 체크용
     int[] dx = { 0, 0, -1, 1 };
     int[] dy = { -1, 1, 0, 0 };
+
+    //아이템 위치
+    int[] ix = { -2, 2, -2, 2, -2, 2 };
+    int[] iy = { 5, 3, 1, -1, -3, -5 };
 
     void Awake()
     {
@@ -137,9 +140,13 @@ public class FloorManager : MonoBehaviour
             case 6:
                 if (!curRoom.visited)
                 {
-                    Item item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(3, Vector3.forward, 0, 0);
-                    curRoom.AddItem(item);
+                    for (int i = 1; i <= 4; i++)
+                    {
+                        Item item = GameManager.instance.GetItemFromPool();
+                        if (Random.Range(0, 2) == 1) item.InitializeItem(3, new Vector3(ix[i], iy[i], 1), 0, 0);
+                        else item.InitializeItem(5, new Vector3(ix[i], iy[i], 1), 0, 0);
+                        curRoom.AddItem(item);
+                    }
                 }
                 ShowItems();
                 TurnPortalsOnOff(true);
@@ -155,6 +162,40 @@ public class FloorManager : MonoBehaviour
                 TurnPortalsOnOff(true);
                 break;
             case 8:
+                if (!curRoom.visited)
+                {
+                    Item item;
+                    int itemID;
+
+                    item = GameManager.instance.GetItemFromPool();
+                    do itemID = Random.Range(0, GameManager.instance.ringDB.Count);
+                    while (DeckManager.instance.deck.Contains(itemID));
+                    item.InitializeItem(1000 + itemID, new Vector3(ix[0], iy[0], 1), 1, 500);
+                    curRoom.AddItem(item);
+
+                    item = GameManager.instance.GetItemFromPool();
+                    do itemID = Random.Range(0, GameManager.instance.relicDB.Count);
+                    while (GameManager.instance.relics.Contains(itemID));
+                    item.InitializeItem(2000 + itemID, new Vector3(ix[1], iy[1], 1), 1, 1000);
+                    curRoom.AddItem(item);
+
+                    item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(0, new Vector3(ix[2], iy[2], 1), 1, 500);
+                    curRoom.AddItem(item);
+
+                    item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(1, new Vector3(ix[3], iy[3], 1), 1, 500);
+                    curRoom.AddItem(item);
+
+                    item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(2, new Vector3(ix[4], iy[4], 1), 1, 500);
+                    curRoom.AddItem(item);
+
+                    item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(6, new Vector3(ix[5], iy[5], 1), 1, 500);
+                    curRoom.AddItem(item);
+                }
+                ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 9:
@@ -244,20 +285,15 @@ public class FloorManager : MonoBehaviour
 
     public void RemoveItem(Item item, bool isImme)
     {
-        lastTouchedItem = item;
+        item.Pay();
         curRoom.items.Remove(item);
         UIManager.instance.RevealMapArea(playerX, playerY);
         if (isImme) GameManager.instance.ReturnItemToPool(item);
         else
         {
             item.animator.SetTrigger("isTake");
-            Invoke("InvokeReturnItemToPool", 1.51f);
+            item.Invoke("InvokeReturnItemToPool", 1.51f);
         }
-    }
-
-    void InvokeReturnItemToPool()
-    {
-        GameManager.instance.ReturnItemToPool(lastTouchedItem);
     }
 
     public void ShowItems()
@@ -271,6 +307,7 @@ public class FloorManager : MonoBehaviour
 
     public void HideItems()
     {
-        for (int i = 0; i < curRoom.items.Count; i++) curRoom.items[i].gameObject.SetActive(false);
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("Item");
+        for (int i = 0; i < objs.Length; i++) objs[i].SetActive(false);
     }
 }
