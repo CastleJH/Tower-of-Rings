@@ -66,6 +66,8 @@ public class GameManager : MonoBehaviour
     public int gold;
     public int diamond;
     public List<int> relics;
+    public List<int> cursedRelics;
+
     void Awake()
     {
         instance = this;

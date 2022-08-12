@@ -144,7 +144,7 @@ public class Floor
 			while (occupied[idx]);
 			//rooms[specials[idx].Key, specials[idx].Value].type = i;
 			//지우세요!
-			rooms[specials[idx].Key, specials[idx].Value].type = 6;
+			rooms[specials[idx].Key, specials[idx].Value].type = 4;
 			occupied[idx] = true;
 		}
 
@@ -154,8 +154,8 @@ public class Floor
 			if (occupied[i]) continue;
 			//do rooms[specials[i].Key, specials[i].Value].type = 2 + Random.Range(0, 6); 
 			//지우세요!
-			do rooms[specials[i].Key, specials[i].Value].type = 6; 
-			while (rooms[specials[i].Key, specials[i].Value].type == 4);
+			rooms[specials[i].Key, specials[i].Value].type = 4; 
+			//while (rooms[specials[i].Key, specials[i].Value].type == 4);
 		}
 
 		//모든 전투 방들의 전장 형태를 결정함.

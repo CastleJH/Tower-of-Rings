@@ -63,7 +63,7 @@ public class Item : MonoBehaviour
         }
     }
 
-    //재화가 부족하다면 false 반환
+    //재화가 부족하거나 사용 불가라면 false 반환
     bool GiveThisToPlayer()
     {
         if (costType == 1)
@@ -89,6 +89,7 @@ public class Item : MonoBehaviour
                 case 2:
                     if (GameManager.instance.ChangePlayerCurHP((int)(GameManager.instance.playerMaxHP * Random.Range(0.15f, 0.3f))))
                         FloorManager.instance.RemoveItem(this, false);
+                    else return false;
                     break;
                 case 3:
                     GameManager.instance.ChangeGold(100);
@@ -101,6 +102,16 @@ public class Item : MonoBehaviour
                 case 5:
                     GameManager.instance.ChangeDiamond(1);
                     FloorManager.instance.RemoveItem(this, false);
+                    break;
+                case 6:
+                    if (GameManager.instance.cursedRelics.Count != 0)
+                    {
+                        int targetIdx = Random.Range(0, GameManager.instance.cursedRelics.Count);
+                        GameManager.instance.relicDB[GameManager.instance.cursedRelics[targetIdx]].isCursed = false;
+                        GameManager.instance.cursedRelics.RemoveAt(targetIdx);
+                        FloorManager.instance.RemoveItem(this, false);
+                    }
+                    else return false;
                     break;
             }
         }
