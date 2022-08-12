@@ -421,13 +421,13 @@ public class UIManager : MonoBehaviour
             if (ringSelectionButtonText[0].text == "ÆÄ±«")
             {
                 DeckManager.instance.RemoveRingFromDeck(deckIdx);
-                FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.lastTouchItem);
+                FloorManager.instance.RemoveItem(FloorManager.instance.lastTouchItem, true);
                 ringSelectionEffectImage.sprite = GameManager.instance.itemSprites[1];
             }
             else
             {
                 GameManager.instance.ringDB[DeckManager.instance.deck[deckIdx]].Upgrade();
-                FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.lastTouchItem);
+                FloorManager.instance.RemoveItem(FloorManager.instance.lastTouchItem, true);
                 ringSelectionEffectImage.sprite = GameManager.instance.itemSprites[0];
             }
             for (int i = 0; i < ringSelectionButtonImage.Length; i++) ringSelectionButtonImage[i].gameObject.SetActive(false);
@@ -454,7 +454,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
             if (FloorManager.instance.curRoom.items[i].itemType == 1000 + type)
             {
-                FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.curRoom.items[i]);
+                FloorManager.instance.RemoveItem(FloorManager.instance.curRoom.items[i], false);
                 break;
             }
         ClosePanel(3);
@@ -476,7 +476,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
             if (FloorManager.instance.curRoom.items[i].itemType == 2000 + type)
             {
-                FloorManager.instance.curRoom.RemoveItem(FloorManager.instance.curRoom.items[i]);
+                FloorManager.instance.RemoveItem(FloorManager.instance.curRoom.items[i], false);
                 break;
             }
         ClosePanel(4);

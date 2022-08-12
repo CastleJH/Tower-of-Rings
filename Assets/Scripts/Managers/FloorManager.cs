@@ -14,6 +14,7 @@ public class FloorManager : MonoBehaviour
     public Animator[] portals;
     public SpriteRenderer roomImage;
     float portalScale;
+    Item lastTouchedItem;
 
     //층 관련 변수
     public Floor floor;
@@ -70,7 +71,7 @@ public class FloorManager : MonoBehaviour
     {
         UIManager.instance.lobbyPanel.SetActive(false);
 
-        if (curRoom != null) curRoom.HideItems();
+        if (curRoom != null) HideItems();
 
         //현재 위치/방 관련 변수를 바꾼다.
         playerX = x;
@@ -94,7 +95,7 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(0, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                curRoom.ShowItems();
+                ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 3:
@@ -107,7 +108,7 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(1000 + ringID, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                curRoom.ShowItems();
+                ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 4:
@@ -120,7 +121,7 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(2000 + relicID, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                curRoom.ShowItems();
+                ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 5:
@@ -130,7 +131,7 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(1, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                curRoom.ShowItems();
+                ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 6:
@@ -140,7 +141,7 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(3, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                curRoom.ShowItems();
+                ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 7:
@@ -150,7 +151,7 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(2, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                curRoom.ShowItems();
+                ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 8:
@@ -219,7 +220,7 @@ public class FloorManager : MonoBehaviour
         else portals[4].gameObject.SetActive(false);
     }
 
-    public void GetInput()
+    void GetInput()
     {
         if (Input.GetMouseButtonUp(0))
         {
@@ -239,5 +240,37 @@ public class FloorManager : MonoBehaviour
                 else CreateAndMoveToFloor(floor.floorNum + 1);
             }
         }
+    }
+
+    public void RemoveItem(Item item, bool isImme)
+    {
+        lastTouchedItem = item;
+        curRoom.items.Remove(item);
+        UIManager.instance.RevealMapArea(playerX, playerY);
+        if (isImme) GameManager.instance.ReturnItemToPool(item);
+        else
+        {
+            item.animator.SetTrigger("isTake");
+            Invoke("InvokeReturnItemToPool", 1.51f);
+        }
+    }
+
+    void InvokeReturnItemToPool()
+    {
+        GameManager.instance.ReturnItemToPool(lastTouchedItem);
+    }
+
+    public void ShowItems()
+    {
+        for (int i = 0; i < curRoom.items.Count; i++)
+        {
+            curRoom.items[i].transform.position = Camera.main.transform.position + curRoom.items[i].pos;
+            curRoom.items[i].gameObject.SetActive(true);
+        }
+    }
+
+    public void HideItems()
+    {
+        for (int i = 0; i < curRoom.items.Count; i++) curRoom.items[i].gameObject.SetActive(false);
     }
 }

@@ -19,26 +19,6 @@ public class Room
 		items.Add(item);
 	}
 
-	public void RemoveItem(Item item)
-    {
-		items.Remove(item);
-		if (FloorManager.instance.curRoom == this) UIManager.instance.RevealMapArea(FloorManager.instance.playerX, FloorManager.instance.playerY);
-		GameManager.instance.ReturnItemToPool(item);
-    }
-
-	public void ShowItems()
-	{
-		for (int i = 0; i < items.Count; i++)
-		{
-			items[i].transform.position = Camera.main.transform.position + items[i].pos;
-			items[i].gameObject.SetActive(true);
-		}
-	}
-
-	public void HideItems()
-	{
-		for (int i = 0; i < items.Count; i++) items[i].gameObject.SetActive(false);
-	}
 	public void RemoveAllItems()
 	{
 		for (int i = items.Count - 1; i >= 0; i--) GameManager.instance.ReturnItemToPool(items[i]);
