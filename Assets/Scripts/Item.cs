@@ -5,6 +5,7 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
+    public SpriteRenderer highlightRenderer;
     public GameObject shadow;
     public SpriteRenderer costTypeImage;
     public TextMesh costText;

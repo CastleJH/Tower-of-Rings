@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 6773778653069254945}
+  highlightRenderer: {fileID: 3463488219875071170}
   shadow: {fileID: 6773778652129041996}
   costTypeImage: {fileID: 6773778652986584192}
   costText: {fileID: 6773778653601708625}

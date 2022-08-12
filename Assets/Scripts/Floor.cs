@@ -132,19 +132,13 @@ public class Floor
 			occupied[0] = true;
 		}
 
-		//아래 두 줄 지우세요!
-		rooms[specials[0].Key, specials[0].Value].type = 8;
-		occupied[0] = true;
-
 		//제련/링/유물의 방을 1개씩 생성함.
 		for (int i = 2; i <= 4; i++)
 		{
 			int idx;
 			do idx = Random.Range(0, specialNum);
 			while (occupied[idx]);
-			//rooms[specials[idx].Key, specials[idx].Value].type = i;
-			//지우세요!
-			rooms[specials[idx].Key, specials[idx].Value].type = 4;
+			rooms[specials[idx].Key, specials[idx].Value].type = i;
 			occupied[idx] = true;
 		}
 
@@ -152,10 +146,8 @@ public class Floor
 		for (int i = 0; i < specialNum; i++)
 		{
 			if (occupied[i]) continue;
-			//do rooms[specials[i].Key, specials[i].Value].type = 2 + Random.Range(0, 6); 
-			//지우세요!
-			rooms[specials[i].Key, specials[i].Value].type = 4; 
-			//while (rooms[specials[i].Key, specials[i].Value].type == 4);
+			do rooms[specials[i].Key, specials[i].Value].type = 2 + Random.Range(0, 6); 
+			while (rooms[specials[i].Key, specials[i].Value].type == 4);
 		}
 
 		//모든 전투 방들의 전장 형태를 결정함.
