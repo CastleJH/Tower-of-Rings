@@ -121,6 +121,8 @@ public class GameManager : MonoBehaviour
         DeckManager.instance.InitializeDeck();
         AddRelicToDeck(2);
         AddRelicToDeck(3);
+        baseRelics[3].isPure = false;
+        AddRelicToDeck(5);
     }
 
     //"*_db.csv"를 읽어온다.

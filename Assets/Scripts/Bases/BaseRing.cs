@@ -60,7 +60,7 @@ public class BaseRing
         }
         else if (GameManager.instance.baseRelics[3].have && GameManager.instance.playerCurHP > GameManager.instance.playerMaxHP * 0.8f)
         {
-            if (GameManager.instance.baseRelics[2].isPure) baseATK *= 1.1f;
+            if (GameManager.instance.baseRelics[3].isPure) baseATK *= 1.1f;
             else baseATK *= 0.9f;
         }
     }
