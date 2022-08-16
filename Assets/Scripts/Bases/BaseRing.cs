@@ -21,10 +21,6 @@ public class BaseRing
     public float csvSPD;
     public float csvRP;
 
-    //레벨 1일 때의 기본 스탯
-    public float lvl1ATK;
-    public float lvl1SPD;
-
     //실제 게임에서의 기본 스탯
     public float baseATK;
     public float baseSPD;
@@ -49,8 +45,24 @@ public class BaseRing
     public void Init()
     {
         level = 1;
-        baseATK = lvl1ATK = csvATK;
-        baseSPD = lvl1SPD = csvSPD;
+        baseATK = csvATK;
+        baseSPD = csvSPD;
+    }
+
+    public void RenewStat()
+    {
+        baseATK = csvATK * (1.0f + (level - 1) * 0.5f);
+        baseSPD = csvSPD * (1.0f - (level - 1) * 0.05f);
+        if (GameManager.instance.baseRelics[2].have && GameManager.instance.playerCurHP < GameManager.instance.playerMaxHP * 0.2f)
+        {
+            if (GameManager.instance.baseRelics[2].isPure) baseATK *= 1.2f;
+            else baseATK *= 0.9f;
+        }
+        else if (GameManager.instance.baseRelics[3].have && GameManager.instance.playerCurHP > GameManager.instance.playerMaxHP * 0.8f)
+        {
+            if (GameManager.instance.baseRelics[2].isPure) baseATK *= 1.1f;
+            else baseATK *= 0.9f;
+        }
     }
 
     //확률 안에 최대 레벨까지 강화. 그 후 공격력/공격 쿨타임을 변경함.
@@ -59,13 +71,9 @@ public class BaseRing
         if (Random.Range(0.0f, 1.0f) > poss) return false;
         if (level == maxlvl) return false;
         level++;
-        baseATK = lvl1ATK;
-        baseSPD = lvl1SPD;
-        for (int i = 2; i <= level; i++)
-        {
-            baseATK += lvl1ATK * 0.5f;
-            baseSPD -= lvl1SPD * 0.05f;
-        }
+
+        RenewStat();
+
         return true;
     }
 
@@ -74,13 +82,8 @@ public class BaseRing
     public void Downgrade()
     {
         if (level > 1) level--;
-        baseATK = lvl1ATK;
-        baseSPD = lvl1SPD;
-        for (int i = 2; i <= level; i++)
-        {
-            baseATK += lvl1ATK * 0.5f;
-            baseSPD -= lvl1SPD * 0.05f;
-        }
+
+        RenewStat();
 
         Ring ring;
         for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--)

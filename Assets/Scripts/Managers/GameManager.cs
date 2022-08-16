@@ -423,11 +423,13 @@ public class GameManager : MonoBehaviour
 
         if (baseRelics[2].have && playerCurHP < playerMaxHP * 0.2f)
         {
-
+            for (int i = 0; i < baseRings.Count; i++) baseRings[i].RenewStat();
+            for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) DeckManager.instance.rings[i].ChangeCurATK(0);
         }
         else if (baseRelics[3].have && playerCurHP > playerMaxHP * 0.8f)
         {
-
+            for (int i = 0; i < baseRings.Count; i++) baseRings[i].RenewStat();
+            for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) DeckManager.instance.rings[i].ChangeCurATK(0);
         }
         if (_HP == 0) return false;
         return true;
