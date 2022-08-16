@@ -475,7 +475,13 @@ public class UIManager : MonoBehaviour
         //유물의 방에서 획득한 것이라면 일정 확률로 저주
         if (FloorManager.instance.curRoom.type == 4)
         {
-            if (Random.Range(0.0f, 1.0f) <= 0.2f)
+            float curseProb = 0.2f;
+            if (GameManager.instance.baseRelics[8].have)
+            {
+                if (GameManager.instance.baseRelics[8].isPure) curseProb = 0.1f;
+                else curseProb = 0.3f;
+            }
+            if (Random.Range(0.0f, 1.0f) <= curseProb)
             {
                 GameManager.instance.baseRelics[type].isPure = false;
                 GameManager.instance.cursedRelics.Add(type);
