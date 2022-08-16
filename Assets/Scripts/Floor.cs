@@ -50,7 +50,9 @@ public class Floor
 
 		//방의 구성을 정함
 		roomNum = 8 + floorNum * 3 + Random.Range(0, 3);
-		specialNum = 3 + (floorNum + 1) / 2;
+        specialNum = 3 + (floorNum + 1) / 2;
+        //지우세요!!
+        specialNum = 4 + (floorNum + 1) / 2;
 		if (floorNum % 2 == 0) store = 1;
 		else store = 0;
 
@@ -148,7 +150,9 @@ public class Floor
 			if (occupied[i]) continue;
 			do rooms[specials[i].Key, specials[i].Value].type = 2 + Random.Range(0, 6); 
 			while (rooms[specials[i].Key, specials[i].Value].type == 4);
-		}
+			//지우세요!
+			rooms[specials[i].Key, specials[i].Value].type = 2;
+        }
 
 		//모든 전투 방들의 전장 형태를 결정함.
 		for (int i = 1; i <= 9; i++)

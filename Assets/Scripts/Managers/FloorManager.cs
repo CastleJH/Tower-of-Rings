@@ -99,9 +99,21 @@ public class FloorManager : MonoBehaviour
             case 2:
                 if (!curRoom.visited)
                 {
-                    Item item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(0, Vector3.forward, 0, 0);
-                    curRoom.AddItem(item);
+                    if (GameManager.instance.baseRelics[6].have && GameManager.instance.baseRelics[6].isPure && Random.Range(0.0f, 1.0f) <= 0.33f)
+                    {
+                        Item item = GameManager.instance.GetItemFromPool();
+                        item.InitializeItem(0, new Vector3(ix[2], iy[2], 1), 0, 0);
+                        curRoom.AddItem(item);
+                        item = GameManager.instance.GetItemFromPool();
+                        item.InitializeItem(0, new Vector3(ix[3], iy[3], 1), 0, 0);
+                        curRoom.AddItem(item);
+                    }
+                    else
+                    {
+                        Item item = GameManager.instance.GetItemFromPool();
+                        item.InitializeItem(0, Vector3.forward, 0, 0);
+                        curRoom.AddItem(item);
+                    }
                 }
                 ShowItems();
                 TurnPortalsOnOff(true);
