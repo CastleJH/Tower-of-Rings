@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
             r.toSame = (string)dataRing[i]["identical"];
             r.toAll = (string)dataRing[i]["all"];
             r.level = 0;
-            r.Upgrade();
+            r.Upgrade(2.0f);
             ringDB.Add(r);
         }
 
