@@ -19,7 +19,6 @@ public class BaseRing
     //db상 스탯
     public float csvATK;
     public float csvSPD;
-    public float csvRP;
 
     //실제 게임에서의 기본 스탯
     public float baseATK;

@@ -139,8 +139,7 @@ public class GameManager : MonoBehaviour
             r.csvATK = (int)csvRing[i]["atk"];
             r.csvSPD = float.Parse(csvRing[i]["spd"].ToString());
             r.baseNumTarget = (int)csvRing[i]["target"];
-            r.csvRP = (int)csvRing[i]["rp"];
-            r.baseRP = r.csvRP;
+            r.baseRP = (int)csvRing[i]["rp"];
             r.baseEFF = float.Parse(csvRing[i]["eff"].ToString());
             r.description = (string)csvRing[i]["description"];
             r.range = (int)csvRing[i]["range"];
@@ -458,7 +457,7 @@ public class GameManager : MonoBehaviour
         switch (id)
         {
             case 1:
-                if (baseRelics[1].isPure)
+                if (baseRelics[id].isPure)
                 {
                     playerMaxHP += 20;
                     ChangePlayerCurHP(20);
@@ -471,6 +470,12 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case 12:
+                if (baseRelics[id].isPure)
+                    for (int i = 0; i < baseRings.Count; i++)
+                        baseRings[i].baseRP *= 0.9f;
+                else 
+                    for (int i = 0; i < baseRings.Count; i++)
+                        baseRings[i].baseRP *= 1.1f;
                 break;
         }
 
