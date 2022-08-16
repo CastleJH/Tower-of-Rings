@@ -159,10 +159,20 @@ public class FloorManager : MonoBehaviour
                 {
                     for (int i = 1; i <= 4; i++)
                     {
-                        Item item = GameManager.instance.GetItemFromPool();
-                        if (Random.Range(0, 2) == 1) item.InitializeItem(3, new Vector3(ix[i], iy[i], 1), 0, 0);
-                        else item.InitializeItem(5, new Vector3(ix[i], iy[i], 1), 0, 0);
-                        curRoom.AddItem(item);
+                        if (GameManager.instance.baseRelics[7].have && !GameManager.instance.baseRelics[7].isPure)
+                        {
+                            if (Random.Range(0, 2) == 1) continue;
+                            Item item = GameManager.instance.GetItemFromPool();
+                            item.InitializeItem(3, new Vector3(ix[i], iy[i], 1), 0, 0);
+                            curRoom.AddItem(item);
+                        }
+                        else
+                        {
+                            Item item = GameManager.instance.GetItemFromPool();
+                            if (Random.Range(0, 2) == 1) item.InitializeItem(3, new Vector3(ix[i], iy[i], 1), 0, 0);
+                            else item.InitializeItem(5, new Vector3(ix[i], iy[i], 1), 0, 0);
+                            curRoom.AddItem(item);
+                        }
                     }
                 }
                 ShowItems();

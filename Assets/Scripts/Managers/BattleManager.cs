@@ -146,9 +146,6 @@ public class BattleManager : MonoBehaviour
             }
             else monsterType = Random.Range(0, 15);    //그외에는 일반 몬스터
 
-            //지우세요!
-            //monsterType = 10;
-
             Monster monster = GameManager.instance.GetMonsterFromPool(monsterType);
             monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
             monster.InitializeMonster(newMonsterID, FloorManager.instance.curRoom.pathID, scale);

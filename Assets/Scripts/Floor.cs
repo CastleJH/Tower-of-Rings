@@ -151,7 +151,7 @@ public class Floor
 			do rooms[specials[i].Key, specials[i].Value].type = 2 + Random.Range(0, 6); 
 			while (rooms[specials[i].Key, specials[i].Value].type == 4);
 			//지우세요!
-			rooms[specials[i].Key, specials[i].Value].type = 2;
+			rooms[specials[i].Key, specials[i].Value].type = 6;
         }
 
 		//모든 전투 방들의 전장 형태를 결정함.

@@ -93,11 +93,13 @@ public class Item : MonoBehaviour
                     else return false;
                     break;
                 case 3:
-                    GameManager.instance.ChangeGold(100);
+                    if (GameManager.instance.baseRelics[7].have && GameManager.instance.baseRelics[7].isPure) GameManager.instance.ChangeGold(150);
+                    else GameManager.instance.ChangeGold(100);
                     FloorManager.instance.RemoveItem(this, false);
                     break;
                 case 4:
-                    GameManager.instance.ChangeGold(100);
+                    if (GameManager.instance.baseRelics[7].have && GameManager.instance.baseRelics[7].isPure) GameManager.instance.ChangeGold(150);
+                    else GameManager.instance.ChangeGold(100);
                     FloorManager.instance.RemoveItem(this, false);
                     break;
                 case 5:
