@@ -211,7 +211,7 @@ public class BattleManager : MonoBehaviour
         //전장을 끄고 맵을 갱신하고 포탈을 보여준다.
         GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(false);
         UIManager.instance.ClosePanel(0);
-        UIManager.instance.RevealMapArea(FloorManager.instance.playerX, FloorManager.instance.playerY);
+        UIManager.instance.RevealMapAndMove(FloorManager.instance.playerX, FloorManager.instance.playerY);
         UIManager.instance.TurnMapOnOff(true);
 
         FloorManager.instance.MoveToRoom(x, y);

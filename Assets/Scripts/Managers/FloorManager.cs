@@ -67,6 +67,11 @@ public class FloorManager : MonoBehaviour
                 floor.rooms[i, j].visited = false;
 
         SceneChanger.instance.ChangeScene(MoveToRoom, floor.startX, floor.startY);
+        if (GameManager.instance.relics.Contains(0))
+        {
+            if (!GameManager.instance.relicDB[0].isCursed) GameManager.instance.ChangePlayerCurHP(10); 
+            else GameManager.instance.ChangePlayerCurHP(-10);
+        }
     }
 
     //해당 방으로 이동한다.
@@ -207,7 +212,7 @@ public class FloorManager : MonoBehaviour
         curRoom.visited = true;
 
         //지도에 변화를 준다.
-        UIManager.instance.RevealMapArea(playerX, playerY);
+        UIManager.instance.RevealMapAndMove(playerX, playerY);
 
         //스프라이트를 올바른 모양으로 바꾼다.
         roomImage.sprite = GameManager.instance.sceneRoomSprites[floor.floorNum];
@@ -287,7 +292,7 @@ public class FloorManager : MonoBehaviour
     {
         item.Pay();
         curRoom.items.Remove(item);
-        UIManager.instance.RevealMapArea(playerX, playerY);
+        UIManager.instance.RevealMapAndMove(playerX, playerY);
 
         if (item.itemType >= 2000)
         {

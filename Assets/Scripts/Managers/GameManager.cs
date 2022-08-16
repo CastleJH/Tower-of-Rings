@@ -113,6 +113,7 @@ public class GameManager : MonoBehaviour
     {
         playerMaxHP = 100;
         playerCurHP = 100;
+        ChangePlayerCurHP(0);
         gold = 0;
         ChangeGold(0);
         diamond = 0;

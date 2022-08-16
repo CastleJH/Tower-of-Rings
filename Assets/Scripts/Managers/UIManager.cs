@@ -168,7 +168,7 @@ public class UIManager : MonoBehaviour
     }
 
     //맵의 일부분을 밝히고, 마커를 해당 위치로 이동한다.
-    public void RevealMapArea(int x, int y)
+    public void RevealMapAndMove(int x, int y)
     {
         int[] dx = { 0, 0, 0, -1, 1 };
         int[] dy = { 0, -1, 1, 0, 0 };
@@ -490,6 +490,18 @@ public class UIManager : MonoBehaviour
                 break;
             }
 
+        if (type == 1)
+        {
+            if (!GameManager.instance.relicDB[1].isCursed)
+            {
+                GameManager.instance.playerMaxHP += 20;
+                GameManager.instance.ChangePlayerCurHP(20);
+            }
+            else
+            {
+                GameManager.instance.playerMaxHP -= 20;
+            }
+        }
         ClosePanel(4);
     }
 

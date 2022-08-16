@@ -72,6 +72,11 @@ public class Ring : MonoBehaviour
                             anim.SetTrigger("isShoot");
                             shootCoolTime = 0.0f;
                             break;
+                        case 10:
+                            GameManager.instance.ChangePlayerCurHP(1);
+                            anim.SetTrigger("isShoot");
+                            shootCoolTime = 0.0f;
+                            break;
                         case 11:
                         case 17:
                         case 23:
@@ -252,15 +257,6 @@ public class Ring : MonoBehaviour
                         targets.RemoveAt(tar);
                     }
                     break;
-                case 10: //HP 낮은 순으로 타겟만큼 공격
-                    targets = targets.OrderBy(x => x.curHP).ToList();
-                    for (int i = 0; i < numTarget; i++)
-                    {
-                        bullet = GameManager.instance.GetBulletFromPool(baseRing.id);
-                        bullet.InitializeBullet(this, targets[i]);
-                        bullet.gameObject.SetActive(true);
-                    }
-                    break;
                 case 12: //HP 높은 순으로 타겟만큼 공격
                 case 21:
                     targets = targets.OrderByDescending(x => x.curHP).ToList();
@@ -342,6 +338,7 @@ public class Ring : MonoBehaviour
                     bullet.gameObject.SetActive(true);
                     break;
                 case 7: //발사 안함
+                case 10:
                 case 11:
                 case 17:
                 case 22:
@@ -364,7 +361,6 @@ public class Ring : MonoBehaviour
             case 0: //단순 공격
             case 2:
             case 9:
-            case 10:
             case 12:
             case 14:
             case 15:
@@ -441,6 +437,7 @@ public class Ring : MonoBehaviour
                 monster.AE_InstantDeath(curATK, curEFF);
                 monster.PlayParticleCollision(baseRing.id, 0.0f);
                 break;
+            case 10:
             case 17:
             case 18:    //아무것도 없음
             case 19:
@@ -465,7 +462,6 @@ public class Ring : MonoBehaviour
                 ring.ChangeCurATK(0.05f);
                 break;
             case 1: //타 1 타 0.5
-            case 10:
             case 20:
             case 26:
             case 30:
@@ -526,6 +522,7 @@ public class Ring : MonoBehaviour
                 ring.ChangeCurEFF(0.05f, '*');
                 break;
             case 2: //효과 없음
+            case 10:
             case 17:
             case 19:
             case 22:
@@ -590,7 +587,6 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurATK(-0.05f);
                         break;
                     case 1: //타 -1 타 -0.5
-                    case 10:
                     case 20:
                     case 26:
                     case 30:
@@ -651,6 +647,7 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurEFF(-0.05f, '*');
                         break;
                     case 2: //효과 없음
+                    case 10:
                     case 17:
                     case 19:
                     case 22:
