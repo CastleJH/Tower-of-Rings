@@ -108,7 +108,7 @@ public class Item : MonoBehaviour
                     if (GameManager.instance.cursedRelics.Count != 0)
                     {
                         int targetIdx = Random.Range(0, GameManager.instance.cursedRelics.Count);
-                        GameManager.instance.relicDB[GameManager.instance.cursedRelics[targetIdx]].isCursed = false;
+                        GameManager.instance.relicDB[GameManager.instance.cursedRelics[targetIdx]].isPure = true;
                         GameManager.instance.cursedRelics.RemoveAt(targetIdx);
                         FloorManager.instance.RemoveItem(this, false);
                     }

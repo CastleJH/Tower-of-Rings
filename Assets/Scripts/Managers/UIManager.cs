@@ -303,7 +303,7 @@ public class UIManager : MonoBehaviour
         for (i = 0; i < GameManager.instance.relics.Count; i++)
         {
             playerStatusRelicImage[i].sprite = GameManager.instance.relicSprites[GameManager.instance.relics[i]];
-            playerStatusRelicCursedImage[i].SetActive(GameManager.instance.relicDB[GameManager.instance.relics[i]].isCursed);
+            playerStatusRelicCursedImage[i].SetActive(!GameManager.instance.relicDB[GameManager.instance.relics[i]].isPure);
             playerStatusRelicImage[i].gameObject.SetActive(true);
         }
         for (; i < playerStatusRelicImage.Length; i++)
@@ -342,17 +342,17 @@ public class UIManager : MonoBehaviour
         relicInfoBaseEffectText.text = baseRelic.pureDescription;
         relicInfoCursedEffectText.text = baseRelic.cursedDescription;
 
-        relicInfoCursedNotify.gameObject.SetActive(baseRelic.isCursed);
-        relicInfoCursedImage.gameObject.SetActive(baseRelic.isCursed);
-        if (baseRelic.isCursed)
-        {
-            relicInfoBaseEffectText.color = new Color32(70, 70, 70, 255);
-            relicInfoCursedEffectText.color = new Color32(200, 200, 200, 255);
-        }
-        else
+        relicInfoCursedNotify.gameObject.SetActive(!baseRelic.isPure);
+        relicInfoCursedImage.gameObject.SetActive(!baseRelic.isPure);
+        if (baseRelic.isPure)
         {
             relicInfoBaseEffectText.color = new Color32(200, 200, 200, 255);
             relicInfoCursedEffectText.color = new Color32(70, 70, 70, 255);
+        }
+        else
+        {
+            relicInfoBaseEffectText.color = new Color32(70, 70, 70, 255);
+            relicInfoCursedEffectText.color = new Color32(200, 200, 200, 255);
         }
 
         relicInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf);
@@ -478,7 +478,7 @@ public class UIManager : MonoBehaviour
         {
             if (Random.Range(0.0f, 1.0f) <= 0.2f)
             {
-                GameManager.instance.relicDB[type].isCursed = true;
+                GameManager.instance.relicDB[type].isPure = false;
                 GameManager.instance.cursedRelics.Add(type);
             }
         }
@@ -492,7 +492,7 @@ public class UIManager : MonoBehaviour
 
         if (type == 1)
         {
-            if (!GameManager.instance.relicDB[1].isCursed)
+            if (GameManager.instance.relicDB[1].isPure)
             {
                 GameManager.instance.playerMaxHP += 20;
                 GameManager.instance.ChangePlayerCurHP(20);
@@ -500,6 +500,8 @@ public class UIManager : MonoBehaviour
             else
             {
                 GameManager.instance.playerMaxHP -= 20;
+                GameManager.instance.playerCurHP = Mathf.Min(GameManager.instance.playerCurHP, GameManager.instance.playerMaxHP);
+                GameManager.instance.ChangePlayerCurHP(0);
             }
         }
         ClosePanel(4);

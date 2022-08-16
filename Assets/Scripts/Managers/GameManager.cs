@@ -170,7 +170,7 @@ public class GameManager : MonoBehaviour
             r.id = (int)dataRelic[i]["id"];
             r.name = (string)dataRelic[i]["name"];
             r.have = false;
-            r.isCursed = false;
+            r.isPure = true;
             r.pureDescription = (string)dataRelic[i]["effect"];
             r.cursedDescription = (string)dataRelic[i]["effect_cursed"];
             relicDB.Add(r);
@@ -444,7 +444,7 @@ public class GameManager : MonoBehaviour
 
     public bool AddRelicToDeck(int id)
     {
-        if (relics.Contains(id)) return false;
+        if (relicDB[id].have) return false;
         relics.Add(id);
         relicDB[id].have = true;
         return true;

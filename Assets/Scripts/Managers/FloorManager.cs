@@ -67,9 +67,9 @@ public class FloorManager : MonoBehaviour
                 floor.rooms[i, j].visited = false;
 
         SceneChanger.instance.ChangeScene(MoveToRoom, floor.startX, floor.startY);
-        if (GameManager.instance.relics.Contains(0))
+        if (GameManager.instance.relicDB[0].have)
         {
-            if (!GameManager.instance.relicDB[0].isCursed) GameManager.instance.ChangePlayerCurHP(10); 
+            if (GameManager.instance.relicDB[0].isPure) GameManager.instance.ChangePlayerCurHP(10); 
             else GameManager.instance.ChangePlayerCurHP(-10);
         }
     }
@@ -296,8 +296,8 @@ public class FloorManager : MonoBehaviour
 
         if (item.itemType >= 2000)
         {
-            if (GameManager.instance.relicDB[item.itemType - 2000].isCursed) item.highlightRenderer.color = Color.black;
-            else item.highlightRenderer.color = Color.white;
+            if (GameManager.instance.relicDB[item.itemType - 2000].isPure) item.highlightRenderer.color = Color.white;
+            else item.highlightRenderer.color = Color.black;
         }
         else item.highlightRenderer.color = Color.white;
 
