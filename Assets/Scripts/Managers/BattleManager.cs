@@ -134,7 +134,7 @@ public class BattleManager : MonoBehaviour
             monster.gameObject.SetActive(true);
             monsters.Add(monster);
             newMonsterID++;
-            yield return new WaitForSeconds(30.0f / numGenMonster); //30초 동안 몬스터들을 등장시켜야 한다. 몬스터 수에 비례하여 생성 주기를 결정한다.
+            yield return new WaitForSeconds(45.0f / numGenMonster); //45초 동안 몬스터들을 등장시켜야 한다. 몬스터 수에 비례하여 생성 주기를 결정한다.
         }
     }
 
