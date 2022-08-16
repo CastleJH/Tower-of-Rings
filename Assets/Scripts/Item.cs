@@ -88,7 +88,13 @@ public class Item : MonoBehaviour
                     UIManager.instance.OpenRingSelectionPanel(0);
                     break;
                 case 2:
-                    if (GameManager.instance.ChangePlayerCurHP((int)(GameManager.instance.playerMaxHP * Random.Range(0.15f, 0.3f))))
+                    float healAmount = GameManager.instance.playerMaxHP * Random.Range(0.15f, 0.3f);
+                    if (GameManager.instance.baseRelics[9].have)
+                    {
+                        if (GameManager.instance.baseRelics[9].isPure) healAmount *= 2;
+                        else healAmount *= 0.5f;
+                    }
+                    if (GameManager.instance.ChangePlayerCurHP((int)healAmount))
                         FloorManager.instance.RemoveItem(this, false);
                     else return false;
                     break;

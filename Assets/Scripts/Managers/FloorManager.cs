@@ -191,35 +191,41 @@ public class FloorManager : MonoBehaviour
             case 8:
                 if (!curRoom.visited)
                 {
+                    int price = 100;
+                    if (GameManager.instance.baseRelics[11].have)
+                    {
+                        if (GameManager.instance.baseRelics[11].isPure) price = 50;
+                        else price = 130;
+                    }
                     Item item;
                     int itemID;
 
                     item = GameManager.instance.GetItemFromPool();
                     do itemID = Random.Range(0, GameManager.instance.baseRings.Count);
                     while (DeckManager.instance.deck.Contains(itemID));
-                    item.InitializeItem(1000 + itemID, new Vector3(ix[0], iy[0], 1), 1, 100);
+                    item.InitializeItem(1000 + itemID, new Vector3(ix[0], iy[0], 1), 1, price);
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
                     do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
                     while (GameManager.instance.relics.Contains(itemID));
-                    item.InitializeItem(2000 + itemID, new Vector3(ix[1], iy[1], 1), 1, 200);
+                    item.InitializeItem(2000 + itemID, new Vector3(ix[1], iy[1], 1), 1, price * 2);
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(0, new Vector3(ix[2], iy[2], 1), 1, 100);
+                    item.InitializeItem(0, new Vector3(ix[2], iy[2], 1), 1, price);
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(1, new Vector3(ix[3], iy[3], 1), 1, 100);
+                    item.InitializeItem(1, new Vector3(ix[3], iy[3], 1), 1, price);
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(2, new Vector3(ix[4], iy[4], 1), 1, 100);
+                    item.InitializeItem(2, new Vector3(ix[4], iy[4], 1), 1, price);
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(6, new Vector3(ix[5], iy[5], 1), 1, 200);
+                    item.InitializeItem(6, new Vector3(ix[5], iy[5], 1), 1, price * 2);
                     curRoom.AddItem(item);
                 }
                 ShowItems();

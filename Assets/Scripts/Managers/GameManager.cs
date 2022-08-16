@@ -470,6 +470,8 @@ public class GameManager : MonoBehaviour
                     ChangePlayerCurHP(0);
                 }
                 break;
+            case 12:
+                break;
         }
 
         ChangePlayerCurHP(0);
