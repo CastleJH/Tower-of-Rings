@@ -748,7 +748,7 @@ public class Ring : MonoBehaviour
     public void ChangeCurATK(float buff)
     {
         buffATK += buff;
-        if (buffATK > 0) curATK = baseRing.baseATK * buffATK;
+        if (buffATK > 0 || buff == 0) curATK = baseRing.baseATK * buffATK;
         else curATK = 0;
     }
 

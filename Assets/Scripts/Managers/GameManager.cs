@@ -119,6 +119,8 @@ public class GameManager : MonoBehaviour
         diamond = 0;
         ChangeDiamond(0);
         DeckManager.instance.InitializeDeck();
+        AddRelicToDeck(2);
+        AddRelicToDeck(3);
     }
 
     //"*_db.csv"를 읽어온다.
@@ -420,17 +422,10 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0.0f;
             Debug.Log("GAME OVER!!!");
         }
+        
+        for (int i = 0; i < baseRings.Count; i++) baseRings[i].RenewStat();
+        for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) DeckManager.instance.rings[i].ChangeCurATK(0);
 
-        if (baseRelics[2].have && playerCurHP < playerMaxHP * 0.2f)
-        {
-            for (int i = 0; i < baseRings.Count; i++) baseRings[i].RenewStat();
-            for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) DeckManager.instance.rings[i].ChangeCurATK(0);
-        }
-        else if (baseRelics[3].have && playerCurHP > playerMaxHP * 0.8f)
-        {
-            for (int i = 0; i < baseRings.Count; i++) baseRings[i].RenewStat();
-            for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) DeckManager.instance.rings[i].ChangeCurATK(0);
-        }
         if (_HP == 0) return false;
         return true;
     }
@@ -458,6 +453,25 @@ public class GameManager : MonoBehaviour
         if (baseRelics[id].have) return false;
         relics.Add(id);
         baseRelics[id].have = true;
+
+        switch (id)
+        {
+            case 1:
+                if (baseRelics[1].isPure)
+                {
+                    playerMaxHP += 20;
+                    ChangePlayerCurHP(20);
+                }
+                else
+                {
+                    playerMaxHP -= 20;
+                    playerCurHP = Mathf.Min(playerCurHP, playerMaxHP);
+                    ChangePlayerCurHP(0);
+                }
+                break;
+        }
+
+        ChangePlayerCurHP(0);
         return true;
     }
 }

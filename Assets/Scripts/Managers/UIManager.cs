@@ -470,9 +470,6 @@ public class UIManager : MonoBehaviour
                 break;
             }
 
-        GameManager.instance.AddRelicToDeck(type);
-
-
         //유물의 방에서 획득한 것이라면 일정 확률로 저주
         if (FloorManager.instance.curRoom.type == 4)
         {
@@ -490,20 +487,8 @@ public class UIManager : MonoBehaviour
                 break;
             }
 
-        if (type == 1)
-        {
-            if (GameManager.instance.baseRelics[1].isPure)
-            {
-                GameManager.instance.playerMaxHP += 20;
-                GameManager.instance.ChangePlayerCurHP(20);
-            }
-            else
-            {
-                GameManager.instance.playerMaxHP -= 20;
-                GameManager.instance.playerCurHP = Mathf.Min(GameManager.instance.playerCurHP, GameManager.instance.playerMaxHP);
-                GameManager.instance.ChangePlayerCurHP(0);
-            }
-        }
+        GameManager.instance.AddRelicToDeck(type);
+
         ClosePanel(4);
     }
 
