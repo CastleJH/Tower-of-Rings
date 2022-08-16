@@ -248,7 +248,7 @@ public class DeckManager : MonoBehaviour
         if (deck.Contains(ringID)) return false;
         if (ringID < 0 || ringID >= GameManager.instance.ringDB.Count) return false;
         GameManager.instance.ringDB[ringID].level = 0;
-        GameManager.instance.ringDB[ringID].Upgrade();
+        GameManager.instance.ringDB[ringID].Upgrade(2.0f);
         deck.Add(ringID);
         return true;
     }
@@ -262,7 +262,7 @@ public class DeckManager : MonoBehaviour
             GameManager.instance.EmptyParticlePool(ringID);
             GameManager.instance.EmptyBulletPool(ringID);
             GameManager.instance.ringDB[ringID].level = 0;
-            GameManager.instance.ringDB[ringID].Upgrade();
+            GameManager.instance.ringDB[ringID].Upgrade(2.0f);
             deck.RemoveAt(index);
             return true;
         }

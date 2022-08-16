@@ -426,7 +426,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                GameManager.instance.ringDB[DeckManager.instance.deck[deckIdx]].Upgrade();
+                GameManager.instance.ringDB[DeckManager.instance.deck[deckIdx]].Upgrade(1.0f);
                 FloorManager.instance.RemoveItem(FloorManager.instance.lastTouchItem, true);
                 ringSelectionEffectImage.sprite = GameManager.instance.itemSprites[0];
             }

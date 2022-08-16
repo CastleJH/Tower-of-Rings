@@ -41,9 +41,10 @@ public class BaseRing
 
     public int level = 0;
 
-    //최대 10레벨까지 강화. 그 후 공격력/공격 쿨타임을 변경함.
-    public bool Upgrade()
+    //확률 안에 최대 레벨까지 강화. 그 후 공격력/공격 쿨타임을 변경함.
+    public bool Upgrade(float poss)
     {
+        if (Random.Range(0.0f, 1.0f) > poss) return false;
         if (level == maxlvl) return false;
         level++;
         baseATK = dbATK;
