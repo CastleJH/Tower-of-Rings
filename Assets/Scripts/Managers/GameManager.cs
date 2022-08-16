@@ -42,11 +42,11 @@ public class GameManager : MonoBehaviour
 
     //DB
     [HideInInspector]
-    public List<BaseRing> ringDB;
+    public List<BaseRing> baseRings;
     [HideInInspector]
-    public List<BaseMonster> monsterDB;
+    public List<BaseMonster> baseMonsters;
     [HideInInspector]
-    public List<BaseRelic> relicDB;
+    public List<BaseRelic> baseRelics;
 
     //오브젝트 풀
     private Queue<Ring> ringPool;
@@ -74,16 +74,16 @@ public class GameManager : MonoBehaviour
 
         //DB읽기
         ReadDB();
-        if (monsterDB.Count != monsterPrefabs.Length) Debug.LogError("num of monster sprites does not match");
-        if (ringDB.Count != ringSprites.Length) Debug.LogError("num of ring sprites does not match");
-        if (ringDB.Count != ringAttackAudios.Length) Debug.LogError("num of audios does not match");
-        if (relicDB.Count != relicSprites.Length) Debug.LogError("num of relic sprites does not match");
+        if (baseMonsters.Count != monsterPrefabs.Length) Debug.LogError("num of monster sprites does not match");
+        if (baseRings.Count != ringSprites.Length) Debug.LogError("num of ring sprites does not match");
+        if (baseRings.Count != ringAttackAudios.Length) Debug.LogError("num of audios does not match");
+        if (baseRelics.Count != relicSprites.Length) Debug.LogError("num of relic sprites does not match");
 
         //오브젝트 풀 초기화
         ringPool = new Queue<Ring>();
-        monsterPool = new Queue<Monster>[monsterDB.Count];
-        bulletPool = new Queue<Bullet>[ringDB.Count];
-        particlePool = new Queue<ParticleChecker>[ringDB.Count];
+        monsterPool = new Queue<Monster>[baseMonsters.Count];
+        bulletPool = new Queue<Bullet>[baseRings.Count];
+        particlePool = new Queue<ParticleChecker>[baseRings.Count];
         barrierPool = new Queue<Barrier>();
         blizzardPool = new Queue<Blizzard>();
         amplifierPool = new Queue<Amplifier>();
@@ -91,12 +91,12 @@ public class GameManager : MonoBehaviour
         dropRPPool = new Queue<DropRP>();
         itemPool = new Queue<Item>();
 
-        for (int i = 0; i < monsterDB.Count; i++)
+        for (int i = 0; i < baseMonsters.Count; i++)
         {
             monsterPool[i] = new Queue<Monster>();
         }
 
-        for (int i = 0; i < ringDB.Count; i++)
+        for (int i = 0; i < baseRings.Count; i++)
         {
             bulletPool[i] = new Queue<Bullet>();
             particlePool[i] = new Queue<ParticleChecker>();
@@ -124,56 +124,56 @@ public class GameManager : MonoBehaviour
     //"*_db.csv"를 읽어온다.
     void ReadDB()
     {
-        List<Dictionary<string, object>> dataRing = DBReader.Read("ring_db");
-        ringDB = new List<BaseRing>();
-        for (int i = 0; i < dataRing.Count; i++)
+        List<Dictionary<string, object>> csvRing = DBReader.Read("ring_db");
+        baseRings = new List<BaseRing>();
+        for (int i = 0; i < csvRing.Count; i++)
         {
             BaseRing r = new BaseRing();
-            r.id = (int)dataRing[i]["id"];
-            r.rarity = (int)dataRing[i]["rarity"];
-            r.name = (string)dataRing[i]["name"];
-            r.maxlvl = (int)dataRing[i]["maxlvl"];
-            r.dbATK = (int)dataRing[i]["atk"];
-            r.dbSPD = float.Parse(dataRing[i]["spd"].ToString());
-            r.baseNumTarget = (int)dataRing[i]["target"];
-            r.dbRP = (int)dataRing[i]["rp"];
-            r.baseRP = r.dbRP;
-            r.baseEFF = float.Parse(dataRing[i]["eff"].ToString());
-            r.description = (string)dataRing[i]["description"];
-            r.range = (int)dataRing[i]["range"];
-            r.toSame = (string)dataRing[i]["identical"];
-            r.toAll = (string)dataRing[i]["all"];
-            r.level = 0;
-            r.Upgrade(2.0f);
-            ringDB.Add(r);
+            r.id = (int)csvRing[i]["id"];
+            r.rarity = (int)csvRing[i]["rarity"];
+            r.name = (string)csvRing[i]["name"];
+            r.maxlvl = (int)csvRing[i]["maxlvl"];
+            r.csvATK = (int)csvRing[i]["atk"];
+            r.csvSPD = float.Parse(csvRing[i]["spd"].ToString());
+            r.baseNumTarget = (int)csvRing[i]["target"];
+            r.csvRP = (int)csvRing[i]["rp"];
+            r.baseRP = r.csvRP;
+            r.baseEFF = float.Parse(csvRing[i]["eff"].ToString());
+            r.description = (string)csvRing[i]["description"];
+            r.range = (int)csvRing[i]["range"];
+            r.toSame = (string)csvRing[i]["identical"];
+            r.toAll = (string)csvRing[i]["all"];
+
+            r.Init();
+            baseRings.Add(r);
         }
 
-        List<Dictionary<string, object>> dataMonster = DBReader.Read("monster_db");
-        monsterDB = new List<BaseMonster>();
-        for (int i = 0; i < dataMonster.Count; i++)
+        List<Dictionary<string, object>> csvMonster = DBReader.Read("monster_db");
+        baseMonsters = new List<BaseMonster>();
+        for (int i = 0; i < csvMonster.Count; i++)
         {
             BaseMonster m = new BaseMonster();
-            m.type = (int)dataMonster[i]["type"];
-            m.name = (string)dataMonster[i]["name"];
-            m.hp = (int)dataMonster[i]["hp"];
-            m.spd = float.Parse(dataMonster[i]["spd"].ToString());
-            m.description = (string)dataMonster[i]["description"];
-            m.atk = (int)dataMonster[i]["atk"];
-            monsterDB.Add(m);
+            m.type = (int)csvMonster[i]["type"];
+            m.name = (string)csvMonster[i]["name"];
+            m.hp = (int)csvMonster[i]["hp"];
+            m.spd = float.Parse(csvMonster[i]["spd"].ToString());
+            m.description = (string)csvMonster[i]["description"];
+            m.atk = (int)csvMonster[i]["atk"];
+            baseMonsters.Add(m);
         }
 
-        List<Dictionary<string, object>> dataRelic = DBReader.Read("relic_db");
-        relicDB = new List<BaseRelic>();
-        for (int i = 0; i < dataRelic.Count; i++)
+        List<Dictionary<string, object>> csvRelic = DBReader.Read("relic_db");
+        baseRelics = new List<BaseRelic>();
+        for (int i = 0; i < csvRelic.Count; i++)
         {
             BaseRelic r = new BaseRelic();
-            r.id = (int)dataRelic[i]["id"];
-            r.name = (string)dataRelic[i]["name"];
+            r.id = (int)csvRelic[i]["id"];
+            r.name = (string)csvRelic[i]["name"];
             r.have = false;
             r.isPure = true;
-            r.pureDescription = (string)dataRelic[i]["effect"];
-            r.cursedDescription = (string)dataRelic[i]["effect_cursed"];
-            relicDB.Add(r);
+            r.pureDescription = (string)csvRelic[i]["effect"];
+            r.cursedDescription = (string)csvRelic[i]["effect_cursed"];
+            baseRelics.Add(r);
         }
     }
 
@@ -184,7 +184,7 @@ public class GameManager : MonoBehaviour
         else
         {
             Monster monster = Instantiate(monsterPrefabs[id]).GetComponent<Monster>();
-            monster.baseMonster = monsterDB[id];
+            monster.baseMonster = baseMonsters[id];
             return monster;
         }
     }
@@ -407,7 +407,7 @@ public class GameManager : MonoBehaviour
         itemPool.Enqueue(item);
     }
 
-    //플레이어의 현재 HP를 바꾼다. false를 반환하면 HP 변화가 없는 경우이다. 바꾼 후의 HP가 0이라면 게임오버로 넘어간다. 
+    //플레이어의 현재 HP를 바꾼다. false를 반환하면 바꾼 HP가 없는 경우이다. 바꾼 후의 HP가 0이라면 게임오버로 넘어간다. 
     public bool ChangePlayerCurHP(int _HP)
     {
         if ((playerCurHP == playerMaxHP) && (_HP > 0)) return false;
@@ -419,6 +419,15 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 0.0f;
             Debug.Log("GAME OVER!!!");
+        }
+
+        if (baseRelics[2].have && playerCurHP < playerMaxHP * 0.2f)
+        {
+
+        }
+        else if (baseRelics[3].have && playerCurHP > playerMaxHP * 0.8f)
+        {
+
         }
         if (_HP == 0) return false;
         return true;
@@ -444,9 +453,9 @@ public class GameManager : MonoBehaviour
 
     public bool AddRelicToDeck(int id)
     {
-        if (relicDB[id].have) return false;
+        if (baseRelics[id].have) return false;
         relics.Add(id);
-        relicDB[id].have = true;
+        baseRelics[id].have = true;
         return true;
     }
 }

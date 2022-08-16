@@ -67,9 +67,9 @@ public class FloorManager : MonoBehaviour
                 floor.rooms[i, j].visited = false;
 
         SceneChanger.instance.ChangeScene(MoveToRoom, floor.startX, floor.startY);
-        if (GameManager.instance.relicDB[0].have)
+        if (GameManager.instance.baseRelics[0].have)
         {
-            if (GameManager.instance.relicDB[0].isPure) GameManager.instance.ChangePlayerCurHP(10); 
+            if (GameManager.instance.baseRelics[0].isPure) GameManager.instance.ChangePlayerCurHP(10); 
             else GameManager.instance.ChangePlayerCurHP(-10);
         }
     }
@@ -111,7 +111,7 @@ public class FloorManager : MonoBehaviour
                 {
                     Item item = GameManager.instance.GetItemFromPool();
                     int ringID;
-                    do ringID = Random.Range(0, GameManager.instance.ringDB.Count);
+                    do ringID = Random.Range(0, GameManager.instance.baseRings.Count);
                     while (DeckManager.instance.deck.Contains(ringID));
                     item.InitializeItem(1000 + ringID, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
@@ -124,7 +124,7 @@ public class FloorManager : MonoBehaviour
                 {
                     Item item = GameManager.instance.GetItemFromPool();
                     int relicID;
-                    do relicID = Random.Range(0, GameManager.instance.relicDB.Count);
+                    do relicID = Random.Range(0, GameManager.instance.baseRelics.Count);
                     while (GameManager.instance.relics.Contains(relicID));
                     item.InitializeItem(2000 + relicID, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
@@ -173,13 +173,13 @@ public class FloorManager : MonoBehaviour
                     int itemID;
 
                     item = GameManager.instance.GetItemFromPool();
-                    do itemID = Random.Range(0, GameManager.instance.ringDB.Count);
+                    do itemID = Random.Range(0, GameManager.instance.baseRings.Count);
                     while (DeckManager.instance.deck.Contains(itemID));
                     item.InitializeItem(1000 + itemID, new Vector3(ix[0], iy[0], 1), 1, 100);
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
-                    do itemID = Random.Range(0, GameManager.instance.relicDB.Count);
+                    do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
                     while (GameManager.instance.relics.Contains(itemID));
                     item.InitializeItem(2000 + itemID, new Vector3(ix[1], iy[1], 1), 1, 200);
                     curRoom.AddItem(item);
@@ -296,7 +296,7 @@ public class FloorManager : MonoBehaviour
 
         if (item.itemType >= 2000)
         {
-            if (GameManager.instance.relicDB[item.itemType - 2000].isPure) item.highlightRenderer.color = Color.white;
+            if (GameManager.instance.baseRelics[item.itemType - 2000].isPure) item.highlightRenderer.color = Color.white;
             else item.highlightRenderer.color = Color.black;
         }
         else item.highlightRenderer.color = Color.white;

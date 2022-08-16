@@ -685,7 +685,7 @@ public class Monster : MonoBehaviour
             for (int i = 0; i < DeckManager.instance.deck.Count; i++)
             {
                 ringID = DeckManager.instance.deck[i];
-                if (GameManager.instance.ringDB[ringID].level > 1)
+                if (GameManager.instance.baseRings[ringID].level > 1)
                 {
                     canDowngrade = true;
                     break;
@@ -697,8 +697,8 @@ public class Monster : MonoBehaviour
                 anim.SetTrigger("Attack");
 
                 do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
-                while (GameManager.instance.ringDB[ringID].level == 1);
-                GameManager.instance.ringDB[ringID].Downgrade();
+                while (GameManager.instance.baseRings[ringID].level == 1);
+                GameManager.instance.baseRings[ringID].Downgrade();
                 UIManager.instance.OpenBattleDeckPanel();
                 BattleManager.instance.ringDowngrade.Add(ringID);
             }
@@ -774,7 +774,7 @@ public class Monster : MonoBehaviour
                             for (int i = 0; i < DeckManager.instance.deck.Count; i++)
                             {
                                 ringID = DeckManager.instance.deck[i];
-                                if (GameManager.instance.ringDB[ringID].level > 1)
+                                if (GameManager.instance.baseRings[ringID].level > 1)
                                 {
                                     canDowngrade = true;
                                     break;
@@ -784,8 +784,8 @@ public class Monster : MonoBehaviour
                             {
                                 skillCoolTime1 = 0.0f;
                                 do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
-                                while (GameManager.instance.ringDB[ringID].level == 1);
-                                GameManager.instance.ringDB[ringID].Downgrade();
+                                while (GameManager.instance.baseRings[ringID].level == 1);
+                                GameManager.instance.baseRings[ringID].Downgrade();
                                 UIManager.instance.OpenBattleDeckPanel();
                                 BattleManager.instance.ringDowngrade.Add(ringID);
                             }

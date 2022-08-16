@@ -206,9 +206,9 @@ public class UIManager : MonoBehaviour
         {
             type = DeckManager.instance.deck[i];
             battleDeckRingImage[i].sprite = GameManager.instance.ringSprites[type];
-            if (GameManager.instance.ringDB[type].level == GameManager.instance.ringDB[type].maxlvl) battleDeckRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
-            else battleDeckRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
-            battleDeckRingRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
+            if (GameManager.instance.baseRings[type].level == GameManager.instance.baseRings[type].maxlvl) battleDeckRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
+            else battleDeckRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.baseRings[type].level];
+            battleDeckRingRPText[i].text = GameManager.instance.baseRings[type].baseRP.ToString();
             battleDeckRingUpgradeImage[i].gameObject.SetActive(true);
             battleDeckRingRP[i].SetActive(true);
         }
@@ -251,13 +251,13 @@ public class UIManager : MonoBehaviour
             type = DeckManager.instance.deck[i];
             ringSelectionRingImage[i].sprite = GameManager.instance.ringSprites[type];
             ringSelectionButtonImage[i].gameObject.SetActive(true);
-            if (GameManager.instance.ringDB[type].level == GameManager.instance.ringDB[type].maxlvl)
+            if (GameManager.instance.baseRings[type].level == GameManager.instance.baseRings[type].maxlvl)
             {
                 ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
                 if (mode == 1) ringSelectionButtonImage[i].gameObject.SetActive(false);
             }
-            else ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
-            ringSelectionRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
+            else ringSelectionRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.baseRings[type].level];
+            ringSelectionRPText[i].text = GameManager.instance.baseRings[type].baseRP.ToString();
             ringSelectionRingUpgradeImage[i].gameObject.SetActive(true);
             ringSelectionRP[i].SetActive(true);
 
@@ -287,9 +287,9 @@ public class UIManager : MonoBehaviour
         {
             type = DeckManager.instance.deck[i];
             playerStatusRingImage[i].sprite = GameManager.instance.ringSprites[type];
-            if (GameManager.instance.ringDB[type].level == GameManager.instance.ringDB[type].maxlvl) playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
-            else playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.ringDB[type].level];
-            playerStatusRPText[i].text = GameManager.instance.ringDB[type].baseRP.ToString();
+            if (GameManager.instance.baseRings[type].level == GameManager.instance.baseRings[type].maxlvl) playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
+            else playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.baseRings[type].level];
+            playerStatusRPText[i].text = GameManager.instance.baseRings[type].baseRP.ToString();
             playerStatusRingUpgradeImage[i].gameObject.SetActive(true);
             playerStatusRP[i].SetActive(true);
         }
@@ -303,7 +303,7 @@ public class UIManager : MonoBehaviour
         for (i = 0; i < GameManager.instance.relics.Count; i++)
         {
             playerStatusRelicImage[i].sprite = GameManager.instance.relicSprites[GameManager.instance.relics[i]];
-            playerStatusRelicCursedImage[i].SetActive(!GameManager.instance.relicDB[GameManager.instance.relics[i]].isPure);
+            playerStatusRelicCursedImage[i].SetActive(!GameManager.instance.baseRelics[GameManager.instance.relics[i]].isPure);
             playerStatusRelicImage[i].gameObject.SetActive(true);
         }
         for (; i < playerStatusRelicImage.Length; i++)
@@ -314,7 +314,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenRingInfoPanel(int id)
     {
-        BaseRing baseRing = GameManager.instance.ringDB[id];
+        BaseRing baseRing = GameManager.instance.baseRings[id];
         ringInfoRingImage.sprite = GameManager.instance.ringSprites[id];
         if (baseRing.level == baseRing.maxlvl) ringInfoRingUpgradeImage.sprite = GameManager.instance.ringInfoUpgradeSprites[0];
         else ringInfoRingUpgradeImage.sprite = GameManager.instance.ringInfoUpgradeSprites[baseRing.level];
@@ -335,7 +335,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenRelicInfoPanel(int id)
     {
-        BaseRelic baseRelic = GameManager.instance.relicDB[id];
+        BaseRelic baseRelic = GameManager.instance.baseRelics[id];
 
         relicInfoRelicImage.sprite = GameManager.instance.relicSprites[id];
         relicInfoNameText.text = baseRelic.name;
@@ -426,7 +426,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                GameManager.instance.ringDB[DeckManager.instance.deck[deckIdx]].Upgrade(2.0f);
+                GameManager.instance.baseRings[DeckManager.instance.deck[deckIdx]].Upgrade(2.0f);
                 FloorManager.instance.RemoveItem(FloorManager.instance.lastTouchItem, true);
                 ringSelectionEffectImage.sprite = GameManager.instance.itemSprites[0];
             }
@@ -442,8 +442,8 @@ public class UIManager : MonoBehaviour
     public void ButtonTakeRing()
     {
         int type = -1;
-        for (int i = 0; i < GameManager.instance.ringDB.Count; i++)
-            if (GameManager.instance.ringDB[i].name == ringInfoNameText.text)
+        for (int i = 0; i < GameManager.instance.baseRings.Count; i++)
+            if (GameManager.instance.baseRings[i].name == ringInfoNameText.text)
             {
                 type = i;
                 break;
@@ -463,8 +463,8 @@ public class UIManager : MonoBehaviour
     public void ButtonTakeRelic()
     {
         int type = -1;
-        for (int i = 0; i < GameManager.instance.relicDB.Count; i++)
-            if (GameManager.instance.relicDB[i].name == relicInfoNameText.text)
+        for (int i = 0; i < GameManager.instance.baseRelics.Count; i++)
+            if (GameManager.instance.baseRelics[i].name == relicInfoNameText.text)
             {
                 type = i;
                 break;
@@ -478,7 +478,7 @@ public class UIManager : MonoBehaviour
         {
             if (Random.Range(0.0f, 1.0f) <= 0.2f)
             {
-                GameManager.instance.relicDB[type].isPure = false;
+                GameManager.instance.baseRelics[type].isPure = false;
                 GameManager.instance.cursedRelics.Add(type);
             }
         }
@@ -492,7 +492,7 @@ public class UIManager : MonoBehaviour
 
         if (type == 1)
         {
-            if (GameManager.instance.relicDB[1].isPure)
+            if (GameManager.instance.baseRelics[1].isPure)
             {
                 GameManager.instance.playerMaxHP += 20;
                 GameManager.instance.ChangePlayerCurHP(20);

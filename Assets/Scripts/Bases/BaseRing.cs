@@ -16,10 +16,14 @@ public class BaseRing
     //최대 강화레벨
     public int maxlvl;
 
-    //DB의 스탯
-    public float dbATK;
-    public float dbSPD;
-    public float dbRP;
+    //db상 스탯
+    public float csvATK;
+    public float csvSPD;
+    public float csvRP;
+
+    //레벨 1일 때의 기본 스탯
+    public float lvl1ATK;
+    public float lvl1SPD;
 
     //실제 게임에서의 기본 스탯
     public float baseATK;
@@ -41,18 +45,26 @@ public class BaseRing
 
     public int level = 0;
 
+
+    public void Init()
+    {
+        level = 1;
+        baseATK = lvl1ATK = csvATK;
+        baseSPD = lvl1SPD = csvSPD;
+    }
+
     //확률 안에 최대 레벨까지 강화. 그 후 공격력/공격 쿨타임을 변경함.
     public bool Upgrade(float poss)
     {
         if (Random.Range(0.0f, 1.0f) > poss) return false;
         if (level == maxlvl) return false;
         level++;
-        baseATK = dbATK;
-        baseSPD = dbSPD;
+        baseATK = lvl1ATK;
+        baseSPD = lvl1SPD;
         for (int i = 2; i <= level; i++)
         {
-            baseATK += dbATK * 0.5f;
-            baseSPD -= dbSPD * 0.05f;
+            baseATK += lvl1ATK * 0.5f;
+            baseSPD -= lvl1SPD * 0.05f;
         }
         return true;
     }
@@ -62,12 +74,12 @@ public class BaseRing
     public void Downgrade()
     {
         if (level > 1) level--;
-        baseATK = dbATK;
-        baseSPD = dbSPD;
+        baseATK = lvl1ATK;
+        baseSPD = lvl1SPD;
         for (int i = 2; i <= level; i++)
         {
-            baseATK += dbATK * 0.5f;
-            baseSPD -= dbSPD * 0.05f;
+            baseATK += lvl1ATK * 0.5f;
+            baseSPD -= lvl1SPD * 0.05f;
         }
 
         Ring ring;

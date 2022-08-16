@@ -105,7 +105,7 @@ public class Ring : MonoBehaviour
     public void InitializeRing(int id)
     {
         //베이스 정보 얻기
-        baseRing = GameManager.instance.ringDB[id];
+        baseRing = GameManager.instance.baseRings[id];
 
         //그래픽
         transform.localScale = Vector3.one;

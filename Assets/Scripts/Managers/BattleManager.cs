@@ -197,7 +197,7 @@ public class BattleManager : MonoBehaviour
 
         //다운그레이드 된 링들을 50% 확률로 복구
         for (int i = 0; i < ringDowngrade.Count; i++)
-            GameManager.instance.ringDB[ringDowngrade[i]].Upgrade(0.5f);
+            GameManager.instance.baseRings[ringDowngrade[i]].Upgrade(0.5f);
 
         diamondGet = 0;
         if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림
