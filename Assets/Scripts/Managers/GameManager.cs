@@ -41,9 +41,6 @@ public class GameManager : MonoBehaviour
     public SpriteRenderer[] monsterPathImages;
 
     //DB
-    List<Dictionary<string, object>> csvRing;
-    List<Dictionary<string, object>> csvMonster;
-    List<Dictionary<string, object>> csvRelic;
     [HideInInspector]
     public List<BaseRing> baseRings;
     [HideInInspector]
@@ -68,6 +65,7 @@ public class GameManager : MonoBehaviour
     public int playerCurHP;
     public int gold;
     public int diamond;
+    bool revivable;
     public List<int> relics;
     public List<int> cursedRelics;
 
@@ -106,69 +104,94 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void TowerStart()
+    public void NormaleModeGameStart()
     {
-        InitializeGame();
+        InitializeGame(true);
         FloorManager.instance.CreateAndMoveToFloor(1);
     }
 
-    public void InitializeGame()
+    public void InitializeGame(bool isNormal)
     {
+        ResetBases(isNormal);
+
         playerMaxHP = 100;
         playerCurHP = 100;
         ChangePlayerCurHP(0);
+
         gold = 0;
         ChangeGold(0);
+        
         diamond = 0;
         ChangeDiamond(0);
+
+        revivable = false;
+
         DeckManager.instance.InitializeDeck();
+
+        relics.Clear();
+        cursedRelics.Clear();
+        
         //지우세요!
-        AddRelicToDeck(19);
-        //baseRelics[19].isPure = false;
+        //AddRelicToDeck(4, false);
+    }
+
+    public void EndGame(int a, int b)
+    {
+        UIManager.instance.OpenGameEndPanel();
+        BattleManager.instance.ResetBattleSystem();
+        ResetBases(true);
+        Time.timeScale = 1;
+    }
+
+    void ResetBases(bool isNormal)
+    {
+        Debug.Log("Reset");
+        for (int i = 0; i < baseRings.Count; i++) baseRings[i].Init();
+        for (int i = 0; i < baseRelics.Count; i++) baseRelics[i].Init();
+        for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].Init();
+
     }
 
     //"*_db.csv"를 읽어온다.
     void ReadDB()
     {
-        csvRing = DBReader.Read("ring_db");
+        List<Dictionary<string, object>> csvRing = DBReader.Read("ring_db");
         baseRings = new List<BaseRing>();
         for (int i = 0; i < csvRing.Count; i++)
         {
             BaseRing r = new BaseRing();
             r.id = (int)csvRing[i]["id"];
-            r.rarity = (int)csvRing[i]["rarity"];
             r.name = (string)csvRing[i]["name"];
             r.maxlvl = (int)csvRing[i]["maxlvl"];
             r.csvATK = (int)csvRing[i]["atk"];
             r.csvSPD = float.Parse(csvRing[i]["spd"].ToString());
-            r.baseNumTarget = (int)csvRing[i]["target"];
-            r.baseRP = (int)csvRing[i]["rp"];
-            r.baseEFF = float.Parse(csvRing[i]["eff"].ToString());
+            r.csvNumTarget = (int)csvRing[i]["target"];
+            r.csvRange = (int)csvRing[i]["range"];
+            r.csvRP = (int)csvRing[i]["rp"];
+            r.csvEFF = float.Parse(csvRing[i]["eff"].ToString());
             r.description = (string)csvRing[i]["description"];
-            r.range = (int)csvRing[i]["range"];
             r.toSame = (string)csvRing[i]["identical"];
             r.toAll = (string)csvRing[i]["all"];
 
-            r.Init();
             baseRings.Add(r);
         }
 
-        csvMonster = DBReader.Read("monster_db");
+        List<Dictionary<string, object>> csvMonster = DBReader.Read("monster_db");
         baseMonsters = new List<BaseMonster>();
         for (int i = 0; i < csvMonster.Count; i++)
         {
             BaseMonster m = new BaseMonster();
             m.type = (int)csvMonster[i]["type"];
             m.name = (string)csvMonster[i]["name"];
-            m.hp = (int)csvMonster[i]["hp"];
-            m.spd = float.Parse(csvMonster[i]["spd"].ToString());
+            m.csvATK = (int)csvMonster[i]["atk"];
+            m.csvHP = (int)csvMonster[i]["hp"];
+            m.csvSPD = float.Parse(csvMonster[i]["spd"].ToString());
             m.description = (string)csvMonster[i]["description"];
-            m.atk = (int)csvMonster[i]["atk"];
             m.tier = ((string)csvMonster[i]["tier"])[0];
             baseMonsters.Add(m);
         }
 
-        csvRelic = DBReader.Read("relic_db");
+        List<Dictionary<string, object>> csvRelic = DBReader.Read("relic_db");
         baseRelics = new List<BaseRelic>();
         for (int i = 0; i < csvRelic.Count; i++)
         {
@@ -423,8 +446,17 @@ public class GameManager : MonoBehaviour
         UIManager.instance.playerHPText.text = playerCurHP.ToString() + "/" + playerMaxHP.ToString();
         if (playerCurHP == 0)
         {
-            Time.timeScale = 0.0f;
-            Debug.Log("GAME OVER!!!");
+            if (baseRelics[4].have && baseRelics[4].isPure && revivable)
+            {
+                revivable = false;
+                ChangePlayerCurHP(10);
+            }
+            else
+            {
+                BattleManager.instance.isBattlePlaying = false;
+                Time.timeScale = 0.0f;
+                SceneChanger.instance.ChangeScene(EndGame, 0, 0);
+            }
         }
         
         for (int i = 0; i < baseRings.Count; i++) baseRings[i].RenewStat();
@@ -452,55 +484,65 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    public bool AddRelicToDeck(int id)
+    public bool AddRelicToDeck(int id, bool isPure)
     {
-        if (baseRelics[id].have) return false;
-        relics.Add(id);
-        baseRelics[id].have = true;
+        if (baseRelics[id].have && baseRelics[id].isPure == isPure) return false;
+        if (!baseRelics[id].have)
+        {
+            relics.Add(id);
+            baseRelics[id].have = true;
+        }
+        baseRelics[id].isPure = isPure;
 
         switch (id)
         {
             case 1:
                 if (baseRelics[id].isPure)
                 {
-                    playerMaxHP += 20;
+                    playerMaxHP = 120;
                     ChangePlayerCurHP(20);
                 }
                 else
                 {
-                    playerMaxHP -= 20;
-                    playerCurHP = Mathf.Min(playerCurHP, playerMaxHP);
+                    playerMaxHP = 80;
+                    playerCurHP = Mathf.Min(playerCurHP, 80);
                     ChangePlayerCurHP(0);
                 }
+                break;
+            case 4:
+                Debug.Log("Yes");
+                if (baseRelics[id].isPure) revivable = true;
+                else
+                    for (int i = 0; i < baseMonsters.Count; i++)
+                        if (baseMonsters[i].tier == 'n') baseMonsters[i].atk = 2;
                 break;
             case 12:
                 if (baseRelics[id].isPure)
                     for (int i = 0; i < baseRings.Count; i++)
                         baseRings[i].baseRP *= 0.9f;
-                else 
+                else
                     for (int i = 0; i < baseRings.Count; i++)
                         baseRings[i].baseRP *= 1.1f;
                 break;
             case 14:
                 if (baseRelics[id].isPure)
-                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].spd = float.Parse(csvMonster[i]["spd"].ToString()) * 0.9f;
+                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].spd = baseMonsters[i].csvSPD * 0.9f;
                 else
-                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].spd = float.Parse(csvMonster[i]["spd"].ToString()) * 1.05f;
+                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].spd = baseMonsters[i].csvSPD * 1.05f;
                 break;
             case 16:
                 if (baseRelics[id].isPure)
                 {
                     for (int i = 0; i < baseMonsters.Count; i++)
-                        if (baseMonsters[i].tier != 'n') baseMonsters[i].hp = (int)csvMonster[i]["hp"] * 0.9f;
+                        if (baseMonsters[i].tier != 'n') baseMonsters[i].hp = baseMonsters[i].csvHP * 0.9f;
                 }
                 else
                 {
                     for (int i = 0; i < baseMonsters.Count; i++)
-                        if (baseMonsters[i].tier != 'n') baseMonsters[i].hp = (int)csvMonster[i]["hp"] * 1.05f;
+                        if (baseMonsters[i].tier != 'n') baseMonsters[i].hp = baseMonsters[i].csvHP * 1.05f;
                 }
                 break;
         }
-
         ChangePlayerCurHP(0);
         return true;
     }

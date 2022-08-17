@@ -6489,7 +6489,7 @@ MonoBehaviour:
   gameStartPanel: {fileID: 337004339}
   gameStartText: {fileID: 1804739339}
   lobbyPanel: {fileID: 1630713582}
-  gameEndingPanel: {fileID: 1676571467}
+  gameEndPanel: {fileID: 1676571467}
   mapPanel: {fileID: 1231937462}
   mapRow1:
   - {fileID: 1761661620}
@@ -10522,6 +10522,13 @@ MonoBehaviour:
   playerX: 0
   playerY: 0
   lastTouchItem: {fileID: 0}
+  itemPos:
+  - {x: -2, y: 1, z: 1}
+  - {x: 2, y: -1, z: 1}
+  - {x: -2, y: 5, z: 1}
+  - {x: 2, y: 3, z: 1}
+  - {x: -2, y: -3, z: 1}
+  - {x: 2, y: -5, z: 1}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -28224,7 +28231,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 326758171}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ButtonGameStart
+        m_MethodName: ButtonOpenLobby
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -33494,7 +33501,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 326758171}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ButtonStartGame
+        m_MethodName: ButtonOpenLobby
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -40315,8 +40322,6 @@ MonoBehaviour:
   dropRPs: []
   isBattlePlaying: 0
   rp: 0
-  goldGet: 0
-  diamondGet: 0
   ringDowngrade: 
   wave: 0
 --- !u!4 &1712438887
@@ -46288,7 +46293,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 326758171}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ButtonEnterTower
+        m_MethodName: ButtonStartNormalMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

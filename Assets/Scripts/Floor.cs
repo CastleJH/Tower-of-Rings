@@ -56,7 +56,7 @@ public class Floor
 		if (floorNum % 2 == 0) store = 1;
 		else store = 0;
 		//지우세요!!
-		store = 1;
+		//store = 1;
 
 		//보스 방은 specials에 포함된 상태로 생성할것이므로 1개 늘려준다. 그리고 상점도 생성해야 하면 1개 더 늘려준다.
 		if (store == 1) specialNum += 2;
@@ -153,7 +153,7 @@ public class Floor
 			do rooms[specials[i].Key, specials[i].Value].type = 2 + Random.Range(0, 6); 
 			while (rooms[specials[i].Key, specials[i].Value].type == 4);
 			//지우세요!
-			rooms[specials[i].Key, specials[i].Value].type = 6;
+			rooms[specials[i].Key, specials[i].Value].type = 2;
         }
 
 		//모든 전투 방들의 전장 형태를 결정함.

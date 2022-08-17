@@ -249,6 +249,7 @@ public class FloorManager : MonoBehaviour
             case 9:
                 roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
                 if (!curRoom.visited) BattleManager.instance.StartBattle();
+                else ShowItems();
                 TurnPortalsOnOff(curRoom.visited);
                 break;
         }

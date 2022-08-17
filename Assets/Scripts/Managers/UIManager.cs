@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
     public GameObject gameStartPanel;
     public GameObject gameStartText;
     public GameObject lobbyPanel;
-    public GameObject gameEndingPanel;
+    public GameObject gameEndPanel;
     
     public GameObject mapPanel;
     public Image[] mapRow1, mapRow2, mapRow3, mapRow4, mapRow5, mapRow6, mapRow7, mapRow8, mapRow9;
@@ -185,8 +185,8 @@ public class UIManager : MonoBehaviour
             if (room.type != -1 && room.type != 10)
             {
                 maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[room.type];
-                if (room.visited && (room.type == 1 || room.type == 9)) maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[0];
-                else if (room.type != 8 && room.visited && room.items.Count == 0) maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[0];
+                if (room.visited && room.type == 1) maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[0];
+                else if (room.type != 9 && room.type != 8 && room.visited && room.items.Count == 0) maps[nx][ny].sprite = GameManager.instance.mapRoomSprites[0];
                 maps[nx][ny].color = Color.white;
             }
         }
@@ -360,6 +360,11 @@ public class UIManager : MonoBehaviour
         relicInfoPanel.SetActive(true);
     }
 
+    public void OpenGameEndPanel()
+    {
+        gameEndPanel.SetActive(true);
+    }
+
     public void ClosePanel(int panelNum)
     {
         switch (panelNum)
@@ -473,6 +478,7 @@ public class UIManager : MonoBehaviour
             }
 
         //유물의 방에서 획득한 것이라면 일정 확률로 저주
+        bool isRelicPure = true;
         if (FloorManager.instance.curRoom.type == 4)
         {
             float curseProb = 0.2f;
@@ -483,7 +489,7 @@ public class UIManager : MonoBehaviour
             }
             if (Random.Range(0.0f, 1.0f) <= curseProb)
             {
-                GameManager.instance.baseRelics[type].isPure = false;
+                isRelicPure = false;
                 GameManager.instance.cursedRelics.Add(type);
             }
         }
@@ -495,7 +501,7 @@ public class UIManager : MonoBehaviour
                 break;
             }
 
-        GameManager.instance.AddRelicToDeck(type);
+        GameManager.instance.AddRelicToDeck(type, isRelicPure);
 
         ClosePanel(4);
     }
@@ -518,20 +524,27 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ButtonStartGame()
+    public void ButtonStartNormalMode()
     {
-        SceneChanger.instance.ChangeScene(ChangeSceneFromStartToLobby, 0, 0);
+        GameManager.instance.NormaleModeGameStart();
     }
 
-    void ChangeSceneFromStartToLobby(int a, int b)
+    public void ButtonOpenLobby()
     {
-        gameStartPanel.SetActive(false);
+        SceneChanger.instance.ChangeScene(ChangeSceneToLobby, 0, 0);
+    }
+
+    public void ChangeSceneToLobby(int a, int b)
+    {
         lobbyPanel.SetActive(true);
-    }
-
-    public void ButtonEnterTower()
-    {
-        GameManager.instance.TowerStart();
+        battleArrangeFail.SetActive(false);
+        battleDeckPanel.SetActive(false);
+        ringSelectionPanel.SetActive(false);
+        playerStatusPanel.SetActive(false);
+        ringInfoPanel.SetActive(false);
+        relicInfoPanel.SetActive(false);
+        gameStartPanel.SetActive(false);
+        gameEndPanel.SetActive(false);
     }
 
     void InvokeReloadAndCloseRingSelectionPanel()

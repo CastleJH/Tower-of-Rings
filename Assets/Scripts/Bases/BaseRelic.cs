@@ -10,4 +10,10 @@ public class BaseRelic        //유물
     public bool isPure;   //저주 여부
     public string pureDescription;  //일반 설명(도감에서 나타날 정보)
     public string cursedDescription;  //저주 설명(도감에서 나타날 정보)
+
+    public void Init()
+    {
+        have = false;
+        isPure = true;
+    }
 }

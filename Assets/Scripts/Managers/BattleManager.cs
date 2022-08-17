@@ -19,6 +19,7 @@ public class BattleManager : MonoBehaviour
     float rpGenerateTime;
     float rpNextGenerateTime;
     byte pathAlpha;
+    public bool isBossKilled;
 
     //웨이브 별 변수
     public int wave;   //현재 웨이브
@@ -31,6 +32,34 @@ public class BattleManager : MonoBehaviour
         monsters = new List<Monster>();
         dropRPs = new List<DropRP>();
         ringDowngrade = new List<int>();
+    }
+
+    public void ResetBattleSystem()
+    {
+        isBattlePlaying = false;
+
+        //링의 정수 정리
+        for (int i = dropRPs.Count - 1; i >= 0; i--)
+            GameManager.instance.ReturnDropRPToPool(dropRPs[i]);
+        dropRPs.Clear();
+
+        //덱 정리
+        for (int i = 0; i < DeckManager.instance.rings.Count; i++) 
+            GameManager.instance.ReturnRingToPool(DeckManager.instance.rings[i]);
+        DeckManager.instance.rings.Clear();
+
+        //링 생성/제거 중이었다면 이것도 정리
+        if (DeckManager.instance.isEditRing)
+        {
+            if (DeckManager.instance.genRing != null) GameManager.instance.ReturnRingToPool(DeckManager.instance.genRing);
+            else DeckManager.instance.ringRemover.transform.position = new Vector3(100, 100, 0);
+        }
+
+        //몬스터 정리
+        for (int i = monsters.Count - 1; i >= 0; i--) GameManager.instance.ReturnMonsterToPool(monsters[i]);
+        monsters.Clear();
+
+        GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(false);
     }
 
     void Update()
@@ -74,6 +103,7 @@ public class BattleManager : MonoBehaviour
         //전투 별 변수 초기화
         ringDowngrade.Clear();
         rpGenerateTime = 3.0f;
+        isBossKilled = false;
         if (GameManager.instance.baseRelics[18].have)
         {
             if (GameManager.instance.baseRelics[18].isPure) rpNextGenerateTime = Random.Range(9.0f, 12.0f);
@@ -173,6 +203,7 @@ public class BattleManager : MonoBehaviour
         {
             if (wave == 3)     //마지막 웨이브였다면 보상을 주고 전투를 종료한다.
             {
+                Debug.Log("NO!!!");
                 if (GameManager.instance.playerCurHP > 0) Time.timeScale = 1;
 
                 //배틀을 종료한다.
@@ -193,6 +224,8 @@ public class BattleManager : MonoBehaviour
 
     void ReloadBattleRoom(int x, int y)
     {
+        if (GameManager.instance.playerCurHP == 0) return;
+
         //링의 정수 정리
         for (int i = dropRPs.Count - 1; i >= 0; i--)
             GameManager.instance.ReturnDropRPToPool(dropRPs[i]);
@@ -276,23 +309,27 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            //보스 방이었으면 유물 드랍
+            //보스 방이었고 보스를 처치했으면 유물 드랍
             if (!GameManager.instance.baseRelics[15].have || GameManager.instance.baseRelics[15].isPure)
             {
-                int itemID;
-                Item item = GameManager.instance.GetItemFromPool();
-                do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
-                while (GameManager.instance.relics.Contains(itemID));
-                item.InitializeItem(2000 + itemID, Vector3.forward, 0, 0);
-                FloorManager.instance.curRoom.AddItem(item);
-                isItemDrop = true;
+                if (isBossKilled)
+                {
+                    int itemID;
+                    Item item = GameManager.instance.GetItemFromPool();
+                    do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
+                    while (GameManager.instance.relics.Contains(itemID));
+                    item.InitializeItem(2000 + itemID, FloorManager.instance.itemPos[3], 0, 0);
+                    FloorManager.instance.curRoom.AddItem(item);
+                    isItemDrop = true;
+                }
             }
         }
 
         //아이템이 한번이라도 드랍되었다면 방 타입을 바꾼다.
-        if (isItemDrop) FloorManager.instance.curRoom.type = 6;
+        if (isItemDrop && FloorManager.instance.curRoom.type != 9) FloorManager.instance.curRoom.type = 6;
 
         //전장을 끄고 맵을 갱신하고 포탈을 보여준다.
+        UIManager.instance.battleArrangeFail.SetActive(false);
         GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(false);
         UIManager.instance.ClosePanel(0);
         UIManager.instance.RevealMapAndMove(FloorManager.instance.playerX, FloorManager.instance.playerY);

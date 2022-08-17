@@ -73,26 +73,12 @@ public class DeckManager : MonoBehaviour
     //덱을 초기화한다.
     public void InitializeDeck()
     {
-        AddRingToDeck(10);
-        AddRingToDeck(2);
-        AddRingToDeck(3);
-        AddRingToDeck(4);
-        AddRingToDeck(5);
-        AddRingToDeck(6);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
-        //AddRingToDeck(1);
-        //AddRingToDeck(15);
-        //AddRingToDeck(18);
-        //AddRingToDeck(7);   //공
-        //AddRingToDeck(14);  //속
-        //AddRingToDeck(10);  //타
-        //AddRingToDeck(3);     //효
-        //AddRingToDeck(19);  //사령관
         AddRingToDeck(0);
         AddRingToDeck(7);
     }
@@ -247,7 +233,6 @@ public class DeckManager : MonoBehaviour
         if (deck.Count >= maxDeckLength) return false;
         if (deck.Contains(ringID)) return false;
         if (ringID < 0 || ringID >= GameManager.instance.baseRings.Count) return false;
-        GameManager.instance.baseRings[ringID].Init();
         deck.Add(ringID);
         return true;
     }

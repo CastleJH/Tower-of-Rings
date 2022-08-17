@@ -7,9 +7,6 @@ public class BaseRing
     //종류
     public int id;
 
-    //희귀도
-    public int rarity;
-
     //이름
     public string name;
 
@@ -19,6 +16,10 @@ public class BaseRing
     //db상 스탯
     public float csvATK;
     public float csvSPD;
+    public float csvEFF;
+    public int csvRange;
+    public int csvNumTarget;
+    public float csvRP;
 
     //실제 게임에서의 기본 스탯
     public float baseATK;
@@ -40,12 +41,16 @@ public class BaseRing
 
     public int level = 0;
 
-
     public void Init()
     {
-        level = 1;
         baseATK = csvATK;
         baseSPD = csvSPD;
+        baseEFF = csvEFF;
+        range = csvRange;
+        baseNumTarget = csvNumTarget;
+        baseRP = csvRP;
+
+        level = 1;
     }
 
     public void RenewStat()
