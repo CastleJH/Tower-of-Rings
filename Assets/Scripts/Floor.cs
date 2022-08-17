@@ -52,9 +52,11 @@ public class Floor
 		roomNum = 8 + floorNum * 3 + Random.Range(0, 3);
         specialNum = 3 + (floorNum + 1) / 2;
         //지우세요!!
-        specialNum = 4 + (floorNum + 1) / 2;
+        //specialNum = 4 + (floorNum + 1) / 2;
 		if (floorNum % 2 == 0) store = 1;
 		else store = 0;
+		//지우세요!!
+		store = 1;
 
 		//보스 방은 specials에 포함된 상태로 생성할것이므로 1개 늘려준다. 그리고 상점도 생성해야 하면 1개 더 늘려준다.
 		if (store == 1) specialNum += 2;
