@@ -494,14 +494,14 @@ public class UIManager : MonoBehaviour
             }
         }
 
+        GameManager.instance.AddRelicToDeck(type, isRelicPure);
+
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
             if (FloorManager.instance.curRoom.items[i].itemType == 2000 + type)
             {
                 FloorManager.instance.RemoveItem(FloorManager.instance.curRoom.items[i], false);
                 break;
             }
-
-        GameManager.instance.AddRelicToDeck(type, isRelicPure);
 
         ClosePanel(4);
     }
