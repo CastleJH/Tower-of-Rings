@@ -26,8 +26,12 @@ public class FloorManager : MonoBehaviour
     int[] dy = { -1, 1, 0, 0 };
 
     //아이템 위치
-    int[] ix = { -2, 2, -2, 2, -2, 2 };
-    int[] iy = { 5, 3, 1, -1, -3, -5 };
+    public Vector3[] itemPos =
+    {
+        new Vector3(-2, 1, 1), new Vector3(2, -1, 1),
+        new Vector3(-2, 5, 1), new Vector3(2, 3, 1),
+        new Vector3(-2, -3, 1), new Vector3(2, -5, 1)
+    };
 
     void Awake()
     {
@@ -102,10 +106,10 @@ public class FloorManager : MonoBehaviour
                     if (GameManager.instance.baseRelics[6].have && GameManager.instance.baseRelics[6].isPure && Random.Range(0.0f, 1.0f) <= 0.33f)
                     {
                         Item item = GameManager.instance.GetItemFromPool();
-                        item.InitializeItem(0, new Vector3(ix[2], iy[2], 1), 0, 0);
+                        item.InitializeItem(0, itemPos[0], 0, 0);
                         curRoom.AddItem(item);
                         item = GameManager.instance.GetItemFromPool();
-                        item.InitializeItem(0, new Vector3(ix[3], iy[3], 1), 0, 0);
+                        item.InitializeItem(0, itemPos[1], 0, 0);
                         curRoom.AddItem(item);
                     }
                     else
@@ -163,14 +167,14 @@ public class FloorManager : MonoBehaviour
                         {
                             if (Random.Range(0, 2) == 1) continue;
                             Item item = GameManager.instance.GetItemFromPool();
-                            item.InitializeItem(5, new Vector3(ix[i], iy[i], 1), 0, 0);
+                            item.InitializeItem(5, itemPos[i], 0, 0);
                             curRoom.AddItem(item);
                         }
                         else
                         {
                             Item item = GameManager.instance.GetItemFromPool();
-                            if (Random.Range(0, 2) == 1) item.InitializeItem(3, new Vector3(ix[i], iy[i], 1), 0, 0);
-                            else item.InitializeItem(5, new Vector3(ix[i], iy[i], 1), 0, 0);
+                            if (Random.Range(0, 2) == 1) item.InitializeItem(3, itemPos[i], 0, 0);
+                            else item.InitializeItem(5, itemPos[i], 0, 0);
                             curRoom.AddItem(item);
                         }
                     }
@@ -203,29 +207,29 @@ public class FloorManager : MonoBehaviour
                     item = GameManager.instance.GetItemFromPool();
                     do itemID = Random.Range(0, GameManager.instance.baseRings.Count);
                     while (DeckManager.instance.deck.Contains(itemID));
-                    item.InitializeItem(1000 + itemID, new Vector3(ix[0], iy[0], 1), 1, (int)(5 * price));
+                    item.InitializeItem(1000 + itemID, itemPos[0], 1, (int)(5 * price));
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
                     do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
                     while (GameManager.instance.relics.Contains(itemID));
-                    item.InitializeItem(2000 + itemID, new Vector3(ix[1], iy[1], 1), 1, (int)(10 * price));
+                    item.InitializeItem(2000 + itemID, itemPos[1], 1, (int)(10 * price));
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(0, new Vector3(ix[2], iy[2], 1), 1, (int)(5 * price));
+                    item.InitializeItem(0, itemPos[2], 1, (int)(5 * price));
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(1, new Vector3(ix[3], iy[3], 1), 1, (int)(5 * price));
+                    item.InitializeItem(1, itemPos[3], 1, (int)(5 * price));
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(2, new Vector3(ix[4], iy[4], 1), 1, (int)(5 * price));
+                    item.InitializeItem(2, itemPos[4], 1, (int)(5 * price));
                     curRoom.AddItem(item);
 
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(6, new Vector3(ix[5], iy[5], 1), 1, (int)(10 * price));
+                    item.InitializeItem(6, itemPos[5], 1, (int)(10 * price));
                     curRoom.AddItem(item);
                 }
                 ShowItems();

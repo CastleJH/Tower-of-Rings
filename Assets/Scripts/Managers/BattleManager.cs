@@ -15,8 +15,6 @@ public class BattleManager : MonoBehaviour
     //전투 별 변수
     public bool isBattlePlaying;  //게임 진행 중인지 여부
     public float rp;        //현재 보유 RP
-    public int goldGet;
-    public int diamondGet;
     public List<int> ringDowngrade;
     float rpGenerateTime;
     float rpNextGenerateTime;
@@ -70,8 +68,6 @@ public class BattleManager : MonoBehaviour
     public void StartBattle()
     {
         //전투 별 변수 초기화
-        goldGet = 0;
-        diamondGet = 0;
         ringDowngrade.Clear();
         rpGenerateTime = 0.0f;
         rpNextGenerateTime = Random.Range(10.0f, 14.0f);
@@ -172,7 +168,6 @@ public class BattleManager : MonoBehaviour
                 StopAllCoroutines();
 
                 SceneChanger.instance.ChangeScene(ReloadBattleRoom, FloorManager.instance.playerX, FloorManager.instance.playerY);
-
             }
             else
             {
@@ -184,8 +179,6 @@ public class BattleManager : MonoBehaviour
 
     void ReloadBattleRoom(int x, int y)
     {
-        //FloorManager.instance.ChangeCurRoomToIdle();
-
         //링의 정수 정리
         for (int i = dropRPs.Count - 1; i >= 0; i--)
             GameManager.instance.ReturnDropRPToPool(dropRPs[i]);
@@ -217,14 +210,33 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < ringDowngrade.Count; i++)
             GameManager.instance.baseRings[ringDowngrade[i]].Upgrade(0.5f);
 
-        diamondGet = 0;
-        if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림
+        //전투 종료 후 아이템을 드랍한다.
+        bool isItemDrop = false;
+
+        //골드 드랍
+        int goldGet = Random.Range(0, 3);
+        if (goldGet != 0) isItemDrop = true;
+        for (int i = 0; i < goldGet; i++)
         {
-            goldGet += (int)(goldGet * greedyATK * 0.01f);
-            if (Random.Range(0.0f, 1.0f) <= greedyATK * 0.01f + greedyEFF) diamondGet = Random.Range(3, 6);
+            Item item = GameManager.instance.GetItemFromPool();
+            item.InitializeItem(4, FloorManager.instance.itemPos[i], 0, 0);
+            FloorManager.instance.curRoom.AddItem(item);
         }
-        GameManager.instance.ChangeGold(goldGet);
-        GameManager.instance.ChangeDiamond(diamondGet);
+
+        //다이아몬드 드랍
+        int diamondGet = 0;
+        if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림
+            if (Random.Range(0.0f, 1.0f) <= greedyATK * 0.01f + greedyEFF) diamondGet = Random.Range(1, 3);
+        if (diamondGet != 0) isItemDrop = true;
+        for (int i = 0; i < diamondGet; i++)
+        {
+            Item item = GameManager.instance.GetItemFromPool();
+            item.InitializeItem(5, FloorManager.instance.itemPos[i + 2], 0, 0);
+            FloorManager.instance.curRoom.AddItem(item);
+        }
+
+        //아이템이 한번이라도 드랍되었다면 방 타입을 바꾼다.
+        if (isItemDrop) FloorManager.instance.curRoom.type = 6;
 
         //전장을 끄고 맵을 갱신하고 포탈을 보여준다.
         GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(false);

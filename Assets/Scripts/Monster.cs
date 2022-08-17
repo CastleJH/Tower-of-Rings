@@ -244,12 +244,6 @@ public class Monster : MonoBehaviour
                 else UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, DeckManager.instance.necroCount.ToString() + "/20");
             }
         }
-
-        //보스 몬스터면 20골드 획득한다. 일반 몬스터면 66%확률로 1, 33%확률로 2골드 획득한다.
-        int g;
-        if (IsNormalMonster()) g = Mathf.Clamp(Random.Range(0, 3), 1, 2);
-        else g = 20;
-        BattleManager.instance.goldGet += g;
     }
 
     //일반 몬스터인지/엘리트 몬스터인지 알려준다.
