@@ -204,33 +204,44 @@ public class FloorManager : MonoBehaviour
                     Item item;
                     int itemID;
 
+                    //유물
+                    item = GameManager.instance.GetItemFromPool();
+                    do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
+                    while (GameManager.instance.relics.Contains(itemID));
+                    item.InitializeItem(2000 + itemID, itemPos[2], 1, (int)(10 * price));
+                    curRoom.AddItem(item);
+
+                    //유물 정화
+                    item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(6, itemPos[3], 1, (int)(10 * price));
+                    curRoom.AddItem(item);
+
+                    //링
                     item = GameManager.instance.GetItemFromPool();
                     do itemID = Random.Range(0, GameManager.instance.baseRings.Count);
                     while (DeckManager.instance.deck.Contains(itemID));
                     item.InitializeItem(1000 + itemID, itemPos[0], 1, (int)(5 * price));
                     curRoom.AddItem(item);
 
+                    //회복
                     item = GameManager.instance.GetItemFromPool();
-                    do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
-                    while (GameManager.instance.relics.Contains(itemID));
-                    item.InitializeItem(2000 + itemID, itemPos[1], 1, (int)(10 * price));
+                    item.InitializeItem(2, itemPos[1], 1, (int)(5 * price));
                     curRoom.AddItem(item);
 
+                    //제련 망치
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(0, itemPos[2], 1, (int)(5 * price));
+                    item.InitializeItem(0, itemPos[4], 1, (int)(5 * price));
                     curRoom.AddItem(item);
 
-                    item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(1, itemPos[3], 1, (int)(5 * price));
-                    curRoom.AddItem(item);
-
-                    item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(2, itemPos[4], 1, (int)(5 * price));
-                    curRoom.AddItem(item);
-
-                    item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(6, itemPos[5], 1, (int)(10 * price));
-                    curRoom.AddItem(item);
+                    //파괴 망치
+                    if (!GameManager.instance.baseRelics[13].have || GameManager.instance.baseRelics[13].isPure)
+                    {
+                        item = GameManager.instance.GetItemFromPool();
+                        int itemPrice = (int)(5 * price);
+                        if (GameManager.instance.baseRelics[13].isPure) itemPrice = 0;
+                        item.InitializeItem(1, itemPos[5], 1, itemPrice);
+                        curRoom.AddItem(item);
+                    }
                 }
                 ShowItems();
                 TurnPortalsOnOff(true);

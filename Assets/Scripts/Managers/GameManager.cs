@@ -120,8 +120,8 @@ public class GameManager : MonoBehaviour
         ChangeDiamond(0);
         DeckManager.instance.InitializeDeck();
         //지우세요!
-        AddRelicToDeck(7);
-        //baseRelics[7].isPure = false;
+        AddRelicToDeck(13);
+        baseRelics[13].isPure = false;
     }
 
     //"*_db.csv"를 읽어온다.
