@@ -215,6 +215,8 @@ public class BattleManager : MonoBehaviour
 
         //골드 드랍
         int goldGet = Random.Range(0, 3);
+        //지우세요!
+        //goldGet = 2;
         if (goldGet != 0) isItemDrop = true;
         for (int i = 0; i < goldGet; i++)
         {
@@ -227,11 +229,13 @@ public class BattleManager : MonoBehaviour
         int diamondGet = 0;
         if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림
             if (Random.Range(0.0f, 1.0f) <= greedyATK * 0.01f + greedyEFF) diamondGet = Random.Range(1, 3);
+        //지우세요!
+        //diamondGet = 2;
         if (diamondGet != 0) isItemDrop = true;
         for (int i = 0; i < diamondGet; i++)
         {
             Item item = GameManager.instance.GetItemFromPool();
-            item.InitializeItem(5, FloorManager.instance.itemPos[i + 2], 0, 0);
+            item.InitializeItem(5, FloorManager.instance.itemPos[i + 3], 0, 0);
             FloorManager.instance.curRoom.AddItem(item);
         }
 
