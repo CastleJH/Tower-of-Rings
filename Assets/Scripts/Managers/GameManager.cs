@@ -41,6 +41,9 @@ public class GameManager : MonoBehaviour
     public SpriteRenderer[] monsterPathImages;
 
     //DB
+    List<Dictionary<string, object>> csvRing;
+    List<Dictionary<string, object>> csvMonster;
+    List<Dictionary<string, object>> csvRelic;
     [HideInInspector]
     public List<BaseRing> baseRings;
     [HideInInspector]
@@ -127,7 +130,7 @@ public class GameManager : MonoBehaviour
     //"*_db.csv"를 읽어온다.
     void ReadDB()
     {
-        List<Dictionary<string, object>> csvRing = DBReader.Read("ring_db");
+        csvRing = DBReader.Read("ring_db");
         baseRings = new List<BaseRing>();
         for (int i = 0; i < csvRing.Count; i++)
         {
@@ -150,7 +153,7 @@ public class GameManager : MonoBehaviour
             baseRings.Add(r);
         }
 
-        List<Dictionary<string, object>> csvMonster = DBReader.Read("monster_db");
+        csvMonster = DBReader.Read("monster_db");
         baseMonsters = new List<BaseMonster>();
         for (int i = 0; i < csvMonster.Count; i++)
         {
@@ -164,7 +167,7 @@ public class GameManager : MonoBehaviour
             baseMonsters.Add(m);
         }
 
-        List<Dictionary<string, object>> csvRelic = DBReader.Read("relic_db");
+        csvRelic = DBReader.Read("relic_db");
         baseRelics = new List<BaseRelic>();
         for (int i = 0; i < csvRelic.Count; i++)
         {
@@ -476,6 +479,12 @@ public class GameManager : MonoBehaviour
                 else 
                     for (int i = 0; i < baseRings.Count; i++)
                         baseRings[i].baseRP *= 1.1f;
+                break;
+            case 14:
+                if (baseRelics[id].isPure)
+                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].spd = float.Parse(csvMonster[i]["spd"].ToString()) * 0.9f;
+                else
+                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].spd = float.Parse(csvMonster[i]["spd"].ToString()) * 1.05f;
                 break;
         }
 
