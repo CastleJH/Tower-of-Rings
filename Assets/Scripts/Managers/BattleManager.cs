@@ -92,8 +92,8 @@ public class BattleManager : MonoBehaviour
         rp = 50;
         if (GameManager.instance.baseRelics[19].have)
         {
-            if (GameManager.instance.baseRelics[19].isPure) rp = 60;
-            else rp = 45;
+            if (GameManager.instance.baseRelics[19].isPure) rp = 55;
+            else rp = 47;
         }
         ChangePlayerRP(0);
 
