@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class BattleManager : MonoBehaviour
 {
@@ -213,30 +215,46 @@ public class BattleManager : MonoBehaviour
         //전투 종료 후 아이템을 드랍한다.
         bool isItemDrop = false;
 
-        //골드 드랍
-        int goldGet = Random.Range(0, 3);
-        //지우세요!
-        //goldGet = 2;
-        if (goldGet != 0) isItemDrop = true;
-        for (int i = 0; i < goldGet; i++)
+        if (FloorManager.instance.curRoom.type != 9)
         {
-            Item item = GameManager.instance.GetItemFromPool();
-            item.InitializeItem(4, FloorManager.instance.itemPos[i], 0, 0);
-            FloorManager.instance.curRoom.AddItem(item);
-        }
+            //골드 드랍
+            int goldGet = Random.Range(0, 3);
+            //지우세요!
+            //goldGet = 2;
+            if (goldGet != 0) isItemDrop = true;
+            for (int i = 0; i < goldGet; i++)
+            {
+                Item item = GameManager.instance.GetItemFromPool();
+                item.InitializeItem(4, FloorManager.instance.itemPos[i], 0, 0);
+                FloorManager.instance.curRoom.AddItem(item);
+            }
 
-        //다이아몬드 드랍
-        int diamondGet = 0;
-        if (greedyATK != -1.0f)   //탐욕링이 존재했다면 보상을 늘림
-            if (Random.Range(0.0f, 1.0f) <= greedyATK * 0.01f + greedyEFF) diamondGet = Random.Range(1, 3);
-        //지우세요!
-        //diamondGet = 2;
-        if (diamondGet != 0) isItemDrop = true;
-        for (int i = 0; i < diamondGet; i++)
+            //다이아몬드 드랍
+            int diamondGet = 0;
+            if (greedyATK != -1.0f && Random.Range(0.0f, 1.0f) <= greedyATK * 0.01f + greedyEFF) diamondGet++;
+            if (GameManager.instance.baseRelics[15].have && GameManager.instance.baseRelics[15].isPure && Random.Range(0.0f, 1.0f) <= 0.33f) diamondGet++;
+            //지우세요!
+            //diamondGet = 2;
+            if (diamondGet != 0) isItemDrop = true;
+            for (int i = 0; i < diamondGet; i++)
+            {
+                Item item = GameManager.instance.GetItemFromPool();
+                item.InitializeItem(5, FloorManager.instance.itemPos[i + 3], 0, 0);
+                FloorManager.instance.curRoom.AddItem(item);
+            }
+        }
+        else
         {
-            Item item = GameManager.instance.GetItemFromPool();
-            item.InitializeItem(5, FloorManager.instance.itemPos[i + 3], 0, 0);
-            FloorManager.instance.curRoom.AddItem(item);
+            //보스 방이었으면 유물 드랍
+            if (!GameManager.instance.baseRelics[15].have || GameManager.instance.baseRelics[15].isPure)
+            {
+                int itemID;
+                Item item = GameManager.instance.GetItemFromPool();
+                do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
+                while (GameManager.instance.relics.Contains(itemID));
+                item.InitializeItem(2000 + itemID, Vector3.forward, 0, 0);
+                FloorManager.instance.curRoom.AddItem(item);
+            }
         }
 
         //아이템이 한번이라도 드랍되었다면 방 타입을 바꾼다.
