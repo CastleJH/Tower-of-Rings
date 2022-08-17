@@ -7,7 +7,7 @@ public class DropRP : MonoBehaviour
 {
     int click;
     int rpLayerMask;
-    Vector3 vel;
+    public Vector3 vel;
 
     public void Awake()
     {
@@ -17,7 +17,12 @@ public class DropRP : MonoBehaviour
     {
         click = 0;
         transform.position = Camera.main.transform.position + new Vector3(Random.Range(-5, 5), 16, 2);
-        vel = new Vector3(0, -0.05f, 0);
+        if (GameManager.instance.baseRelics[18].have)
+        {
+            if (GameManager.instance.baseRelics[18].isPure) vel = new Vector3(0, -1.5f, 0);
+            else vel = new Vector3(0, -3.0f, 0);
+        }
+        else vel = new Vector3(0, -2.0f, 0);
     }
 
     void Update()
@@ -33,8 +38,8 @@ public class DropRP : MonoBehaviour
             if (hit.collider != null && hit.collider.gameObject == gameObject) UpdateClick();
         }
 
-        transform.Translate(vel);
-        if (transform.position.y < Camera.main.transform.position.y - 14.0f)
+        transform.Translate(vel * Time.unscaledDeltaTime);
+        if (transform.position.y < Camera.main.transform.position.y - 16.0f)
         {
             BattleManager.instance.dropRPs.Remove(this);
             GameManager.instance.ReturnDropRPToPool(this);

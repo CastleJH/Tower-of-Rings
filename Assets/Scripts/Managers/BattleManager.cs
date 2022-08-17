@@ -49,12 +49,16 @@ public class BattleManager : MonoBehaviour
 
             if (Time.timeScale != 0)
             {
-                //rpGenerateTime += Time.unscaledDeltaTime;
                 rpGenerateTime += Time.deltaTime;
                 if (rpGenerateTime > rpNextGenerateTime)
                 {
                     rpGenerateTime = 0.0f;
-                    rpNextGenerateTime = Random.Range(10.0f, 14.0f);
+                    if (GameManager.instance.baseRelics[18].have)
+                    {
+                        if (GameManager.instance.baseRelics[18].isPure) rpNextGenerateTime = Random.Range(9.0f, 12.0f);
+                        else rpNextGenerateTime = Random.Range(13.0f, 16.0f);
+                    }
+                    else rpNextGenerateTime = Random.Range(11.0f, 14.0f);
                     DropRP dropRP = GameManager.instance.GetDropRPFromPool();
                     dropRP.InitializeDropRP();
                     dropRPs.Add(dropRP);
@@ -69,8 +73,13 @@ public class BattleManager : MonoBehaviour
     {
         //전투 별 변수 초기화
         ringDowngrade.Clear();
-        rpGenerateTime = 0.0f;
-        rpNextGenerateTime = Random.Range(10.0f, 14.0f);
+        rpGenerateTime = 3.0f;
+        if (GameManager.instance.baseRelics[18].have)
+        {
+            if (GameManager.instance.baseRelics[18].isPure) rpNextGenerateTime = Random.Range(9.0f, 12.0f);
+            else rpNextGenerateTime = Random.Range(13.0f, 16.0f);
+        }
+        else rpNextGenerateTime = Random.Range(11.0f, 14.0f); 
         pathAlpha = 0;
 
         //전장을 킨다.
