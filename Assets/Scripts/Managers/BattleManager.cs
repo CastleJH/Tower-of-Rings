@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class BattleManager : MonoBehaviour
 {
@@ -127,7 +125,7 @@ public class BattleManager : MonoBehaviour
     //몬스터를 생성한다.
     IEnumerator GenerateMonster()
     {
-        Debug.Log("Start Coroutine");
+        //Debug.Log("Start Coroutine");
         while (newMonsterID < numGenMonster)
         {
             Debug.Log("gen!");
@@ -254,6 +252,7 @@ public class BattleManager : MonoBehaviour
                 while (GameManager.instance.relics.Contains(itemID));
                 item.InitializeItem(2000 + itemID, Vector3.forward, 0, 0);
                 FloorManager.instance.curRoom.AddItem(item);
+                isItemDrop = true;
             }
         }
 

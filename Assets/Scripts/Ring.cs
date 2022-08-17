@@ -169,6 +169,17 @@ public class Ring : MonoBehaviour
         ringCollider.enabled = true;
         isSealed = false;
 
+        buffNumTarget = 0.0f;
+        buffATK = 1.0f;
+        buffSPD = 1.0f;
+        buffEFF = 1.0f;
+        buffEFFPlus = 0.0f;
+
+        if (GameManager.instance.baseRelics[17].have && (number + 1) % 5 == 0)
+        {
+            if (GameManager.instance.baseRelics[17].isPure) buffATK = 1.1f;
+            else buffATK = 0.8f;
+        }
         ApplySynergy();
     }
 
@@ -540,13 +551,6 @@ public class Ring : MonoBehaviour
     void ApplySynergy()
     {
         Ring ring;
-
-        buffNumTarget = 0.0f;
-        buffATK = 1.0f;
-        buffSPD = 1.0f;
-        buffEFF = 1.0f;
-        buffEFFPlus = 0.0f;
-
 
         ChangeCurNumTarget(0.0f);
         ChangeCurATK(0.0f);
