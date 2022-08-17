@@ -519,10 +519,10 @@ public class GameManager : MonoBehaviour
             case 12:
                 if (baseRelics[id].isPure)
                     for (int i = 0; i < baseRings.Count; i++)
-                        baseRings[i].baseRP *= 0.9f;
+                        baseRings[i].baseRP = (int)(baseRings[i].csvRP * 0.9f);
                 else
                     for (int i = 0; i < baseRings.Count; i++)
-                        baseRings[i].baseRP *= 1.1f;
+                        baseRings[i].baseRP = (int)(baseRings[i].csvRP * 1.1f);
                 break;
             case 14:
                 if (baseRelics[id].isPure)

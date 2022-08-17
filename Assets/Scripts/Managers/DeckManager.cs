@@ -58,10 +58,10 @@ public class DeckManager : MonoBehaviour
                 if (plantCoolTime < 10)
                 {
                     plantCoolTime += Time.deltaTime;
-                    if (plantCoolTime >= 10.0f)
+                    if (plantCoolTime >= 20.0f)
                     {
-                        plantCoolTime = 10.0f;
-                        UIManager.instance.SetBattleDeckRingRPText(plantIdx, "10.00");
+                        plantCoolTime = 20.0f;
+                        UIManager.instance.SetBattleDeckRingRPText(plantIdx, "20.00");
                         BattleManager.instance.ChangePlayerRP(0);
                     }
                     else UIManager.instance.SetBattleDeckRingRPText(plantIdx, string.Format("{0:0.00}", plantCoolTime));

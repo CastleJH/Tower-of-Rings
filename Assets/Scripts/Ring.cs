@@ -110,6 +110,7 @@ public class Ring : MonoBehaviour
         //±×·¡ÇÈ
         transform.localScale = Vector3.one;
         spriteRenderer.sprite = GameManager.instance.ringSprites[id];
+        spriteRenderer.transform.localScale = Vector3.one;
         rangeRenderer.transform.localScale = new Vector2(baseRing.range * 2, baseRing.range * 2);
         rangeRenderer.color = new Color(0, 0, 0, 0);
         transform.localScale = Vector3.one;
