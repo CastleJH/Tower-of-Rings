@@ -90,6 +90,11 @@ public class BattleManager : MonoBehaviour
 
         //초기 RP를 정하고 UI를 업데이트한다.
         rp = 50;
+        if (GameManager.instance.baseRelics[19].have)
+        {
+            if (GameManager.instance.baseRelics[19].isPure) rp = 60;
+            else rp = 45;
+        }
         ChangePlayerRP(0);
 
         //덱 매니저의 전투 관련 변수들을 초기화한다.
