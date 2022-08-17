@@ -271,7 +271,7 @@ public class Ring : MonoBehaviour
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
                     for (int i = 0; i < targets.Count && numTarget != 0; i++)
                     {
-                        if (targets[i].IsNormalMonster()) continue;
+                        if (targets[i].baseMonster.tier == 'n') continue;
                         bullet = GameManager.instance.GetBulletFromPool(baseRing.id);
                         bullet.InitializeBullet(this, targets[i]);
                         bullet.gameObject.SetActive(true);
@@ -279,7 +279,7 @@ public class Ring : MonoBehaviour
                     }
                     for (int i = 0; i < targets.Count && numTarget != 0; i++)
                     {
-                        if (!targets[i].IsNormalMonster()) continue;
+                        if (targets[i].baseMonster.tier != 'n') continue;
                         bullet = GameManager.instance.GetBulletFromPool(baseRing.id);
                         bullet.InitializeBullet(this, targets[i]);
                         bullet.gameObject.SetActive(true);

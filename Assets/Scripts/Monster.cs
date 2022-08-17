@@ -63,7 +63,7 @@ public class Monster : MonoBehaviour
         if (isInBattle)
         {
             baseSPD = baseMonster.spd;
-            if (!IsNormalMonster()) UseMonsterSkill();
+            if (baseMonster.tier != 'n') UseMonsterSkill();
             curSPD = baseSPD;
 
             //spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
@@ -162,7 +162,7 @@ public class Monster : MonoBehaviour
         barrierBlock = false;
         curseStack = 0;
         isInAmplify = false;
-        if (IsNormalMonster() || baseMonster.type == 23) skillCoolTime1 = 0.0f;
+        if (baseMonster.tier == 'n' || baseMonster.type == 23) skillCoolTime1 = 0.0f;
         else skillCoolTime1 = 5.0f;
         skillCoolTime2 = 0.0f;
         skillUseTime = 0.0f;
@@ -244,13 +244,6 @@ public class Monster : MonoBehaviour
                 else UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, DeckManager.instance.necroCount.ToString() + "/20");
             }
         }
-    }
-
-    //일반 몬스터인지/엘리트 몬스터인지 알려준다.
-    public bool IsNormalMonster()
-    {
-        if (baseMonster.type < 15) return true;
-        else return false;
     }
 
     //엘리트/보스의 스킬을 사용한다.
@@ -399,7 +392,7 @@ public class Monster : MonoBehaviour
     //공격 이펙트: 절단
     public void AE_Cut(float dmg)
     {
-        if (IsNormalMonster()) AE_DecreaseHP(curHP * (dmg * 0.01f), Color.red);
+        if (baseMonster.tier == 'n') AE_DecreaseHP(curHP * (dmg * 0.01f), Color.red);
         else AE_DecreaseHP(curHP * (dmg * 0.005f), Color.red);
     }
 
@@ -425,7 +418,7 @@ public class Monster : MonoBehaviour
     //공격 이펙트: 처형
     public void AE_Execution(float dmg, float rate)
     {
-        if (!IsNormalMonster()) rate *= 0.5f;
+        if (baseMonster.tier != 'n') rate *= 0.5f;
         if (curHP - dmg < baseHP * rate)
         {
             AE_DecreaseHP(-1, Color.red);
@@ -471,7 +464,7 @@ public class Monster : MonoBehaviour
     {
         if (Random.Range(0.0f, 1.0f) < prob)
         {
-            if (!IsNormalMonster()) AE_DecreaseHP(baseHP * prob * 0.5f, new Color32(80, 80, 80, 255));
+            if (baseMonster.tier != 'n') AE_DecreaseHP(baseHP * prob * 0.5f, new Color32(80, 80, 80, 255));
             else
             {
                 AE_DecreaseHP(-1, Color.black);
@@ -714,7 +707,7 @@ public class Monster : MonoBehaviour
             {
                 monster1 = BattleManager.instance.monsters[i];
                 monster2 = BattleManager.instance.monsters[Random.Range(0, monsterNum)];
-                if (!monster1.IsNormalMonster() || !monster2.IsNormalMonster()) continue;
+                if (monster1.baseMonster.tier != 'n' || monster2.baseMonster.tier != 'n') continue;
                 tmp = monster1.movedDistance;
                 monster1.movedDistance = monster2.movedDistance;
                 monster2.movedDistance = tmp;

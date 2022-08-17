@@ -164,6 +164,7 @@ public class GameManager : MonoBehaviour
             m.spd = float.Parse(csvMonster[i]["spd"].ToString());
             m.description = (string)csvMonster[i]["description"];
             m.atk = (int)csvMonster[i]["atk"];
+            m.tier = ((string)csvMonster[i]["tier"])[0];
             baseMonsters.Add(m);
         }
 
@@ -485,6 +486,18 @@ public class GameManager : MonoBehaviour
                     for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].spd = float.Parse(csvMonster[i]["spd"].ToString()) * 0.9f;
                 else
                     for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].spd = float.Parse(csvMonster[i]["spd"].ToString()) * 1.05f;
+                break;
+            case 16:
+                if (baseRelics[id].isPure)
+                {
+                    for (int i = 0; i < baseMonsters.Count; i++)
+                        if (baseMonsters[i].tier != 'n') baseMonsters[i].hp = (int)csvMonster[i]["hp"] * 0.9f;
+                }
+                else
+                {
+                    for (int i = 0; i < baseMonsters.Count; i++)
+                        if (baseMonsters[i].tier != 'n') baseMonsters[i].hp = (int)csvMonster[i]["hp"] * 1.05f;
+                }
                 break;
         }
 

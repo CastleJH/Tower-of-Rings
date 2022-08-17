@@ -10,4 +10,5 @@ public class BaseMonster        //몬스터의 원형
     public float spd;       //이동속도
     public string description;  //설명(도감에서 나타날 정보)
     public int atk;     //공격력
+    public char tier;
 }
