@@ -131,36 +131,25 @@ public class BattleManager : MonoBehaviour
         DeckManager.instance.PrepareBattle();
 
         wave = 1;
-        newMonsterID = 0;
+        newMonsterID = 0; 
+        numGenMonster = 15;
         if (GameManager.instance.baseRelics[5].have)
         {
-            if (GameManager.instance.baseRelics[5].isPure) numGenMonster = 27;
-            else numGenMonster = 33;
+            if (GameManager.instance.baseRelics[5].isPure) numGenMonster = (int)(numGenMonster * 0.9f);
+            else numGenMonster = (int)(numGenMonster * 1.1f);
         }
-        else numGenMonster = 30;
         isBattlePlaying = true;
     }
 
     //웨이브를 시작한다. 관련 변수를 초기화하고 몬스터 생성 코루틴을 시작한다.
     void StartWave()
     {
+        if (wave == 2) numGenMonster = 20;
+        else numGenMonster = 15;
         if (GameManager.instance.baseRelics[5].have)
         {
-            if (GameManager.instance.baseRelics[5].isPure)
-            {
-                if (wave == 2) numGenMonster = 40;
-                else numGenMonster = 27;
-            }
-            else
-            {
-                if (wave == 2) numGenMonster = 50;
-                else numGenMonster = 33;
-            }
-        }
-        else
-        {
-            if (wave == 2) numGenMonster = 45;
-            else numGenMonster = 30;
+            if (GameManager.instance.baseRelics[5].isPure) numGenMonster = (int)(numGenMonster * 0.9f);
+            else numGenMonster = (int)(numGenMonster * 1.1f);
         }
         newMonsterID = 0;
         StartCoroutine(GenerateMonster());
@@ -192,7 +181,7 @@ public class BattleManager : MonoBehaviour
             monster.gameObject.SetActive(true);
             monsters.Add(monster);
             newMonsterID++;
-            yield return new WaitForSeconds(45.0f / numGenMonster); //45초 동안 몬스터들을 등장시켜야 한다. 몬스터 수에 비례하여 생성 주기를 결정한다.
+            yield return new WaitForSeconds(1.0f);
         }
     }
 

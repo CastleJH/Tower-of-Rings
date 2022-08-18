@@ -55,7 +55,7 @@ public class BaseRing
 
     public void RenewStat()
     {
-        baseATK = csvATK * (1.0f + (level - 1) * 0.5f);
+        baseATK = csvATK * (1.0f + (level - 1) * 0.25f);
         baseSPD = csvSPD * (1.0f - (level - 1) * 0.05f);
         if (GameManager.instance.baseRelics[2].have && GameManager.instance.playerCurHP < GameManager.instance.playerMaxHP * 0.2f)
         {

@@ -39573,7 +39573,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 1}
+  m_Color: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -40323,6 +40323,7 @@ MonoBehaviour:
   isBattlePlaying: 0
   rp: 0
   ringDowngrade: 
+  isBossKilled: 0
   wave: 0
 --- !u!4 &1712438887
 Transform:
