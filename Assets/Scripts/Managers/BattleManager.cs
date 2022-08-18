@@ -66,10 +66,12 @@ public class BattleManager : MonoBehaviour
     {
         if (isBattlePlaying)    //전투 중인 경우
         {
-            //전투 종료 여부 확인
-            CheckBattleOver();
-            
-            if (pathAlpha < 255)
+            if (pathAlpha == 255)
+            {
+                //전투 종료 여부 확인
+                CheckBattleOver();
+            }
+            else
             {
                 pathAlpha += 3;
                 GameManager.instance.monsterPathImages[FloorManager.instance.curRoom.pathID].color = new Color32(255, 255, 255, pathAlpha);
@@ -131,13 +133,6 @@ public class BattleManager : MonoBehaviour
         DeckManager.instance.PrepareBattle();
 
         wave = 1;
-        newMonsterID = 0; 
-        numGenMonster = 15;
-        if (GameManager.instance.baseRelics[5].have)
-        {
-            if (GameManager.instance.baseRelics[5].isPure) numGenMonster = (int)(numGenMonster * 0.9f);
-            else numGenMonster = (int)(numGenMonster * 1.1f);
-        }
         isBattlePlaying = true;
     }
 

@@ -693,7 +693,7 @@ public class Ring : MonoBehaviour
     //배치 가능 범위인지 확인한다.
     public bool CanBePlaced()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.75f);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.7f);
 
         int deckIdx = DeckManager.instance.deck.IndexOf(baseRing.id);
         int rpCost;

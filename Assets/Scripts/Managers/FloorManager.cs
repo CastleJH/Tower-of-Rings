@@ -97,7 +97,11 @@ public class FloorManager : MonoBehaviour
                 break;
             case 1:
                 roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
-                if (!curRoom.visited) BattleManager.instance.StartBattle();
+                if (!curRoom.visited)
+                {
+                    curRoom.AddSinkhole();
+                    BattleManager.instance.StartBattle();
+                }
                 TurnPortalsOnOff(curRoom.visited);
                 break;
             case 2:
@@ -248,7 +252,11 @@ public class FloorManager : MonoBehaviour
                 break;
             case 9:
                 roomImage.transform.position = new Vector3(GameManager.instance.monsterPaths[curRoom.pathID].transform.position.x, GameManager.instance.monsterPaths[curRoom.pathID].transform.position.y - 2.5f, roomImage.transform.position.z);
-                if (!curRoom.visited) BattleManager.instance.StartBattle();
+                if (!curRoom.visited)
+                {
+                    curRoom.AddSinkhole();
+                    BattleManager.instance.StartBattle();
+                }
                 else ShowItems();
                 TurnPortalsOnOff(curRoom.visited);
                 break;
@@ -261,9 +269,10 @@ public class FloorManager : MonoBehaviour
         //스프라이트를 올바른 모양으로 바꾼다.
         roomImage.sprite = GameManager.instance.sceneRoomSprites[floor.floorNum];
 
+        curRoom.ShowSinkhole();
+
         //카메라를 해당하는 전장으로 이동한다.
-        Camera.main.transform.position = roomImage.transform.position;
-        Camera.main.transform.Translate(0, 1.5f, -15);
+        Camera.main.transform.position = roomImage.transform.position + new Vector3(0.0f, 1.5f, -15f);
     } 
 
     public void ChangeCurRoomToIdle()

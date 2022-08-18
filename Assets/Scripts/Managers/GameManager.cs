@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
 
     public SPUM_Prefabs[] spum_prefabs;
 
+    public GameObject sinkholeNorth;
+    public GameObject sinkholeSouth;
+
     //ÇÁ¸®ÆÕ
     public GameObject ringPrefab;
     public GameObject[] monsterPrefabs;

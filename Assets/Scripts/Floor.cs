@@ -8,10 +8,17 @@ public class Room
 	public bool visited;
 	public int pathID;
 	public List<Item> items;
+	public float sinkholeScale;
+	public bool sinkholeNorthOn;
+	public bool sinkholeSouthOn;
+	public Vector3 sinkholeNorthPos;
+	public Vector3 sinkholeSouthPos;
 
     public Room()
     {
 		items = new List<Item>();
+        sinkholeNorthOn = false;
+        sinkholeSouthOn = false;
     }
 
 	public void AddItem(Item item)
@@ -24,6 +31,44 @@ public class Room
 		for (int i = items.Count - 1; i >= 0; i--) GameManager.instance.ReturnItemToPool(items[i]);
 		items.Clear();
 	}
+
+	public void AddSinkhole()
+	{
+        sinkholeScale = Random.Range(0.5f, 1.0f);
+        if (Random.Range(0, 5) < 2)
+        {
+			Debug.Log("North");
+			sinkholeNorthOn = true;
+            sinkholeNorthPos = new Vector3(Random.Range(-6.0f, 6.0f), 2.5f + Random.Range(2.5f + 4.0f * (sinkholeScale - 0.5f), 12.0f), 5);
+        }
+		else sinkholeNorthOn = false;
+        if (Random.Range(0, 5) < 2)
+        {
+            Debug.Log("South");
+            sinkholeSouthOn = true;
+            sinkholeSouthPos = new Vector3(Random.Range(-6.0f, 6.0f), 2.5f - Random.Range(2.5f + 4.0f * (sinkholeScale - 0.5f), 12.0f), 5);
+        }
+        else sinkholeSouthOn = false;
+    }
+
+	public void ShowSinkhole()
+    {
+        if (sinkholeNorthOn)
+        {
+            GameManager.instance.sinkholeNorth.transform.localScale = Vector2.one * sinkholeScale;
+            GameManager.instance.sinkholeNorth.transform.position = FloorManager.instance.roomImage.transform.position + sinkholeNorthPos;
+            GameManager.instance.sinkholeNorth.SetActive(true);
+        }
+        else GameManager.instance.sinkholeNorth.SetActive(false);
+        if (sinkholeSouthOn)
+        {
+            Debug.Log("South");
+            GameManager.instance.sinkholeSouth.transform.localScale = Vector2.one * (1.5f - sinkholeScale);
+            GameManager.instance.sinkholeSouth.transform.position = FloorManager.instance.roomImage.transform.position + sinkholeSouthPos;
+            GameManager.instance.sinkholeSouth.SetActive(true);
+        }
+        else GameManager.instance.sinkholeSouth.SetActive(false);
+    }
 }
 
 public class Floor
