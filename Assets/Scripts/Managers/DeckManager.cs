@@ -210,7 +210,7 @@ public class DeckManager : MonoBehaviour
                 else UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));
                 sleepActivated++;
             }
-            else UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.5f));  //다음 필요 RP값을 계산
+            else UIManager.instance.SetBattleDeckRingRPText(deckIdx, (int)(rpCost * 1.3333f));  //다음 필요 RP값을 계산
             genRing.PutIntoBattle(ringNumber++);
             rings.Add(genRing);
             GetCommanderNearestForAllRings();

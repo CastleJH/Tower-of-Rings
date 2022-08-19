@@ -86,10 +86,10 @@ public class BattleManager : MonoBehaviour
                     rpGenerateTime = 0.0f;
                     if (GameManager.instance.baseRelics[18].have)
                     {
-                        if (GameManager.instance.baseRelics[18].isPure) rpNextGenerateTime = Random.Range(9.0f, 12.0f);
-                        else rpNextGenerateTime = Random.Range(13.0f, 16.0f);
+                        if (GameManager.instance.baseRelics[18].isPure) rpNextGenerateTime = Random.Range(4.5f, 6.0f);
+                        else rpNextGenerateTime = Random.Range(6.5f, 8.0f);
                     }
-                    else rpNextGenerateTime = Random.Range(11.0f, 14.0f);
+                    else rpNextGenerateTime = Random.Range(5.5f, 7.0f);
                     DropRP dropRP = GameManager.instance.GetDropRPFromPool();
                     dropRP.InitializeDropRP();
                     dropRPs.Add(dropRP);
@@ -159,7 +159,7 @@ public class BattleManager : MonoBehaviour
             Debug.Log("gen!");
             //몬스터 능력치 배율을 조정한다.
             float scale;
-            scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) + 0.05f * (wave - 1);
+            scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) * (1.0f + 0.5f * (wave - 1));
 
             //몬스터 생성
             int monsterType;

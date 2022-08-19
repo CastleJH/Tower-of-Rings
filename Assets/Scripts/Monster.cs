@@ -208,7 +208,7 @@ public class Monster : MonoBehaviour
         BattleManager.instance.monsters.Remove(this);
         if (isDead)
         {
-            if (baseMonster.tier != 'b') BattleManager.instance.isBossKilled = true;
+            if (baseMonster.tier == 'b') BattleManager.instance.isBossKilled = true;
             anim.ResetTrigger("AddScene");
             anim.speed = 0.8f;
             anim.SetTrigger("Die");
