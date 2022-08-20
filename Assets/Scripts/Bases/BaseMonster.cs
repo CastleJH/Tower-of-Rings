@@ -1,31 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class BaseMonster        //몬스터의 원형
+public class BaseMonster
 {
     public int type;        //종류
     public string name;     //이름
 
+    //db상 스탯
+    public int csvATK;
+    public float csvHP;
+    public float csvSPD;
 
-    public int csvATK;     //공격력
-    public float csvHP;        //기본 HP
-    public float csvSPD;       //이동속도
+    //플레이어 스탯 & 유물 등에 의해 조율된 스탯
+    public int baseATK;
+    public float baseMaxHP;
+    public float baseSPD;       
 
 
-    public int atk;     //공격력
-    public float hp;        //기본 HP
-    public float spd;       //이동속도
-
-
-    public char tier;
-    public string description;  //설명(도감에서 나타날 정보)
+    public char tier;       //몬스터의 난이도
+    public string description;  //설명
 
 
     public void Init()
     {
-        atk = csvATK;
-        hp = csvHP;
-        spd = csvSPD;
+        baseATK = csvATK;
+        baseMaxHP = csvHP;
+        baseSPD = csvSPD;
     }
 }

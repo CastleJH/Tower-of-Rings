@@ -1,15 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class BaseRelic        //유물
+public class BaseRelic
 {
-    public int id;        //종류
+    public int id;          //ID
     public string name;     //이름
-    public bool have;
-    public bool isPure;   //저주 여부
-    public string pureDescription;  //일반 설명(도감에서 나타날 정보)
-    public string cursedDescription;  //저주 설명(도감에서 나타날 정보)
+    public bool have;       //보유 여부
+    public bool isPure;     //저주 여부
+    public string pureDescription;      //원형 설명
+    public string cursedDescription;    //저주 설명
 
     public void Init()
     {

@@ -11,41 +11,39 @@ public class Monster : MonoBehaviour
     //기본 스탯
     public BaseMonster baseMonster;
 
-    //개인 스탯
-    public float baseHP;
+    //조정된 개인 스탯
+    public float maxHP;
     public float curHP;
-    public float baseSPD;
-    public float curSPD;
+    public float baseSPD;       //링 방해 효과 적용 전 속도
+    public float curSPD;        //링 방해 효과 적용 후 속도
 
     //이동 변수
     public PathCreator path;    //이동 경로
     public float movedDistance; //맵에서의 이동 거리
 
     //그래픽
-    //SpriteRenderer spriteRenderer;  //몬스터 이미지
-    //public SPUM_SpriteList spumSprites;
     public Animator anim;
-    public TextMesh hpText;   //HP 텍스트
-    float prevX;
+    public TextMesh hpText;     //HP 텍스트
+    float prevX;                //직전 프레임의 x좌표(이 값에 의해 좌/우 방향이 flip됨)
 
     //기타 변수
-    bool isInBattle;     //살아서 전투에 참여중인지 여부
-    float snowTime;         //눈꽃의 슬로우 효과가 지속된 시간
-    float snowEndTime;      //눈꽃의 슬로우 효과가 끝나는 시간
+    bool isInBattle;            //살아서 전투에 참여중인지 여부
+    float snowTime;             //눈꽃의 슬로우 효과가 지속된 시간
+    float snowEndTime;          //눈꽃의 슬로우 효과가 끝나는 시간
     Dictionary<int, float> poisonDmg;   //맹독의 데미지
     Dictionary<int, float> poisonTime;  //맹독의 데미지 쿨타임
-    public bool isInBlizzard; //눈보라 속에 있는지 여부
+    public bool isInBlizzard;   //눈보라 속에 있는지 여부
     float paralyzeTime;         //마비의 마비 효과가 지속된 시간
     float paralyzeEndTime;      //마비의 마비 효과가 끝나는 시간
-    public bool barrierBlock; //결계로부터 이동을 방해받지 않는지 여부
-    public int curseStack;     //저주로부터 쌓인 스택
+    public bool barrierBlock;   //결계로부터 이동을 방해받지 않는지 여부
+    public int curseStack;      //저주로부터 쌓인 스택
     public bool isInAmplify;    //증폭 범위 내에 있는지 여부
-    float skillCoolTime1;    //엘리트/보스 몬스터의 스킬 쿨타임
-    float skillCoolTime2;
-    float skillUseTime;     //엘리트/보스 몬스터의 스킬 지속된 시간
-    bool immuneDamage;
-    bool immuneInterrupt;
-    int cloneID;
+    float skillCoolTime1;       //엘리트/보스 몬스터의 스킬 쿨타임
+    float skillCoolTime2;       //엘리트/보스 몬스터의 스킬 쿨타임
+    float skillUseTime;         //엘리트/보스 몬스터의 스킬 지속된 시간
+    bool immuneDamage;          //데미지 면역 여부
+    bool immuneInterrupt;       //이동방해 면역 여부
+    int cloneID;                //복제술사의 복제된 몬스터 ID
 
     void Awake()
     {        
@@ -62,7 +60,7 @@ public class Monster : MonoBehaviour
     {
         if (isInBattle)
         {
-            baseSPD = baseMonster.spd;
+            baseSPD = baseMonster.baseSPD;
             if (baseMonster.tier != 'n') UseMonsterSkill();
             curSPD = baseSPD;
 
@@ -140,9 +138,9 @@ public class Monster : MonoBehaviour
         id = _id;
 
         //스탯
-        baseHP = baseMonster.hp * scale;
-        curHP = baseHP;
-        baseSPD = baseMonster.spd;
+        maxHP = baseMonster.baseMaxHP * scale;
+        curHP = maxHP;
+        baseSPD = baseMonster.baseSPD;
 
         //이동 변수
         path = GameManager.instance.monsterPaths[pathID];
@@ -307,7 +305,7 @@ public class Monster : MonoBehaviour
             {
                 if (isInAmplify) dmg *= 1.2f;
                 curHP -= dmg;
-                if (curHP > baseHP) curHP = baseHP;
+                if (curHP > maxHP) curHP = maxHP;
                 DamageText t = GameManager.instance.GetDamageTextFromPool();
                 t.InitializeDamageText((Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
                 t.gameObject.SetActive(true);
@@ -317,7 +315,7 @@ public class Monster : MonoBehaviour
         else
         {
             curHP -= dmg;
-            if (curHP > baseHP) curHP = baseHP;
+            if (curHP > maxHP) curHP = maxHP;
             DamageText t = GameManager.instance.GetDamageTextFromPool();
             t.InitializeDamageText((-Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
             t.gameObject.SetActive(true);
@@ -407,7 +405,7 @@ public class Monster : MonoBehaviour
     public void AE_CurseDead()
     {
         float dmg = curseStack;
-        dmg = baseHP * dmg * 0.01f;
+        dmg = maxHP * dmg * 0.01f;
 
         for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
         {
@@ -420,7 +418,7 @@ public class Monster : MonoBehaviour
     public void AE_Execution(float dmg, float rate)
     {
         if (baseMonster.tier != 'n') rate *= 0.5f;
-        if (curHP - dmg < baseHP * rate)
+        if (curHP - dmg < maxHP * rate)
         {
             AE_DecreaseHP(-1, Color.red);
             DamageText t = GameManager.instance.GetDamageTextFromPool();
@@ -465,7 +463,7 @@ public class Monster : MonoBehaviour
     {
         if (Random.Range(0.0f, 1.0f) < prob)
         {
-            if (baseMonster.tier != 'n') AE_DecreaseHP(baseHP * prob * 0.5f, new Color32(80, 80, 80, 255));
+            if (baseMonster.tier != 'n') AE_DecreaseHP(maxHP * prob * 0.5f, new Color32(80, 80, 80, 255));
             else
             {
                 AE_DecreaseHP(-1, Color.black);
@@ -479,14 +477,14 @@ public class Monster : MonoBehaviour
 
     void Elite_Berserker()
     {
-        baseSPD = baseMonster.spd * (1.0f + (baseHP - curHP) / baseHP);
+        baseSPD = baseMonster.baseSPD * (1.0f + (maxHP - curHP) / maxHP);
     }
 
     void Elite_Messenger()
     {
         if (skillUseTime != 0)
         {
-            baseSPD = baseMonster.spd * 2;
+            baseSPD = baseMonster.baseSPD * 2;
             skillUseTime += Time.deltaTime;
             if (skillUseTime > 2.0f)
             {
@@ -507,7 +505,7 @@ public class Monster : MonoBehaviour
 
     void Elite_Giant()
     {
-        if (curHP < baseHP * 0.2f)
+        if (curHP < maxHP * 0.2f)
         {
             if (skillUseTime < 5.0f)
             {
@@ -537,7 +535,7 @@ public class Monster : MonoBehaviour
                 if (colliders[i].tag == "Monster")
                 {
                     monster = colliders[i].GetComponent<Monster>();
-                    if (monster.curHP > 0 && monster != this) monster.AE_DecreaseHP(-monster.baseHP * 0.05f, Color.green);
+                    if (monster.curHP > 0 && monster != this) monster.AE_DecreaseHP(-monster.maxHP * 0.05f, Color.green);
                 }
         }
     }
@@ -549,8 +547,8 @@ public class Monster : MonoBehaviour
         {
             monster = BattleManager.instance.monsters[i];
             if (monster != this && Vector2.Distance(monster.transform.position, transform.position) < 1.5f)
-                monster.baseSPD = monster.baseMonster.spd * 1.2f;
-            else monster.baseSPD = monster.baseMonster.spd;
+                monster.baseSPD = monster.baseMonster.baseSPD * 1.2f;
+            else monster.baseSPD = monster.baseMonster.baseSPD;
         }
     }
 
@@ -811,7 +809,7 @@ public class Monster : MonoBehaviour
                     break;
                 case 1:
                     immuneInterrupt = false;
-                    AE_DecreaseHP((baseHP - curHP) * 0.05f, Color.green);
+                    AE_DecreaseHP((maxHP - curHP) * 0.05f, Color.green);
                     break;
             }
         }

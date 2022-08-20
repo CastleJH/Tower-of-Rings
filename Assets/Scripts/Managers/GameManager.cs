@@ -528,7 +528,7 @@ public class GameManager : MonoBehaviour
                 if (baseRelics[id].isPure) revivable = true;
                 else
                     for (int i = 0; i < baseMonsters.Count; i++)
-                        if (baseMonsters[i].tier == 'n') baseMonsters[i].atk = 2;
+                        if (baseMonsters[i].tier == 'n') baseMonsters[i].baseATK = 2;
                 break;
             case 12:
                 if (baseRelics[id].isPure)
@@ -540,20 +540,20 @@ public class GameManager : MonoBehaviour
                 break;
             case 14:
                 if (baseRelics[id].isPure)
-                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].spd = baseMonsters[i].csvSPD * 0.9f;
+                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].baseSPD = baseMonsters[i].csvSPD * 0.9f;
                 else
-                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].spd = baseMonsters[i].csvSPD * 1.05f;
+                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].baseSPD = baseMonsters[i].csvSPD * 1.05f;
                 break;
             case 16:
                 if (baseRelics[id].isPure)
                 {
                     for (int i = 0; i < baseMonsters.Count; i++)
-                        if (baseMonsters[i].tier != 'n') baseMonsters[i].hp = baseMonsters[i].csvHP * 0.9f;
+                        if (baseMonsters[i].tier != 'n') baseMonsters[i].baseMaxHP = baseMonsters[i].csvHP * 0.9f;
                 }
                 else
                 {
                     for (int i = 0; i < baseMonsters.Count; i++)
-                        if (baseMonsters[i].tier != 'n') baseMonsters[i].hp = baseMonsters[i].csvHP * 1.05f;
+                        if (baseMonsters[i].tier != 'n') baseMonsters[i].baseMaxHP = baseMonsters[i].csvHP * 1.05f;
                 }
                 break;
         }
