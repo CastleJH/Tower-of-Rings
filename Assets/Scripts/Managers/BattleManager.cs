@@ -38,6 +38,8 @@ public class BattleManager : MonoBehaviour
     {
         isBattlePlaying = false;
 
+        StopAllCoroutines();
+
         //링의 정수 정리
         for (int i = dropRPs.Count - 1; i >= 0; i--)
             GameManager.instance.ReturnDropRPToPool(dropRPs[i]);
@@ -154,7 +156,7 @@ public class BattleManager : MonoBehaviour
     IEnumerator GenerateMonster()
     {
         //Debug.Log("Start Coroutine");
-        while (newMonsterID < numGenMonster)
+        while (newMonsterID < numGenMonster && isBattlePlaying)
         {
             Debug.Log("gen!");
             //몬스터 능력치 배율을 조정한다.

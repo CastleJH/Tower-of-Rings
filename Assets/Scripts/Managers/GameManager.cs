@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public bool debugFlag;
+
     public SPUM_Prefabs[] spum_prefabs;
 
     public GameObject sinkholeNorth;
@@ -105,6 +107,15 @@ public class GameManager : MonoBehaviour
             bulletPool[i] = new Queue<Bullet>();
             particlePool[i] = new Queue<ParticleChecker>();
         }
+    }
+
+    void Update()
+    {
+        if (debugFlag)
+        {
+            debugFlag = false;
+            EndGame(0, 0);
+        }    
     }
 
     public void NormaleModeGameStart()
