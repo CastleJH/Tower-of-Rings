@@ -1,3 +1,4 @@
+//몬스터 원형의 정보. 모든 Monster는 BaseMonster를 가지며 이 클래스의 변수들로 스탯값이 정해진다.
 public class BaseMonster
 {
     public int type;        //종류
@@ -13,12 +14,12 @@ public class BaseMonster
     public float baseMaxHP;
     public float baseSPD;       
 
-
-    public char tier;       //몬스터의 난이도
+    //기타
+    public char tier;       //몬스터의 처치 난이도
     public string description;  //설명
 
-
-    public void Init()
+    //DB 데이터로 몬스터 원형의 스탯 초기화(유물, 플레이어 스탯등이 적용되지 않은 최초 값)
+    public void Init() 
     {
         baseATK = csvATK;
         baseMaxHP = csvHP;

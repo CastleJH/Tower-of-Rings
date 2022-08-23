@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//링 원형의 정보. 모든 Ring은 BaseRing을 가지며 이 클래스의 변수들로 스탯값이 정해진다.
 public class BaseRing
 {
     //종류
@@ -33,15 +34,14 @@ public class BaseRing
     public float bulletSPD = 30.0f;
 
     //설명
-    public string description;
-
-    //시너지
-    public string toSame;
-    public string toAll;
+    public string description;  //기본 설명
+    public string toSame;       //같은 링 시너지
+    public string toAll;        //모든 링 시너지
 
     public int level = 0;
 
-    public void Init()
+    //DB 데이터로 링 원형의 스탯 초기화(유물, 플레이어 스탯등이 적용되지 않은 최초 값) & 레벨 초기화
+    public void Init()      
     {
         baseATK = csvATK;
         baseSPD = csvSPD;
@@ -52,8 +52,9 @@ public class BaseRing
 
         level = 1;
     }
-
-    public void RenewStat()
+    
+    //레벨, 유물, 플레이어 스탯을 적용한 링 원형의 스탯
+    public void RenewStat()    
     {
         baseATK = csvATK * (1.0f + (level - 1) * 0.25f);
         baseSPD = csvSPD * (1.0f - (level - 1) * 0.05f);
@@ -69,10 +70,10 @@ public class BaseRing
         }
     }
 
-    //확률 안에 최대 레벨까지 강화. 그 후 공격력/공격 쿨타임을 변경함.
-    public bool Upgrade(float poss)
+    //prob확률로 레벨업하고 스탯을 갱신한다. 레벨업은 최대 레벨까지만 한다. 레벨업 한 경우는 true, 아닌 경우는 false를 반환한다.
+    public bool Upgrade(float prob)
     {
-        if (Random.Range(0.0f, 1.0f) > poss) return false;
+        if (Random.Range(0.0f, 1.0f) > prob) return false;
         if (level == maxlvl) return false;
         level++;
 
@@ -82,7 +83,7 @@ public class BaseRing
     }
 
 
-    //최소 1레벨까지 다운그레이드. 그 후 공격력/공격 쿨타임을 변경함.
+    //레벨을 다운그래이드 하고 스탯을 갱신한다. 이미 필드에 생성되어있는 링들의 스탯 또한 갱신한다. 1레벨 까지만 다운그레이드 한다. 
     public void Downgrade()
     {
         if (level > 1) level--;
