@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DamageText : MonoBehaviour
 {
-    float speed;
-    float lifetime;
-    TextMesh text;
+    float speed;        //위로 떠오르는 속도
+    float lifetime;     //위로 떠오르는 시간
+    TextMesh text;      //텍스트
 
     void Awake()
     {
@@ -14,6 +12,8 @@ public class DamageText : MonoBehaviour
         lifetime = 0.8f;
         text = GetComponent<TextMesh>();
     }
+
+    //활성화되면서 바로 오브젝트 풀에 되돌리도록 예약한다.
     void OnEnable()
     {
         Invoke("InvokeRemoveFromBattle", lifetime);
@@ -30,7 +30,7 @@ public class DamageText : MonoBehaviour
         GameManager.instance.ReturnDamageTextToPool(this);
     }
 
-    //인자 값으로 텍스트/위치/색깔을 수정한다.
+    //인자 값으로 텍스트/최초 위치/색깔을 수정한다.
     public void InitializeDamageText(string dmgText, Vector2 pos, Color32 color)
     {
         text.text = dmgText;
