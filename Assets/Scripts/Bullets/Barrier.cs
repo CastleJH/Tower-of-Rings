@@ -19,7 +19,7 @@ public class Barrier : MonoBehaviour
         Invoke("InvokeRemoveFromBattle", lifeTime + 0.05f);
     }
 
-    //결계를 없앤다. 결계에 영향을 받던 몬스터들의 이동 여부를 다시 자유롭게 하고, 오브젝트 풀에 되돌린다.
+    //결계를 없앤다. 결계에 영향을 받던 몬스터들의 이동 방해를 해제하고, 이 결계를 오브젝트 풀에 되돌린다.
     void InvokeRemoveFromBattle()
     {
         for (int i = monsters.Count - 1; i >= 0; i--) monsters[i].barrierBlock = false;

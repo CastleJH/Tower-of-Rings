@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public int destroyID;
-    public Ring parent;
-    public Monster target;
-    bool isInBattle;
+    public int destroyID;   //어느 링 타입으로부터 나온 불렛인지(올바른 오브젝트 풀에 되돌리기 위함)
+    public Ring parent;     //이 불렛을 발사한 부모 링
+    Monster target;         //이 불렛이 향하여 이동할 타겟
+    bool isInBattle;        //전투 안에 유효하게 존재하는지 여부
 
-    TrailRenderer trailRenderer;
+    TrailRenderer trailRenderer;    //트레일
 
     void Awake()
     {
@@ -18,11 +18,11 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if (isInBattle && parent.baseRing != null && target != null && target.curHP > 0 && target.movedDistance > 0.05f) Move();   //부모링이 있고 타겟이 살아있으면 이동
-        else RemoveFromBattle(0.0f); //제거
+        if (isInBattle && parent.baseRing != null && target != null && target.curHP > 0 && target.movedDistance > 0.05f) Move();   //전투 안에 유효하게 존재하고, 부모링이 있고, 타겟이 살아있으면 이동
+        else RemoveFromBattle(); //제거
     }
 
-    //적을 향해 이동한다.
+    //타겟을 향해 이동한다.
     void Move()
     {
         transform.position = Vector2.MoveTowards(transform.position, target.transform.position, parent.baseRing.bulletSPD * Time.deltaTime);
@@ -38,33 +38,24 @@ public class Bullet : MonoBehaviour
         transform.position = new Vector3(parent.transform.position.x, parent.transform.position.y, 0);
     }
 
-    //게임에서 자신을 time초 뒤 제거한다.
-    void RemoveFromBattle(float time)
-    {
-        if (time == 0.0f) InvokeRemoveFromBattle();
-        else Invoke("InvokeRemoveFromBattle", time);
-    }
-
-    //실제로 게임에서 제거한다.
-    void InvokeRemoveFromBattle()
+    //게임에서 자신을 제거한다. 오브젝트 풀에 되돌리기 전 트레일을 꺼서 잔상을 없앤다.
+    void RemoveFromBattle()
     {
         trailRenderer.Clear();
-        CancelInvoke();
         GameManager.instance.ReturnBulletToPool(this);
     }
 
+    //올바른 타겟에 도달했는지 확인한다.
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Monster" && isInBattle)
         {
             Monster monster = collision.gameObject.GetComponent<Monster>();
-            if (target == null) RemoveFromBattle(0.0f);
-            else if (monster.id == target.id)    //올바른 타겟에 도달한 경우
+            if (monster == target)    //올바른 타겟에 도달한 경우
             {
-                //공격 후 자신을 제거한다.
-                if (parent.baseRing != null) parent.AttackEffect(monster);
+                if (parent.baseRing != null) parent.AttackEffect(monster);  //부모링이 유효하다면 공격한다.
                 isInBattle = false;
-                RemoveFromBattle(0.0f);
+                RemoveFromBattle();     //전투에서 제거한다.
             }
         }
     }
