@@ -498,7 +498,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    public bool AddRelicToDeck(int id, bool isPure)
+    public bool AddRelicToPlayer(int id, bool isPure)
     {
         if (baseRelics[id].have && baseRelics[id].isPure == isPure) return false;
         if (!baseRelics[id].have)

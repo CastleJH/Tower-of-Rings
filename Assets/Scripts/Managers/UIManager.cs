@@ -69,6 +69,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI ringInfoSameSynergyText;
     public TextMeshProUGUI ringInfoAllSynergyText;
     public GameObject ringInfoTakeButton;
+    public TextMeshProUGUI ringInfoTakeText;
 
     public GameObject relicInfoPanel;
     public Image relicInfoRelicImage;
@@ -78,6 +79,7 @@ public class UIManager : MonoBehaviour
     public GameObject relicInfoCursedImage;
     public GameObject relicInfoCursedNotify;
     public GameObject relicInfoTakeButton;
+    public TextMeshProUGUI relicInfoTakeText;
 
 
     float titleTextBlinkTime;
@@ -445,9 +447,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
+    //재화를 소모해야 하면 소모한다. 재화가 부족한 경우라면 획득하지 않는다.
     public void ButtonTakeRing()
     {
+        if (ringInfoTakeText.text[0] != '이') return;
         int type = -1;
         for (int i = 0; i < GameManager.instance.baseRings.Count; i++)
             if (GameManager.instance.baseRings[i].name == ringInfoNameText.text)
@@ -461,14 +464,17 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
             if (FloorManager.instance.curRoom.items[i].itemType == 1000 + type)
             {
+                FloorManager.instance.curRoom.items[i].Pay();
                 FloorManager.instance.RemoveItem(FloorManager.instance.curRoom.items[i], false);
                 break;
             }
         ClosePanel(3);
     }
 
+    //재화를 소모해야 하면 소모한다. 재화가 부족한 경우라면 획득하지 않는다.
     public void ButtonTakeRelic()
     {
+        if (relicInfoTakeText.text[0] != '이') return;
         int type = -1;
         for (int i = 0; i < GameManager.instance.baseRelics.Count; i++)
             if (GameManager.instance.baseRelics[i].name == relicInfoNameText.text)
@@ -494,11 +500,12 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        GameManager.instance.AddRelicToDeck(type, isRelicPure);
+        GameManager.instance.AddRelicToPlayer(type, isRelicPure);
 
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
             if (FloorManager.instance.curRoom.items[i].itemType == 2000 + type)
             {
+                FloorManager.instance.curRoom.items[i].Pay();
                 FloorManager.instance.RemoveItem(FloorManager.instance.curRoom.items[i], false);
                 break;
             }

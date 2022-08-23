@@ -6765,6 +6765,7 @@ MonoBehaviour:
   ringInfoSameSynergyText: {fileID: 1110103676}
   ringInfoAllSynergyText: {fileID: 1970540413}
   ringInfoTakeButton: {fileID: 1878973054}
+  ringInfoTakeText: {fileID: 1454904598}
   relicInfoPanel: {fileID: 784115629}
   relicInfoRelicImage: {fileID: 1527389701}
   relicInfoNameText: {fileID: 302723824}
@@ -6773,6 +6774,7 @@ MonoBehaviour:
   relicInfoCursedImage: {fileID: 336858903}
   relicInfoCursedNotify: {fileID: 713796116}
   relicInfoTakeButton: {fileID: 2022873499}
+  relicInfoTakeText: {fileID: 1527223417}
 --- !u!4 &326758172
 Transform:
   m_ObjectHideFlags: 0

@@ -44,8 +44,8 @@ public class FloorManager : MonoBehaviour
     {
         if (debugFlag)
         {
-            UIManager.instance.playerMarker.gameObject.SetActive(false);
             floor.Generate(debugInt);
+            MoveToRoom(floor.startX, floor.startY);
             for (int i = 1; i <= 9; i++)
                 for (int j = 1; j <= 9; j++)
                 {
@@ -260,7 +260,7 @@ public class FloorManager : MonoBehaviour
                     {
                         item = GameManager.instance.GetItemFromPool();
                         int itemPrice = (int)(5 * price);
-                        if (GameManager.instance.baseRelics[13].isPure) itemPrice = 0;
+                        if (GameManager.instance.baseRelics[13].have) itemPrice = 0;
                         item.InitializeItem(1, itemPos[5], 1, itemPrice);
                         curRoom.AddItem(item);
                     }
