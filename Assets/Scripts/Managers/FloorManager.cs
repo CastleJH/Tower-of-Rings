@@ -42,6 +42,24 @@ public class FloorManager : MonoBehaviour
 
     void Update()
     {
+        if (debugFlag)
+        {
+            UIManager.instance.playerMarker.gameObject.SetActive(false);
+            floor.Generate(debugInt);
+            for (int i = 1; i <= 9; i++)
+                for (int j = 1; j <= 9; j++)
+                {
+                    if (floor.rooms[i, j].type != -1 && floor.rooms[i, j].type != 10)
+                    {
+                        //Debug.Log(GameManager.instance.mapRoomSprites[floor.rooms[i, j].type]);
+                        //Debug.Log(UIManager.instance.maps[i][j]);
+                        UIManager.instance.maps[i][j].sprite = GameManager.instance.mapRoomSprites[floor.rooms[i, j].type];
+                        UIManager.instance.maps[i][j].color = Color.white;
+                    }
+                    else UIManager.instance.maps[i][j].color = new Color(0, 0, 0, 0);
+                }
+            debugFlag = false;
+        }
         if (isPortalOn)
         {
             if (portalScale < 1)

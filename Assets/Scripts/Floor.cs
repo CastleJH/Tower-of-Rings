@@ -1,81 +1,65 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//방 정보. 게임 도중 동시에 여러 개 존재한다.
 public class Room
 {
-    public int type;
-	public bool visited;
-	public int pathID;
-	public List<Item> items;
-	public float sinkholeScale;
-	public bool sinkholeNorthOn;
-	public bool sinkholeSouthOn;
-	public Vector3 sinkholeNorthPos;
-	public Vector3 sinkholeSouthPos;
+    public int type;			//방 타입(0:평화 1:전투 2:제련 3:링 4:유물 5:파괴 6:탐욕 7:회복 8:상점 9:보스)
+	public bool visited;		//방 이전에 방문 여부
+	public int pathID;			//방에 있는 몬스터 경로 타입(방 타입이 1, 9인 경우만 유효함)
+	public List<Item> items;	//방에 있는 아이템들
+	float sinkholeScale;		//싱크홀 크기
+	Vector3 sinkholeNorthPos;	//북쪽 싱크홀 위치(y좌표가 100이면 싱크홀이 없다는 의미임)
+	Vector3 sinkholeSouthPos;	//남쪽 싱크홀 위치(y좌표가 100이면 싱크홀이 없다는 의미임)
 
     public Room()
     {
 		items = new List<Item>();
-        sinkholeNorthOn = false;
-        sinkholeSouthOn = false;
+        sinkholeNorthPos = new Vector3(0, 100, 0);
+        sinkholeSouthPos = new Vector3(0, 100, 0);
     }
-
+	
+	//방에 아이템을 추가한다.
 	public void AddItem(Item item)
 	{
 		items.Add(item);
 	}
 
+	//방에 있는 모든 아이템을 제거하고 오브젝트 풀에 되돌린다.
 	public void RemoveAllItems()
 	{
 		for (int i = items.Count - 1; i >= 0; i--) GameManager.instance.ReturnItemToPool(items[i]);
 		items.Clear();
 	}
 
+	//방에 싱크홀을 추가한다.
 	public void AddSinkhole()
 	{
         sinkholeScale = Random.Range(0.5f, 1.0f);
-        if (Random.Range(0, 5) < 2)
-        {
-			Debug.Log("North");
-			sinkholeNorthOn = true;
-            sinkholeNorthPos = new Vector3(Random.Range(-6.0f, 6.0f), 2.5f + Random.Range(2.5f + 4.0f * (sinkholeScale - 0.5f), 12.0f), 5);
-        }
-		else sinkholeNorthOn = false;
-        if (Random.Range(0, 5) < 2)
-        {
-            Debug.Log("South");
-            sinkholeSouthOn = true;
-            sinkholeSouthPos = new Vector3(Random.Range(-6.0f, 6.0f), 2.5f - Random.Range(2.5f + 4.0f * (sinkholeScale - 0.5f), 12.0f), 5);
-        }
-        else sinkholeSouthOn = false;
+        if (Random.Range(0, 5) < 2) sinkholeNorthPos = new Vector3(Random.Range(-6.0f, 6.0f), 2.5f + Random.Range(2.5f + 4.0f * (sinkholeScale - 0.5f), 12.0f), 5);
+        else sinkholeNorthPos = new Vector3(0, 100, 0);
+        if (Random.Range(0, 5) < 2) sinkholeSouthPos = new Vector3(Random.Range(-6.0f, 6.0f), 2.5f - Random.Range(2.5f + 4.0f * (sinkholeScale - 0.5f), 12.0f), 5);
+        else sinkholeSouthPos = new Vector3(0, 100, 0);
     }
 
+	//싱크홀을 보여준다.
 	public void ShowSinkhole()
     {
-        if (sinkholeNorthOn)
-        {
-            GameManager.instance.sinkholeNorth.transform.localScale = Vector2.one * sinkholeScale;
-            GameManager.instance.sinkholeNorth.transform.position = FloorManager.instance.roomImage.transform.position + sinkholeNorthPos;
-            GameManager.instance.sinkholeNorth.SetActive(true);
-        }
-        else GameManager.instance.sinkholeNorth.SetActive(false);
-        if (sinkholeSouthOn)
-        {
-            Debug.Log("South");
-            GameManager.instance.sinkholeSouth.transform.localScale = Vector2.one * (1.5f - sinkholeScale);
-            GameManager.instance.sinkholeSouth.transform.position = FloorManager.instance.roomImage.transform.position + sinkholeSouthPos;
-            GameManager.instance.sinkholeSouth.SetActive(true);
-        }
-        else GameManager.instance.sinkholeSouth.SetActive(false);
+        GameManager.instance.sinkholeNorth.transform.localScale = Vector2.one * sinkholeScale;
+        GameManager.instance.sinkholeNorth.transform.position = FloorManager.instance.roomImage.transform.position + sinkholeNorthPos;
+
+        GameManager.instance.sinkholeSouth.transform.localScale = Vector2.one * (1.5f - sinkholeScale);
+        GameManager.instance.sinkholeSouth.transform.position = FloorManager.instance.roomImage.transform.position + sinkholeSouthPos;
     }
 }
 
+
+//층 정보. 게임 도중 동시에 하나만 존재한다.
 public class Floor
 {
-    public int startX, startY;
-	public int floorNum;
-	public Room[,] rooms = new Room[11, 11];
+    public int startX, startY;					//시작 지점
+	public int floorNum;						//현재 층 수
+	public Room[,] rooms = new Room[11, 11];	//층을 구성하는 방들
 
 	public Floor()
     {
@@ -84,25 +68,22 @@ public class Floor
 				rooms[i, j] = new Room();
     }
 
+	//알맞은 형태의 층을 생성한다.
 	public void Generate(int _floorNum)
 	{
-		floorNum = _floorNum;
+		floorNum = _floorNum;	//층 수를 저장한다.
 
-		int[] dr = { 0, 0, -1, 1 };
+		int[] dr = { 0, 0, -1, 1 };		//인접한 방을 확인하기 위한 좌표이다.
 		int[] dc = { -1, 1, 0, 0 };
-		int roomNum, specialNum, store, genNum;
+		int roomNum, specialNum, genNum;		//각각 생성할 방 총 개수, 생성할 특별방 개수, 지금까지 생성한 방 개수이다. 
 		List<KeyValuePair<int, int>> specials = new List<KeyValuePair<int, int>>();
 
-		//방의 구성을 정함
-		roomNum = 8 + floorNum * 2 + Random.Range(0, 3);
-        specialNum = 3 + (int)((floorNum + 1) * 0.7f); //4 5 5 6 7 7 8
-		if (floorNum % 2 == 0) store = 1;
-		else store = 0;
-
-		//상점도 생성해야 하면 1개 더 늘려준다.
-		if (store == 1) specialNum++;
-
-		do
+		//층을 구성하는 방들의 개수를 정한다.
+		roomNum = 7 + (floorNum + 1) / 2 * 3 + Random.Range(0, 3);  //10, 10, 13, 13, 16, 16, 19 + (0 ~ 2) //확정
+		specialNum = 4 + (floorNum + 1) / 2 + Random.Range(0, 2); //4 4 5 5 6 6 7 + (0 ~ 1) 확정
+		if (floorNum == 7) specialNum++;
+		
+        do
 		{
 			genNum = 0;
 
@@ -150,7 +131,7 @@ public class Floor
 					//50% 확률로 포기
 					if (Random.Range(0, 2) == 1) continue;
 
-					//이 방은 선택되엇다.
+					//이 방은 선택되었다.
 					rooms[next.Key, next.Value].type = 1;
 					genNum++;
 					q.Enqueue(next);
@@ -170,7 +151,7 @@ public class Floor
 		occupied[specialNum - 1] = true;
 
 		//상점을 만들어야 하는 경우 가장 시작점과 가까운 특수 방을 상점으로 만듦
-		if (store == 1)
+		if (floorNum % 2 == 0 || floorNum == 7)
 		{
 			rooms[specials[0].Key, specials[0].Value].type = 8;
 			occupied[0] = true;
@@ -192,8 +173,6 @@ public class Floor
 			if (occupied[i]) continue;
 			do rooms[specials[i].Key, specials[i].Value].type = 2 + Random.Range(0, 6); 
 			while (rooms[specials[i].Key, specials[i].Value].type == 4);
-			//지우세요!
-			//rooms[specials[i].Key, specials[i].Value].type = 2;
         }
 
 		//모든 전투 방들의 전장 형태를 결정함.

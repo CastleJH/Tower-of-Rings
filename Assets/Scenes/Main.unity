@@ -10510,7 +10510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f11dd9883467945afa6defeb4332cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugFlag: 1
+  debugFlag: 0
   debugInt: 1
   portals:
   - {fileID: 742702810}
@@ -13732,6 +13732,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3075fbec8136346980424528d44588, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugFlag: 0
   spum_prefabs:
   - {fileID: 5766477943239229958, guid: 0b1be082e5140df4b91d7aa927534c26, type: 3}
   - {fileID: 972298806471768025, guid: a32592b56a7b24e45a3ce721d8af529d, type: 3}
