@@ -277,7 +277,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    //피격 이펙트: HP감소 (만일 dmg가 음수이면 회복, 1987654321이면 즉사)
+    //피격 이펙트: HP감소 (만일 dmg가 음수이면 회복, 1987654321이면 즉사/처형. 즉사는 color.r == 0이고 처형은 255이다.)
     public void AE_DecreaseHP(float dmg, Color32 color)
     {
         if (dmg >= 0)
@@ -287,17 +287,20 @@ public class Monster : MonoBehaviour
             {
                 if (isInAmplify) dmg *= (1.0f + amplifyInc);   //증폭 효과를 받는중이면 데미지를 올린다.
                 curHP -= dmg;
-                if (curHP > maxHP) curHP = maxHP;
+                //데미지 미터기를 표시한다. 소수점 아래 둘째자리까지만 표현.
                 DamageText t = GameManager.instance.GetDamageTextFromPool();
                 t.InitializeDamageText((Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
                 t.gameObject.SetActive(true);
             }
-            else
+            else //즉사/처형인 경우
             {
                 curHP = 0;
+                DamageText t = GameManager.instance.GetDamageTextFromPool();
+                if (color.r == 0) t.InitializeDamageText("즉사!", transform.position, new Color32(70, 70, 70, 255));
+                else t.InitializeDamageText("처형!", transform.position, new Color32(70, 70, 70, 255));
             }
         }
-        else
+        else //HP 회복인 경우
         {
             curHP -= dmg;
             if (curHP > maxHP) curHP = maxHP;
@@ -306,6 +309,8 @@ public class Monster : MonoBehaviour
             t.gameObject.SetActive(true);
         }
         SetHPText();
+
+        //사망 판정인지 확인한다.
         CheckDead();
     }
 
@@ -322,16 +327,15 @@ public class Monster : MonoBehaviour
     //피격 이펙트: 폭발
     public void AE_Explosion(float dmg, float splash)
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);
-
+        //자신 근처의 자신이 아닌 다른 모든 몬스터들에 스플래시 데미지
         Monster monster;
-        for (int i = 0; i < colliders.Length; i++)
-            if (colliders[i].tag == "Monster")
-            {
-                monster = colliders[i].GetComponent<Monster>();
-                if (monster.curHP > 0 && monster != this) monster.AE_DecreaseHP(dmg * splash, new Color32(150, 30, 30, 255));
-                
-            }
+        for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
+        {
+            monster = BattleManager.instance.monsters[i];
+            if (monster.isInBattle && Vector2.Distance(transform.position, monster.transform.position) < 1.5f && monster != this) 
+                monster.AE_DecreaseHP(dmg * splash, new Color32(150, 30, 30, 255));
+        }
+        //자신에게 원래 데미지
         AE_DecreaseHP(dmg, new Color32(150, 30, 30, 255));
     }
 
@@ -355,7 +359,7 @@ public class Monster : MonoBehaviour
     public void AE_Teleport(float dmg, float prob)
     {
         AE_DecreaseHP(dmg, new Color32(255, 0, 200, 255));
-        if (Random.Range(0.0f, 1.0f) < prob)
+        if (Random.Range(0.0f, 1.0f) < prob) //일정 확률로 이동 거리를 0으로 만들어버림
         {
             movedDistance = 0.0f;
             DamageText t = GameManager.instance.GetDamageTextFromPool();
@@ -383,6 +387,7 @@ public class Monster : MonoBehaviour
         float dmg = curseStack;
         dmg = maxHP * dmg * 0.01f;
 
+        //모든 몬스터들에 자신에게 쌓인 저주 스택에 비례하여 피해를 입힘
         for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
         {
             BattleManager.instance.monsters[i].PlayParticleCollision(21, 0.0f);
@@ -393,14 +398,8 @@ public class Monster : MonoBehaviour
     //피격 이펙트: 처형
     public void AE_Execution(float dmg, float rate)
     {
-        if (baseMonster.tier != 'n') rate *= 0.5f;
-        if (curHP - dmg < maxHP * rate)
-        {
-            AE_DecreaseHP(1987654321, Color.red);
-            DamageText t = GameManager.instance.GetDamageTextFromPool();
-            t.InitializeDamageText("처형!", transform.position, new Color32(70, 70, 70, 255));
-            t.gameObject.SetActive(true);
-        }
+        if (baseMonster.tier != 'n') rate *= 0.5f;  //엘리트/보스 몬스터는 처형컷이 더 낮아짐
+        if (curHP - dmg < maxHP * rate) AE_DecreaseHP(1987654321, Color.red); //이 공격으로 인해 일정 HP 미만이 되면 처형
         else AE_DecreaseHP(dmg, new Color32(70, 70, 70, 255));
     }
 
@@ -408,7 +407,7 @@ public class Monster : MonoBehaviour
     public void AE_Grow(float dmg, Ring ring)
     {
         AE_DecreaseHP(dmg, new Color32(30, 180, 30, 255));
-        if (curHP <= 0 && ring.growStack < 20)
+        if (curHP <= 0 && ring.growStack < 20) //최대 20까지 성장
         {
             ring.growStack++;
             ring.ChangeCurATK(0.1f);
@@ -419,17 +418,18 @@ public class Monster : MonoBehaviour
     public void AE_Angel()
     {
         AE_DecreaseHP(curHP * 0.2f, Color.yellow);
-        movedDistance = 0;
+        movedDistance = 0;  //모두 이동거리를 0으로 만듦
     }
 
     //피격 이펙트: 추적
     public void AE_Chase(float dmg, float radius)
     {
         Monster monster;
+        //자신을 포함한 일정 반경 내 몬스터 모두에게 데미지주기
         for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
         {
             monster = BattleManager.instance.monsters[i];
-            if (Vector2.Distance(transform.position, monster.transform.position) < radius)
+            if (monster.isInBattle && Vector2.Distance(transform.position, monster.transform.position) < radius)
                 monster.AE_DecreaseHP(dmg, new Color32(100, 0, 0, 255));
         }
     }
@@ -437,38 +437,34 @@ public class Monster : MonoBehaviour
     //피격 이펙트: 즉사
     public void AE_InstantDeath(float dmg, float prob)
     {
-        if (Random.Range(0.0f, 1.0f) < prob)
+        if (Random.Range(0.0f, 1.0f) < prob)    //일정 확률로 즉사(단 일반 몬스터가 아니면 HP비례 데미지입음)
         {
             if (baseMonster.tier != 'n') AE_DecreaseHP(maxHP * prob * 0.5f, new Color32(80, 80, 80, 255));
-            else
-            {
-                AE_DecreaseHP(1987654321, Color.black);
-                DamageText t = GameManager.instance.GetDamageTextFromPool();
-                t.InitializeDamageText("즉사!", transform.position, new Color32(80, 80, 80, 255));
-                t.gameObject.SetActive(true);
-            }
+            else AE_DecreaseHP(1987654321, Color.black);
         }
-        else AE_DecreaseHP(dmg, new Color32(80, 80, 80, 255));
+        else AE_DecreaseHP(dmg, new Color32(80, 80, 80, 255));  //즉사 아니면 평범하게 데미지입음
     }
 
+    //엘리트 몬스터 스킬: 광전사
     void Elite_Berserker()
     {
-        baseSPD = baseMonster.baseSPD * (1.0f + (maxHP - curHP) / maxHP);
+        baseSPD = baseMonster.baseSPD * (1.0f + (maxHP - curHP) / maxHP); //잃은 HP 비례 속도가 빨라짐
     }
 
+    //엘리트 몬스터 스킬: 전령
     void Elite_Messenger()
     {
-        if (skillUseTime != 0)
+        if (skillUseTime != 0)  //스킬 사용중이라면 이속을 두배로 만든다.
         {
             baseSPD = baseMonster.baseSPD * 2;
             skillUseTime += Time.deltaTime;
-            if (skillUseTime > 2.0f)
+            if (skillUseTime > 2.0f) //2초간 스킬이 지속된다.
             {
                 skillUseTime = 0.0f;
                 skillCoolTime1 = 0.0f;
             }
         }
-        else
+        else   //5초 쿨타임을 기다림
         {
             skillCoolTime1 += Time.deltaTime;
             if (skillCoolTime1 > 5.0f)
@@ -479,11 +475,12 @@ public class Monster : MonoBehaviour
         }
     }
 
+    //엘리트 몬스터 스킬: 철벽거인
     void Elite_Giant()
     {
-        if (curHP < maxHP * 0.2f)
+        if (curHP < maxHP * 0.2f) //최대 HP 20% 미만이 되면
         {
-            if (skillUseTime < 5.0f)
+            if (skillUseTime < 10.0f) //10초간 모든 피해&이동 방해 효과 면역
             {
                 immuneDamage = true;
                 immuneInterrupt = true;
@@ -497,53 +494,58 @@ public class Monster : MonoBehaviour
         }
     }
 
+    //엘리트 몬스터 스킬: 암흑신관
     void Elite_DarkPriest()
     {
         skillCoolTime1 += Time.deltaTime;
-        if (skillCoolTime1 >= 1.0f)
+        if (skillCoolTime1 >= 1.0f) //1초마다
         {
             skillCoolTime1 = 0.0f;
 
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);
+            //자신을 제외한 일정 반경 내 몬스터 모두의 HP를 회복
             Monster monster;
-
-            for (int i = 0; i < colliders.Length; i++)
-                if (colliders[i].tag == "Monster")
-                {
-                    monster = colliders[i].GetComponent<Monster>();
-                    if (monster.curHP > 0 && monster != this) monster.AE_DecreaseHP(-monster.maxHP * 0.05f, Color.green);
-                }
+            for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
+            {
+                monster = BattleManager.instance.monsters[i];
+                if (monster.isInBattle && Vector2.Distance(transform.position, monster.transform.position) < 3.0f && monster != this)
+                    monster.AE_DecreaseHP(-monster.maxHP * 0.05f, Color.green);
+            }
         }
     }
 
+    //엘리트 몬스터 스킬: 악마 지휘관
     void Elite_DevilCommander()
     {
         Monster monster;
+        //자신을 제외한 일정 반경 내 몬스터 모두의 이속을 증가
         for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
         {
             monster = BattleManager.instance.monsters[i];
-            if (monster != this && Vector2.Distance(monster.transform.position, transform.position) < 1.5f)
+            if (monster.isInBattle && Vector2.Distance(transform.position, monster.transform.position) < 3.0f && monster != this)
                 monster.baseSPD = monster.baseMonster.baseSPD * 1.2f;
             else monster.baseSPD = monster.baseMonster.baseSPD;
         }
     }
 
+    //엘리트 몬스터 스킬: 정화자
     void Elite_Purifier()
     {
         immuneInterrupt = true;
     }
 
+    //엘리트 몬스터 스킬: 포식자
     void Elite_Predator()
     {
         skillCoolTime1 += Time.deltaTime;
-        if (skillCoolTime1 >= 5.0f)
+        if (skillCoolTime1 >= 5.0f)  //5초마다
         {
             skillCoolTime1 = 0.0f;
 
-            BattleManager.instance.ChangePlayerRP(-BattleManager.instance.rp * 0.2f);
+            BattleManager.instance.ChangePlayerRP(-BattleManager.instance.rp * 0.2f); //플레이어 RP 감소
         }
     }
 
+    //보스 몬스터 스킬: 인형술사
     void Boss_Puppeteer()
     {
         Monster monster;
