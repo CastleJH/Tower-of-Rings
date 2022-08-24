@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -30,8 +29,8 @@ public class Monster : MonoBehaviour
     bool isInBattle;            //살아서 전투에 참여중인지 여부
     float snowTime;             //눈꽃의 슬로우 효과가 지속된 시간
     float snowEndTime;          //눈꽃의 슬로우 효과가 끝나는 시간
-    Dictionary<int, float> poisonDmg;   //맹독의 데미지
-    Dictionary<int, float> poisonTime;  //맹독의 데미지 쿨타임
+    float poisonDmg;            //맹독의 데미지
+    float poisonTime;           //맹독의 데미지 쿨타임
     public bool isInBlizzard;   //눈보라 속에 있는지 여부
     float paralyzeTime;         //마비의 마비 효과가 지속된 시간
     float paralyzeEndTime;      //마비의 마비 효과가 끝나는 시간
@@ -45,71 +44,51 @@ public class Monster : MonoBehaviour
     bool immuneInterrupt;       //이동방해 면역 여부
     int cloneID;                //복제술사의 복제된 몬스터 ID
 
-    void Awake()
-    {        
-        poisonTime = new Dictionary<int, float>();
-        poisonDmg = new Dictionary<int, float>();
-    }
-
     void OnEnable()
     {
-        anim.SetTrigger("AddScene");
+        anim.SetTrigger("AddScene");    //애니메이션을 RunState로 돌린다.
     }
 
     void Update()
     {
         if (isInBattle)
         {
-            baseSPD = baseMonster.baseSPD;
+            //기본 속도를 정한다. 일반 몬스터가 아니라면 스킬을 써서 기본 속도를 바꾼다.
+            baseSPD = baseMonster.baseSPD;      
             if (baseMonster.tier != 'n') UseMonsterSkill();
+
+            //최종 속도를 정한다. 링의 이동 방해 효과등을 적용한다.
             curSPD = baseSPD;
-
-            //spriteRenderer.color = Color.white; //색깔(상태 이상 표시 용)을 초기화
-
             if (!immuneInterrupt)
             {
-                //이동방해는 약한순->강한순으로 적용되어야 한다.
-                if (isInBlizzard) //눈보라 속이라면
-                {
-                    curSPD = baseSPD * 0.7f;
-                    //spriteRenderer.color = Color.cyan;
-                }
+                //이동방해는 약한순->강한순으로 체크한다. 지속시간도 감소시키면서 마지막에 가장 강한 이동 방해 효과만 받도록 하기 위함임.
+                if (isInBlizzard) curSPD = baseSPD * 0.7f; //눈보라
 
-                if (snowTime < snowEndTime) //눈꽃 링의 둔화가 적용중이라면
+                if (snowTime < snowEndTime) //눈꽃
                 {
                     curSPD = baseSPD * 0.5f;
                     snowTime += Time.deltaTime;
-                    //spriteRenderer.color = Color.cyan;
                 }
 
-                if (paralyzeTime < paralyzeEndTime) //마비 링의 마비가 적용중이라면
+                if (paralyzeTime < paralyzeEndTime) //마비
                 {
                     curSPD = 0;
                     paralyzeTime += Time.deltaTime;
-                    //spriteRenderer.color = Color.yellow;
                 }
 
-                if (barrierBlock) curSPD = 0;
+                if (barrierBlock) curSPD = 0;  //결계
             }
 
-            if (poisonDmg.Count > 0)  //맹독 중첩이 하나라도 있다면
+            //맹독 중첩이 있으면 데미지를 받는다.
+            if (poisonDmg > 0)
             {
-                //spriteRenderer.color = Color.green;
-                List<int> list = poisonDmg.Keys.ToList();
-                for (int i = 0; i < list.Count; i++)
+                poisonTime += Time.deltaTime;
+                if (poisonTime >= 1.0f)
                 {
-                    int key = list[i];
-                    poisonTime[key] += Time.deltaTime;
-                    if (poisonTime[key] > 1.0f)
-                    {
-                        AE_DecreaseHP(poisonDmg[key], new Color32(0, 100, 0, 255));
-                        PlayParticleCollision(5, 0.0f);
-                        poisonTime[key] = 0.0f;
-                    }
+                    AE_DecreaseHP(poisonDmg, Color.green);
+                    poisonTime = 0.0f;
                 }
             }
-
-            //if (curseStack != 0) spriteRenderer.color = Color.gray;     //저주 중첩이 하나라도 있다면
 
             movedDistance += curSPD * Time.deltaTime;
             anim.speed = curSPD;
@@ -153,8 +132,8 @@ public class Monster : MonoBehaviour
         //기타 변수
         isInBattle = true;
         snowEndTime = -1.0f;
-        poisonDmg.Clear();
-        poisonTime.Clear();
+        poisonDmg = 0.0f;
+        poisonTime = 0.0f;
         isInBlizzard = false;
         paralyzeEndTime = -1.0f;
         barrierBlock = false;
@@ -351,18 +330,9 @@ public class Monster : MonoBehaviour
     }
 
     //공격 이펙트: 맹독
-    public void AE_Poison(int ringNumber, float dmg)
+    public void AE_Poison(float dmg)
     {
-
-        if (poisonDmg.ContainsKey(ringNumber))
-        {
-            poisonDmg[ringNumber] += dmg;
-        }
-        else
-        {
-            poisonDmg.Add(ringNumber, dmg);
-            poisonTime.Add(ringNumber, 1.0f);
-        }
+        poisonDmg += dmg;
     }
 
     //공격 이펙트: 마비

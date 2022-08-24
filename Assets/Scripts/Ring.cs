@@ -38,7 +38,6 @@ public class Ring : MonoBehaviour
     public bool isSealed;           //보스 몬스터로 인한 봉인 여부
     int oxyRemoveCount;          //산화 링의 소멸 카운트
     float explosionSplash;        //폭발 링의 스플래쉬 데미지(비율)
-    int poisonStack;            //맹독 링의 공격 당 쌓는 스택
     ParticleChecker rpGenerationParticle; //RP 생산시 링 위치에서 재생할 파티클
     Blizzard blizzard;          //눈보라
     public Monster commanderTarget; //사령관 링의 타겟
@@ -134,9 +133,6 @@ public class Ring : MonoBehaviour
                 break;
             case 4:
                 explosionSplash = 0.5f;
-                break;
-            case 5:
-                poisonStack = 1;
                 break;
             case 11:
                 blizzard = GameManager.instance.GetBlizzardFromPool();
@@ -407,7 +403,7 @@ public class Ring : MonoBehaviour
                 monster.PlayParticleCollision(baseRing.id, 0.0f);
                 break;
             case 5:
-                monster.AE_Poison(number, curATK * poisonStack);
+                monster.AE_Poison(curATK);
                 break;
             case 6:
                 monster.AE_DecreaseHP(Random.Range(0.0f, curATK), new Color32(255, 0, 100, 255));
@@ -498,7 +494,7 @@ public class Ring : MonoBehaviour
                 ring.ChangeCurATK(0.05f);
                 break;
             case 5:
-                if (ring.baseRing.id == baseRing.id) ring.poisonStack++;
+                if (ring.baseRing.id == baseRing.id) ring.ChangeCurATK(0.5f);
                 ring.ChangeCurSPD(-0.08f);
                 break;
             case 9:
@@ -616,7 +612,7 @@ public class Ring : MonoBehaviour
                         ring.ChangeCurATK(-0.05f);
                         break;
                     case 5:
-                        if (ring.baseRing.id == baseRing.id) ring.poisonStack--;
+                        if (ring.baseRing.id == baseRing.id) ring.ChangeCurATK(-0.5f);
                         ring.ChangeCurSPD(0.08f);
                         break;
                     case 9:
