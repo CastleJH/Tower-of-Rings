@@ -12,14 +12,16 @@ public class ParticleChecker : MonoBehaviour
     {
         particle = GetComponent<ParticleSystem>();
         particles = GetComponentsInChildren<ParticleSystem>();
-        id = int.Parse((gameObject.name.Split(' ')[1]).Split('(')[0]);
+        id = int.Parse(gameObject.name.Split(' ')[1].Split('(')[0]);
     }
 
+    //enable되면 자동으로 플레이
     void OnEnable()
     {
         particle.Play();
     }
 
+    //disable되면 자동으로 풀에 되돌림
     void OnDisable()
     {
         GameManager.instance.ReturnParticleToPool(this, id);
