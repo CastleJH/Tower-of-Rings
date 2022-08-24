@@ -550,19 +550,21 @@ public class Monster : MonoBehaviour
     {
         Monster monster;
         skillCoolTime1 += Time.deltaTime;
-        if (skillCoolTime1 >= 10.0f)
+        if (skillCoolTime1 >= 10.0f)    //10초마다
         {
             skillCoolTime1 = 0.0f;
             anim.SetTrigger("Attack");
 
+            //인형을 소환한다. 초기에는 생성한 인형을 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않는다. 인형의 스탯을 정한 후에는 자신의 조금 앞쪽에다 위치시킨다.
             monster = GameManager.instance.GetMonsterFromPool(29);
-            monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
-            monster.InitializeMonster(cloneID--, FloorManager.instance.curRoom.pathID, 1.0f);    //그외에는 일반 몬스터
+            monster.gameObject.transform.position = new Vector2(100, 100);  //
+            monster.InitializeMonster(cloneID--, FloorManager.instance.curRoom.pathID, 1.0f);
             monster.movedDistance = movedDistance + 1.0f;
             monster.gameObject.SetActive(true);
             BattleManager.instance.monsters.Add(monster);
         }
 
+        //만일 살아있는 인형이 있다면 데미지 면역이다.
         for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
         {
             monster = BattleManager.instance.monsters[i];
@@ -575,22 +577,22 @@ public class Monster : MonoBehaviour
         immuneDamage = false;
     }
 
+    //보스 몬스터 스킬: 분신술사
     void Boss_CloneMage()
     {
         skillCoolTime1 += Time.deltaTime;
-        if (skillCoolTime1 >= 10.0f)
+        if (skillCoolTime1 >= 10.0f)    //10초마다
         {
             skillCoolTime1 = 0.0f;
             anim.SetTrigger("Attack");
 
+            //HP를 2/3으로 하는 분신 두 개로 나뉜다.
             Monster monster;
-            float scale;
-            if (FloorManager.instance.floor.floorNum == 7) scale = 4.0f;
-            else scale = 0.5f * (FloorManager.instance.floor.floorNum + 1);
+            float scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) * 2.0f;
 
             monster = GameManager.instance.GetMonsterFromPool(23);
-            monster.gameObject.transform.position = new Vector2(100, 100);  //초기에는 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않음.
-            monster.InitializeMonster(cloneID--, FloorManager.instance.curRoom.pathID, scale);    //그외에는 일반 몬스터
+            monster.gameObject.transform.position = new Vector2(100, 100);
+            monster.InitializeMonster(cloneID--, FloorManager.instance.curRoom.pathID, scale);
 
             monster.movedDistance = movedDistance + 0.5f;
             monster.curHP = curHP * 0.666f;
@@ -605,9 +607,10 @@ public class Monster : MonoBehaviour
         }
     }
 
+    //보스 몬스터 스킬: 봉인술사
     void Boss_Sealer()
     {
-        if (skillUseTime != 0)
+        if (skillUseTime != 0)  //스킬 사용중이라면 5초 후에 봉인을 푼다.
         {
             skillUseTime += Time.deltaTime;
             if (skillUseTime > 5.0f)
@@ -620,12 +623,12 @@ public class Monster : MonoBehaviour
         else
         {
             skillCoolTime1 += Time.deltaTime;
-            if (skillCoolTime1 >= 10.0f)
+            if (skillCoolTime1 >= 10.0f)    //10초 쿨타임을 기다려서 봉인을 건다.
             {
                 skillUseTime = 0.001f;
                 anim.SetTrigger("Attack");
 
-                int targetSealNum = DeckManager.instance.rings.Count / 2;
+                int targetSealNum = DeckManager.instance.rings.Count / 2;   //전체 링의 절반만큼 랜덤하게 봉인건다.
                 int sealNum = 0;
                 int tarIdx;
                 while (sealNum < targetSealNum)
@@ -639,12 +642,15 @@ public class Monster : MonoBehaviour
         }
     }
 
+    //보스 몬스터 스킬: 저주술사
     void Boss_DarkWarlock()
     {
         skillCoolTime1 += Time.deltaTime;
-        if (skillCoolTime1 >= 10.0f)
+        if (skillCoolTime1 >= 10.0f)    //10초마다
         {
             int ringID;
+
+            //다운그레이드 할 수 있는 링이 있는지 확인한다.
             bool canDowngrade = false;
             for (int i = 0; i < DeckManager.instance.deck.Count; i++)
             {
@@ -655,11 +661,14 @@ public class Monster : MonoBehaviour
                     break;
                 }
             }
+
+            //다운그레이드가 가능하다면
             if (canDowngrade)
             {
                 skillCoolTime1 = 0.0f;
                 anim.SetTrigger("Attack");
 
+                //랜덤한 링 하나를 다운그레이드하고, 링 생성 덱을 갱신한 뒤(업그레이드 표시를 바꾸기 위해), 다운그레이드 내역을 기록한다(전투 종료 후 50퍼 확률로 각각 복구하기 위해).
                 do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
                 while (GameManager.instance.baseRings[ringID].level == 1);
                 GameManager.instance.baseRings[ringID].Downgrade();
@@ -669,14 +678,16 @@ public class Monster : MonoBehaviour
         }
     }
 
+    //보스 몬스터 스킬: 공간분열자
     void Boss_Spacer()
     {
         skillCoolTime1 += Time.deltaTime;
-        if (skillCoolTime1 >= 10.0f)
+        if (skillCoolTime1 >= 10.0f)    //10초마다
         {
             skillCoolTime1 = 0.0f;
             anim.SetTrigger("Attack");
 
+            //모든 일반몬스터들끼리 자리를 바꾼다.
             Monster monster1, monster2;
             int monsterNum = BattleManager.instance.monsters.Count;
             float tmp;
@@ -692,24 +703,27 @@ public class Monster : MonoBehaviour
         }
     }
 
+    //보스 몬스터 스킬: 처형인
     void Boss_Executer()
     {
         skillCoolTime1 += Time.deltaTime;
-        if (skillCoolTime1 >= 10.0f)
+        if (skillCoolTime1 >= 10.0f)    //10초마다
         {
             skillCoolTime1 = 0.0f;
             anim.SetTrigger("Attack");
 
+            //랜덤한 링을 제거한다.
             DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[Random.Range(0, DeckManager.instance.rings.Count)]);
         }
     }
 
+    //보스 몬스터 스킬: 타락한 왕
     void Boss_King()
     {
-        if (skillUseTime != 0)
+        if (skillUseTime != 0)  //스킬(봉인) 사용중이면
         {
             skillUseTime += Time.deltaTime;
-            if (skillUseTime > 5.0f)
+            if (skillUseTime > 5.0f)    //봉인을 취소한다.
             {
                 skillUseTime = 0.0f;
                 skillCoolTime1 = 0.0f;
@@ -719,7 +733,7 @@ public class Monster : MonoBehaviour
         else 
         {
             skillCoolTime1 += Time.deltaTime;
-            if (skillCoolTime1 >= 10.0f)
+            if (skillCoolTime1 >= 10.0f) //10초마다 강력한 스킬을 사용한다.
             {
                 skillCoolTime1 = 0.0f;
                 anim.SetTrigger("Attack");
@@ -727,13 +741,13 @@ public class Monster : MonoBehaviour
                 bool canDowngrade = false;
                 do
                 {
-                    switch (Random.Range(0, 3))
+                    switch (Random.Range(0, 3)) //다음 셋 중 하나를 성공할 때까지 적용한다.
                     {
-                        case 0:
+                        case 0: //링 하나를 랜덤하게 제거한다.
                             DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[Random.Range(0, DeckManager.instance.rings.Count)]);
                             canDowngrade = true;
                             break;
-                        case 1:
+                        case 1: //링 하나를 랜덤하게 다운그레이드한다.
                             int ringID;
                             for (int i = 0; i < DeckManager.instance.deck.Count; i++)
                             {
@@ -754,7 +768,7 @@ public class Monster : MonoBehaviour
                                 BattleManager.instance.ringDowngrade.Add(ringID);
                             }
                             break;
-                        case 2:
+                        case 2: //링 절반을 봉인한다.
                             skillUseTime = 0.001f;
 
                             int targetSealNum = DeckManager.instance.rings.Count / 2;
@@ -775,19 +789,19 @@ public class Monster : MonoBehaviour
         }
 
         skillCoolTime2 += Time.deltaTime;
-        if (skillCoolTime2 >= 5.0f)
+        if (skillCoolTime2 >= 5.0f)     //5초마다 일반 스킬을 사용한다.
         {
             skillCoolTime2 = 0.0f;
             anim.SetTrigger("Attack");
 
             switch (Random.Range(0, 2))
             {
-                case 0:
+                case 0: //이동 방해 효과에 면역이다.
                     immuneInterrupt = true;
                     break;
-                case 1:
+                case 1: //잃은 HP의 일부를 회복한다.
                     immuneInterrupt = false;
-                    AE_DecreaseHP((maxHP - curHP) * 0.05f, Color.green);
+                    AE_DecreaseHP(-(maxHP - curHP) * 0.05f, Color.green);
                     break;
             }
         }
