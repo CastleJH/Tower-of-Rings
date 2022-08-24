@@ -16,8 +16,12 @@ public class Amplifier : MonoBehaviour
     {
         coolTime += Time.deltaTime;
 
-        //증폭기끼리 영역이 겹쳤을 때 하나가 삭제되면 일시적으로 isInAmplify가 false로 변경될 수 있다. 따라서 매 프레임 계속 true로 바꿔줘야 함.
-        for (int i = monsters.Count - 1; i >= 0; i--) monsters[i].isInAmplify = true;
+        //증폭기끼리 영역이 겹쳤을 때 하나가 삭제되면 일시적으로 isInAmplify가 false로 변경될 수 있다. 따라서 매 프레임 계속 true로 바꿔주고 증폭량도 갱신해야 함.
+        for (int i = monsters.Count - 1; i >= 0; i--)
+        {
+            monsters[i].isInAmplify = true;
+            monsters[i].amplifyInc = Mathf.Max(monsters[i].amplifyInc, parent.curATK * 0.01f);
+        }
         
         if (coolTime > 0.5f)    //0.5초마다 파티클 재생
         {
@@ -38,10 +42,14 @@ public class Amplifier : MonoBehaviour
         transform.localScale = new Vector3(par.baseRing.range * 2, par.baseRing.range * 2, 1);
     }
 
-    //증폭기를 전투에서 제거한다. 제거하면서 영향을 받던 모든 몬스터들의 추가 피격 상태를 해제한다.
+    //증폭기를 전투에서 제거한다. 제거하면서 영향을 받던 모든 몬스터들의 추가 피격 상태를 해제하고 증폭량을 초기화한다.
     public void RemoveFromBattle()
     {
-        for (int i = monsters.Count - 1; i >= 0; i--) monsters[i].isInAmplify = false;
+        for (int i = monsters.Count - 1; i >= 0; i--)
+        {
+            monsters[i].isInAmplify = false;
+            monsters[i].amplifyInc = 0.0f;
+        }
         monsters.Clear();
         GameManager.instance.ReturnAmplifierToPool(this);
     }

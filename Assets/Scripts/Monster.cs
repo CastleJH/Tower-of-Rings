@@ -13,8 +13,8 @@ public class Monster : MonoBehaviour
     //조정된 개인 스탯
     public float maxHP;
     public float curHP;
-    public float baseSPD;       //링 방해 효과 적용 전 속도
-    public float curSPD;        //링 방해 효과 적용 후 속도
+    public float baseSPD;       //링 이동 방해 효과 적용 전 속도
+    public float curSPD;        //링 이동 방해 효과 적용 후 속도
 
     //이동 변수
     public PathCreator path;    //이동 경로
@@ -37,6 +37,7 @@ public class Monster : MonoBehaviour
     public bool barrierBlock;   //결계로부터 이동을 방해받지 않는지 여부
     public int curseStack;      //저주로부터 쌓인 스택
     public bool isInAmplify;    //증폭 범위 내에 있는지 여부
+    public float amplifyInc;    //증폭량
     float skillCoolTime1;       //엘리트/보스 몬스터의 스킬 쿨타임
     float skillCoolTime2;       //엘리트/보스 몬스터의 스킬 쿨타임
     float skillUseTime;         //엘리트/보스 몬스터의 스킬 지속된 시간
@@ -90,13 +91,15 @@ public class Monster : MonoBehaviour
                 }
             }
 
-            movedDistance += curSPD * Time.deltaTime;
+            //최종 이속으로 애니메이션 속도를 결정한다.
             anim.speed = curSPD;
 
+            //최종 이속으로 몬스터 위치를 결정한다.
             prevX = transform.position.x;
-            transform.position = path.path.GetPointAtDistance(movedDistance);
-            transform.Translate(0.0f, 0.0f, id * 0.001f);
+            movedDistance += curSPD * Time.deltaTime;
+            transform.position = path.path.GetPointAtDistance(movedDistance) + new Vector3(0.0f, 0.0f, id * 0.001f);
 
+            //직전 위치와 x좌표를 비교하여 좌우반전한다.
             if (prevX > transform.position.x)
             {
                 transform.localScale = new Vector3(1, 1, 1);
@@ -120,14 +123,11 @@ public class Monster : MonoBehaviour
         maxHP = baseMonster.baseMaxHP * scale;
         curHP = maxHP;
         baseSPD = baseMonster.baseSPD;
+        SetHPText();
 
         //이동 변수
         path = GameManager.instance.monsterPaths[pathID];
         movedDistance = 0.0f;
-
-        //그래픽
-        //CopySPUMDataFromBase();
-        SetHPText();
 
         //기타 변수
         isInBattle = true;
@@ -139,6 +139,7 @@ public class Monster : MonoBehaviour
         barrierBlock = false;
         curseStack = 0;
         isInAmplify = false;
+        amplifyInc = 0.0f;
         if (baseMonster.tier == 'n' || baseMonster.type == 23) skillCoolTime1 = 0.0f;
         else skillCoolTime1 = 5.0f;
         skillCoolTime2 = 0.0f;
@@ -181,50 +182,52 @@ public class Monster : MonoBehaviour
     {
         if (!gameObject.activeSelf) return;
 
-        curHP = 0;  //HP를 0으로 바꾼다.
+        isInBattle = false;
+        curHP = 0;
         BattleManager.instance.monsters.Remove(this);
-        if (isDead)
+
+        if (isDead) //사망으로 인해 제거하는 경우
         {
-            if (baseMonster.tier == 'b') BattleManager.instance.isBossKilled = true;
+            if (baseMonster.tier == 'b') BattleManager.instance.isBossKilled = true;    //보스몬스터였으면 유물을 획득할 수 있게 플래그를 올린다.
+
+            //사망 애니메이션을 보여준다.
             anim.ResetTrigger("AddScene");
             anim.speed = 0.8f;
             anim.SetTrigger("Die");
+
+            //사망으로 인한 게임 내 효과를 낸다.
             ApplyDeadEffect();
+
+            //몬스터를 풀에 잠시 뒤(애니메이션이 끝난 뒤) 되돌려준다.
             Invoke("InvokeReturnMonsterToPool", 1.0f);
         }
-        else InvokeReturnMonsterToPool();
+        else InvokeReturnMonsterToPool();   //아니면 그냥 바로 제거한다.
     }
 
-    void InvokeReturnMonsterToPool()
-    {
-        GameManager.instance.ReturnMonsterToPool(this);
-    }
-
-    //사망 효과를 적용한다. (골드 획득도 포함)
+    //사망 효과를 적용한다.
     void ApplyDeadEffect()
     {
         //저주 링의 사망시 폭발 효과를 적용한다.
         if (curseStack != 0) AE_CurseDead();
 
-        //네크로 링의 사망을 카운팅한다.
+        //사령술 링의 소환을 위한 카운팅을 한다.
         if (DeckManager.instance.necroIdx != -1)
         {
-
-            if (DeckManager.instance.necroCount < 20)
+            if (DeckManager.instance.necroCount < 10)   //사령술 카운트가 10이 될때까지 한다.
             {
                 DeckManager.instance.necroCount++;
-                if (DeckManager.instance.necroCount >= 20)
+                if (DeckManager.instance.necroCount >= 10)  //링 소환 덱의 텍스트를 갱신한다.
                 {
-                    DeckManager.instance.necroCount = 20;
-                    UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, "20/20");
+                    DeckManager.instance.necroCount = 10;
+                    UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, "10/10");
                     BattleManager.instance.ChangePlayerRP(0);
                 }
-                else UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, DeckManager.instance.necroCount.ToString() + "/20");
+                else UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, DeckManager.instance.necroCount.ToString() + "/10");
             }
         }
     }
 
-    //엘리트/보스의 스킬을 사용한다.
+    //몬스터의 스킬을 사용한다(엘리트/보스인 경우만 불린다).
     void UseMonsterSkill()
     {
         switch (baseMonster.type)
@@ -274,22 +277,25 @@ public class Monster : MonoBehaviour
         }
     }
 
-    //공격 이펙트: HP감소
+    //피격 이펙트: HP감소 (만일 dmg가 음수이면 회복, 1987654321이면 즉사)
     public void AE_DecreaseHP(float dmg, Color32 color)
     {
-        if (dmg >= 0 || color != Color.green)
+        if (dmg >= 0)
         {
             if (immuneDamage) dmg = 0;
-            if (dmg != -1)
+            if (dmg != 1987654321)
             {
-                if (isInAmplify) dmg *= 1.2f;
+                if (isInAmplify) dmg *= (1.0f + amplifyInc);   //증폭 효과를 받는중이면 데미지를 올린다.
                 curHP -= dmg;
                 if (curHP > maxHP) curHP = maxHP;
                 DamageText t = GameManager.instance.GetDamageTextFromPool();
                 t.InitializeDamageText((Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
                 t.gameObject.SetActive(true);
             }
-            else curHP = 0;
+            else
+            {
+                curHP = 0;
+            }
         }
         else
         {
@@ -303,7 +309,7 @@ public class Monster : MonoBehaviour
         CheckDead();
     }
 
-    //공격 이펙트: 눈꽃
+    //피격 이펙트: 눈꽃
     public void AE_Snow(float dmg, float time)
     {
         AE_DecreaseHP(dmg, new Color32(0, 0, 180, 255));
@@ -313,7 +319,7 @@ public class Monster : MonoBehaviour
         snowTime = 0;
     }
 
-    //공격 이펙트: 폭발
+    //피격 이펙트: 폭발
     public void AE_Explosion(float dmg, float splash)
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);
@@ -329,13 +335,13 @@ public class Monster : MonoBehaviour
         AE_DecreaseHP(dmg, new Color32(150, 30, 30, 255));
     }
 
-    //공격 이펙트: 맹독
+    //피격 이펙트: 맹독
     public void AE_Poison(float dmg)
     {
         poisonDmg += dmg;
     }
 
-    //공격 이펙트: 마비
+    //피격 이펙트: 마비
     public void AE_Paralyze(float dmg, float time)
     {
         AE_DecreaseHP(dmg, new Color32(150, 150, 0, 255));
@@ -345,7 +351,7 @@ public class Monster : MonoBehaviour
         paralyzeTime = 0;
     }
 
-    //공격 이펙트: 귀환(텔레포트)
+    //피격 이펙트: 귀환(텔레포트)
     public void AE_Teleport(float dmg, float prob)
     {
         AE_DecreaseHP(dmg, new Color32(255, 0, 200, 255));
@@ -358,20 +364,20 @@ public class Monster : MonoBehaviour
         }
     }
 
-    //공격 이펙트: 절단
+    //피격 이펙트: 절단
     public void AE_Cut(float dmg)
     {
         if (baseMonster.tier == 'n') AE_DecreaseHP(curHP * (dmg * 0.01f), Color.red);
         else AE_DecreaseHP(curHP * (dmg * 0.005f), Color.red);
     }
 
-    //공격 이펙트: 저주
+    //피격 이펙트: 저주
     public void AE_Curse(int stack)
     {
         curseStack += stack;
     }
 
-    //공격 이펙트: 저주의 사망 효과
+    //피격 이펙트: 저주의 사망 효과
     public void AE_CurseDead()
     {
         float dmg = curseStack;
@@ -384,13 +390,13 @@ public class Monster : MonoBehaviour
         }
     }
 
-    //공격 이펙트: 처형
+    //피격 이펙트: 처형
     public void AE_Execution(float dmg, float rate)
     {
         if (baseMonster.tier != 'n') rate *= 0.5f;
         if (curHP - dmg < maxHP * rate)
         {
-            AE_DecreaseHP(-1, Color.red);
+            AE_DecreaseHP(1987654321, Color.red);
             DamageText t = GameManager.instance.GetDamageTextFromPool();
             t.InitializeDamageText("처형!", transform.position, new Color32(70, 70, 70, 255));
             t.gameObject.SetActive(true);
@@ -398,7 +404,7 @@ public class Monster : MonoBehaviour
         else AE_DecreaseHP(dmg, new Color32(70, 70, 70, 255));
     }
 
-    //공격 이펙트: 성장
+    //피격 이펙트: 성장
     public void AE_Grow(float dmg, Ring ring)
     {
         AE_DecreaseHP(dmg, new Color32(30, 180, 30, 255));
@@ -409,14 +415,14 @@ public class Monster : MonoBehaviour
         }
     }
 
-    //공격 이펙트: 천사
+    //피격 이펙트: 천사
     public void AE_Angel()
     {
         AE_DecreaseHP(curHP * 0.2f, Color.yellow);
         movedDistance = 0;
     }
 
-    //공격 이펙트: 추적
+    //피격 이펙트: 추적
     public void AE_Chase(float dmg, float radius)
     {
         Monster monster;
@@ -428,7 +434,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    //공격 이펙트: 즉사
+    //피격 이펙트: 즉사
     public void AE_InstantDeath(float dmg, float prob)
     {
         if (Random.Range(0.0f, 1.0f) < prob)
@@ -436,7 +442,7 @@ public class Monster : MonoBehaviour
             if (baseMonster.tier != 'n') AE_DecreaseHP(maxHP * prob * 0.5f, new Color32(80, 80, 80, 255));
             else
             {
-                AE_DecreaseHP(-1, Color.black);
+                AE_DecreaseHP(1987654321, Color.black);
                 DamageText t = GameManager.instance.GetDamageTextFromPool();
                 t.InitializeDamageText("즉사!", transform.position, new Color32(80, 80, 80, 255));
                 t.gameObject.SetActive(true);
@@ -785,30 +791,9 @@ public class Monster : MonoBehaviour
         }
     }
 
-    /*private void CopySPUMDataFromBase()
+    //몬스터를 오브젝트 풀에 되돌릴 때 Invoke로 돌리는 경우 쓰인다.
+    void InvokeReturnMonsterToPool()
     {
-        SPUM_Prefabs _baseData = Resources.Load<SPUM_Prefabs>(string.Format("SPUM/SPUM_Units/Unit{0:D3}", baseMonster.type));
-        if (_baseData == null) Debug.LogError(string.Format("SPUM named Unit{0:D3} does not exist in Assets/Resources/SPUM/SPUM_Units", baseMonster.type));
-        else
-        {
-            SyncSprites(spumSprites._itemList, _baseData._spriteOBj._itemList);
-            SyncSprites(spumSprites._eyeList, _baseData._spriteOBj._eyeList);
-            SyncSprites(spumSprites._hairList, _baseData._spriteOBj._hairList);
-            SyncSprites(spumSprites._bodyList, _baseData._spriteOBj._bodyList);
-            SyncSprites(spumSprites._clothList, _baseData._spriteOBj._clothList);
-            SyncSprites(spumSprites._armorList, _baseData._spriteOBj._armorList);
-            SyncSprites(spumSprites._pantList, _baseData._spriteOBj._pantList);
-            SyncSprites(spumSprites._weaponList, _baseData._spriteOBj._weaponList);
-            SyncSprites(spumSprites._backList, _baseData._spriteOBj._backList);
-        }
+        GameManager.instance.ReturnMonsterToPool(this);
     }
-
-    private void SyncSprites(List<SpriteRenderer> _target, List<SpriteRenderer> _base)
-    {
-        for (int i = _base.Count - 1; i >= 0; i--)
-        {
-            _target[i].sprite = _base[i].sprite;
-            _target[i].color = _base[i].color;
-        }
-    }*/
 }
