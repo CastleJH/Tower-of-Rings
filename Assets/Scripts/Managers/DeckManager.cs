@@ -8,28 +8,25 @@ public class DeckManager : MonoBehaviour
 {
     public static DeckManager instance;
 
-    public bool debugFlag;  //디버그용
-    public int debugVariable;
-
     public GameObject ringRemover;
 
     //덱 구성 변수
     public int maxDeckLength = 6;
-    public List<int> deck;  //플레이어 덱
+    public List<int> deck;          //플레이어 덱
 
     //배틀 중 변수
-    public List<Ring> rings;    //전투 중인 링들
-    public Ring genRing = null;    //생성 중인 링
-    public bool isEditRing;  //링 생성/제거버튼이 눌렸는지 여부
-    int ringNumber;    //링 생성시 부여하는 구분 번호
-    public bool isAngelEffect;     //천사 링의 효과가 유효한지 여부
-    public Ring angelRing;  //생성한 천사링
-    public int sleepActivated;    //유효한 동면 링의 수
-    public int sleepGenerated; //생성한 동면 링의 수
-    float plantCoolTime;    //식물 링의 생성 쿨타임
-    int plantIdx;       //식물 링의 덱에서의 인덱스(0 이상인 경우만 쿨타임이 돌아간다)
-    public int necroCount;         //네크로 링의 사망 카운트
-    public int necroIdx;       //네크로 링의 덱에서의 인덱스
+    public List<Ring> rings;        //전투 중인 링들
+    public Ring genRing = null;     //생성 중인 링
+    public bool isEditRing;         //링 생성/제거버튼이 눌렸는지 여부
+    int ringNumber;                 //링 생성시 부여하는 구분 번호
+    public bool isAngelEffect;      //천사 링의 효과가 유효한지 여부
+    public Ring angelRing;          //생성한 천사링
+    public int sleepActivated;      //유효한 동면 링의 수
+    public int sleepGenerated;      //생성한 동면 링의 수
+    float plantCoolTime;            //식물 링의 생성 쿨타임
+    int plantIdx;                   //식물 링의 덱에서의 인덱스(0 이상인 경우만 쿨타임이 돌아간다)
+    public int necroCount;          //네크로 링의 사망 카운트
+    public int necroIdx;            //네크로 링의 덱에서의 인덱스
 
     //기타
     int ringLayerMask;  //링 레이어마스크
@@ -46,22 +43,18 @@ public class DeckManager : MonoBehaviour
 
     void Update()
     {
-        if (debugFlag)
-        {
-            debugFlag = false;
-        }
         if (BattleManager.instance.isBattlePlaying)
         {
             if (isEditRing) GetInput(); //링 생성이 눌린 경우
-            if (plantIdx != -1)
+            if (plantIdx != -1)         //식물링이 존재하는 경우
             {
-                if (plantCoolTime < 10)
+                if (plantCoolTime < 10) //10초마다 생성가능하게 한다.
                 {
                     plantCoolTime += Time.deltaTime;
-                    if (plantCoolTime >= 20.0f)
+                    if (plantCoolTime >= 10.0f)
                     {
-                        plantCoolTime = 20.0f;
-                        UIManager.instance.SetBattleDeckRingRPText(plantIdx, "20.00");
+                        plantCoolTime = 10.0f;
+                        UIManager.instance.SetBattleDeckRingRPText(plantIdx, "10.00");
                         BattleManager.instance.ChangePlayerRP(0);
                     }
                     else UIManager.instance.SetBattleDeckRingRPText(plantIdx, string.Format("{0:0.00}", plantCoolTime));
@@ -86,7 +79,6 @@ public class DeckManager : MonoBehaviour
     //전투 준비한다. 필요한 변수들을 초기화한다.
     public void PrepareBattle()
     {
-        rings.Clear();
         genRing = null;
         isEditRing = false;
         ringNumber = 0;
@@ -202,7 +194,7 @@ public class DeckManager : MonoBehaviour
             {
                 necroCount = 0;
                 necroIdx = deckIdx;
-                UIManager.instance.SetBattleDeckRingRPText(deckIdx, "0/20");
+                UIManager.instance.SetBattleDeckRingRPText(deckIdx, "0/10");
             }
             else if (genRing.baseRing.id == 32)  //동면링이라면 효과 발동 가능한지 확인하고 3개 생성이면 앞으로 생성 불가하게 막음
             {
@@ -260,13 +252,14 @@ public class DeckManager : MonoBehaviour
 
         Ring ring;
         List<Ring> commanderList = new List<Ring>();
-        for (int i = rings.Count - 1; i >= 0; i--) //모든 링에 대하여 이 링이 가장 가까운 사령관 링이었던 경우 삭제하고, 같은 사령관 링이면 저장한다.
+        for (int i = rings.Count - 1; i >= 0; i--) //사령관 링을 모두 찾는다.
         {
             ring = rings[i];
+            ring.commanderNearest = null;
             if (ring.baseRing.id == 19) commanderList.Add(ring);
         }
 
-        if (commanderList.Count == 0) return;
+        if (commanderList.Count == 0) return;   //사령관 링이 하나도 없으면 끝.
 
         for (int i = rings.Count - 1; i >= 0; i--) //모든 링에 대하여 새롭게 사령관 링을 찾아준다.
         {

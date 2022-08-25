@@ -320,7 +320,7 @@ public class UIManager : MonoBehaviour
         if (baseRing.level == baseRing.maxlvl) ringInfoRingUpgradeImage.sprite = GameManager.instance.ringInfoUpgradeSprites[0];
         else ringInfoRingUpgradeImage.sprite = GameManager.instance.ringInfoUpgradeSprites[baseRing.level];
         ringInfoRPText.text = ((int)baseRing.baseRP).ToString();
-        ringInfoNameText.text = baseRing.name;
+        ringInfoNameText.text = baseRing.name + " 링";
         ringInfoATKText.text = (Mathf.Round(baseRing.baseATK * 100) * 0.01f).ToString();
         ringInfoSPDText.text = (Mathf.Round(baseRing.baseSPD * 100) * 0.01f).ToString();
         ringInfoRNGText.text = (baseRing.range - 2).ToString();
@@ -446,7 +446,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    //재화를 소모해야 하면 소모한다. 재화가 부족한 경우라면 획득하지 않는다.
+    //재화를 소모해야 하면 소모한다. 재화가 부족한 경우거나 이미 덱이 다 차있다면 획득하지 않는다.
     public void ButtonTakeRing()
     {
         if (ringInfoTakeText.text[0] != '이') return;
@@ -458,7 +458,11 @@ public class UIManager : MonoBehaviour
                 break;
             }
 
-        DeckManager.instance.AddRingToDeck(type);
+        if (DeckManager.instance.AddRingToDeck(type))
+        {
+            ClosePanel(3);
+            return;
+        }
 
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
             if (FloorManager.instance.curRoom.items[i].itemType == 1000 + type)
