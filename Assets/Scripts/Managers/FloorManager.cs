@@ -293,11 +293,6 @@ public class FloorManager : MonoBehaviour
         Camera.main.transform.position = roomImage.transform.position + new Vector3(0.0f, 1.5f, -15f);
     } 
 
-    public void ChangeCurRoomToIdle()
-    {
-        curRoom.type = 0;
-    }
-
     private void TurnPortalsOnOff(bool isOn)
     {
         isPortalOn = isOn;
