@@ -185,7 +185,6 @@ public class GameManager : MonoBehaviour
     void ResetBases(bool isNormal)
     {
         int mult = isNormal ? 1 : 2;    //하드모드면 몬스터 HP만 두배로 해준다.
-        Debug.Log("Reset");
         for (int i = 0; i < baseRings.Count; i++) baseRings[i].Init();
         for (int i = 0; i < baseRelics.Count; i++) baseRelics[i].Init();
         for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].Init(mult);
