@@ -9,13 +9,9 @@ public class GameManager : MonoBehaviour
 
     public bool debugFlag;
 
-    public SPUM_Prefabs[] spum_prefabs;
-
-    public GameObject sinkholeNorth;
-    public GameObject sinkholeSouth;
-
     //프리팹
     public GameObject ringPrefab;
+    public SPUM_Prefabs[] spum_prefabs;
     public GameObject[] monsterPrefabs;
     public GameObject[] bulletPrefabs;
     public GameObject[] particlePrefabs;
@@ -41,9 +37,11 @@ public class GameManager : MonoBehaviour
     //사운드
     public AudioClip[] ringAttackAudios;
 
-    //몬스터 이동 경로
+    //몬스터 이동 경로 & 맵 구성
     public PathCreator[] monsterPaths;
     public SpriteRenderer[] monsterPathImages;
+    public GameObject sinkholeNorth;
+    public GameObject sinkholeSouth;
 
     //DB
     [HideInInspector]
@@ -65,14 +63,17 @@ public class GameManager : MonoBehaviour
     private Queue<DropRP> dropRPPool;
     private Queue<Item> itemPool;
 
-    //게임 진행상황 관련 변수
+    //통합 게임 관련 변수
+    public int diamond;
+
+    //개별 게임 관련 변수
     public int playerMaxHP;
     public int playerCurHP;
     public int gold;
-    public int diamond;
-    bool revivable;
     public List<int> relics;
     public List<int> cursedRelics;
+    bool revivable;
+
 
     void Awake()
     {
@@ -107,62 +108,78 @@ public class GameManager : MonoBehaviour
             bulletPool[i] = new Queue<Bullet>();
             particlePool[i] = new Queue<ParticleChecker>();
         }
+
+        diamond = 0;
     }
 
-    void Update()
-    {
-        if (debugFlag)
-        {
-            debugFlag = false;
-            EndGame(0, 0);
-        }    
-    }
-
+    //노말모드 게임을 시작한다.
     public void NormaleModeGameStart()
     {
         InitializeGame(true);
         FloorManager.instance.CreateAndMoveToFloor(1);
     }
 
-    public void InitializeGame(bool isNormal)
+    //게임을 초기화한다. isNormal이 true이면 노말모드, false이면 하드모드로 초기화한다.
+    void InitializeGame(bool isNormal)
     {
+        //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 초기로 되돌린다(DB값과 일치하도록).
         ResetBases(isNormal);
 
+        //플레이어 시작 HP값을 정한다.
         playerMaxHP = 100;
         playerCurHP = 100;
         ChangePlayerCurHP(0);
 
+        //플레이어 시작 골드량을 정한다. 다이아몬드는 개별 게임과 독립적이므로 바꾸지 않는다.
         gold = 0;
         ChangeGold(0);
-        
-        diamond = 0;
         ChangeDiamond(0);
 
+        //부활 가능 여부를 초기화한다.
         revivable = false;
 
+        //덱을 초기화한다.
         DeckManager.instance.InitializeDeck();
 
+        //유물을 모두 비운다.
         relics.Clear();
         cursedRelics.Clear();
-        
-        //지우세요!
-        //AddRelicToDeck(4, false);
+
+        //플레이어가 강화한 자체 스탯을 적용한다.
+        ApplyPlayerStat();
     }
 
-    public void EndGame(int a, int b)
+    //플레이어가 강화한 자체 스탯을 적용한다(로비에서 강화한 스탯, 시작 링/유물로 선정한 것들을 덱에 넣기 등).
+    void ApplyPlayerStat()
     {
-        UIManager.instance.OpenGameEndPanel();
-        BattleManager.instance.ResetBattleSystem();
-        ResetBases(true);
-        Time.timeScale = 1;
+
     }
 
+    //진행중이던 게임을 게임오버 처리한다(HP가 0이 되었거나, 플레이어가 메뉴에서 포기를 눌렀거나).
+    void OnGameOver(int a, int b)
+    {
+        UIManager.instance.OpenGameEndPanel();  //게임오버패널을 연다.
+        BattleManager.instance.ResetBattleSystem();     //배틀시스템을 모두 종료한다.
+        ResetBases(true);           //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 DB값과 일치시킨다. 도감 열었을 때 표시되는 스탯이 원래대로 돌아오기 위함임.
+        Time.timeScale = 1;         //속도를 원래대로 돌린다.
+    }
+
+    //진행중이던 게임을 클리어 처리한다(7층의 보스를 처치했을 때).
+    void OnGameClear(int a, int b)
+    {
+        BattleManager.instance.ResetBattleSystem();     //배틀시스템을 모두 종료한다.
+        ResetBases(true);           //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 DB값과 일치시킨다. 도감 열었을 때 표시되는 스탯이 원래대로 돌아오기 위함임.
+        Time.timeScale = 1;         //속도를 원래대로 돌린다.
+    }
+
+    //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 DB값과 일치시킨다(다만, 하드모드면 몬스터 HP가 2배가 될 수 있다).
     void ResetBases(bool isNormal)
     {
+        int mult = isNormal ? 1 : 2;    //하드모드면 몬스터 HP만 두배로 해준다.
         Debug.Log("Reset");
         for (int i = 0; i < baseRings.Count; i++) baseRings[i].Init();
         for (int i = 0; i < baseRelics.Count; i++) baseRelics[i].Init();
-        for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].Init();
+        for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].Init(mult);
 
     }
 
@@ -232,7 +249,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     //몬스터를 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
     public void ReturnMonsterToPool(Monster monster)
     {
@@ -252,7 +268,6 @@ public class GameManager : MonoBehaviour
         if (ringPool.Count > 0) return ringPool.Dequeue();
         else return Instantiate(ringPrefab).GetComponent<Ring>();
     }
-
 
     //링을 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
     public void ReturnRingToPool(Ring ring)
@@ -469,7 +484,7 @@ public class GameManager : MonoBehaviour
             {
                 BattleManager.instance.isBattlePlaying = false;
                 Time.timeScale = 0.0f;
-                SceneChanger.instance.ChangeScene(EndGame, 0, 0);
+                SceneChanger.instance.ChangeScene(OnGameOver, 0, 0);
             }
         }
         
@@ -480,7 +495,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    //골드를 바꾼다.
+    //골드를 바꾼다. 골드가 부족하면 false를 반환한다.
     public bool ChangeGold(int _gold)
     {
         if (gold + _gold < 0) return false;
@@ -488,8 +503,8 @@ public class GameManager : MonoBehaviour
         UIManager.instance.playerGoldText.text = gold.ToString();
         return true;
     }
-    
-    //다이아몬드를 바꾼다.
+
+    //다이아몬드를 바꾼다. 다이아몬드가 부족하면 false를 반환한다.
     public bool ChangeDiamond(int _diamond)
     {
         if (diamond + _diamond < 0) return false;
@@ -498,6 +513,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    //유물을 플레이어에게 준다. 이미 있던 유물이면서 저주 여부까지 똑같다면 false를 반환한다. 그렇지 않다면 획득시의 효과를 적용하고 true를 반환한다.
     public bool AddRelicToPlayer(int id, bool isPure)
     {
         if (baseRelics[id].have && baseRelics[id].isPure == isPure) return false;
@@ -510,7 +526,7 @@ public class GameManager : MonoBehaviour
 
         switch (id)
         {
-            case 1:
+            case 1:     //거인의 머리
                 if (baseRelics[id].isPure)
                 {
                     playerMaxHP = 120;
@@ -523,14 +539,13 @@ public class GameManager : MonoBehaviour
                     ChangePlayerCurHP(0);
                 }
                 break;
-            case 4:
-                Debug.Log("Yes");
+            case 4:     //불멸자의 심장
                 if (baseRelics[id].isPure) revivable = true;
                 else
                     for (int i = 0; i < baseMonsters.Count; i++)
                         if (baseMonsters[i].tier == 'n') baseMonsters[i].baseATK = 2;
                 break;
-            case 12:
+            case 12:    //소환사의 축복
                 if (baseRelics[id].isPure)
                     for (int i = 0; i < baseRings.Count; i++)
                         baseRings[i].baseRP = (int)(baseRings[i].csvRP * 0.9f);
@@ -538,22 +553,22 @@ public class GameManager : MonoBehaviour
                     for (int i = 0; i < baseRings.Count; i++)
                         baseRings[i].baseRP = (int)(baseRings[i].csvRP * 1.1f);
                 break;
-            case 14:
+            case 14:    //빙하 조각
                 if (baseRelics[id].isPure)
-                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].baseSPD = baseMonsters[i].csvSPD * 0.9f;
+                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].baseSPD = baseMonsters[i].initSPD * 0.9f;
                 else
-                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].baseSPD = baseMonsters[i].csvSPD * 1.05f;
+                    for (int i = 0; i < baseMonsters.Count; i++) baseMonsters[i].baseSPD = baseMonsters[i].initSPD * 1.05f;
                 break;
-            case 16:
+            case 16:    //학살자의 낫
                 if (baseRelics[id].isPure)
                 {
                     for (int i = 0; i < baseMonsters.Count; i++)
-                        if (baseMonsters[i].tier != 'n') baseMonsters[i].baseMaxHP = baseMonsters[i].csvHP * 0.9f;
+                        if (baseMonsters[i].tier != 'n') baseMonsters[i].baseMaxHP = baseMonsters[i].initMaxHP * 0.9f;
                 }
                 else
                 {
                     for (int i = 0; i < baseMonsters.Count; i++)
-                        if (baseMonsters[i].tier != 'n') baseMonsters[i].baseMaxHP = baseMonsters[i].csvHP * 1.05f;
+                        if (baseMonsters[i].tier != 'n') baseMonsters[i].baseMaxHP = baseMonsters[i].initMaxHP * 1.05f;
                 }
                 break;
         }
