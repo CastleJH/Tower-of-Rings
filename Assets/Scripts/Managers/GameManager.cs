@@ -74,7 +74,6 @@ public class GameManager : MonoBehaviour
     public List<int> cursedRelics;
     bool revivable;
 
-
     void Awake()
     {
         instance = this;
@@ -110,6 +109,16 @@ public class GameManager : MonoBehaviour
         }
 
         diamond = 0;
+    }
+
+    void Update()
+    {
+        if (debugFlag)
+        {
+            debugFlag = false;
+            BattleManager.instance.StopBattleSystem();
+            UIManager.instance.lobbyPanel.SetActive(true);
+        }
     }
 
     //노말모드 게임을 시작한다.
@@ -159,7 +168,7 @@ public class GameManager : MonoBehaviour
     void OnGameOver(int a, int b)
     {
         UIManager.instance.OpenGameEndPanel();  //게임오버패널을 연다.
-        BattleManager.instance.ResetBattleSystem();     //배틀시스템을 모두 종료한다.
+        BattleManager.instance.StopBattleSystem();     //배틀시스템을 모두 종료한다.
         ResetBases(true);           //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 DB값과 일치시킨다. 도감 열었을 때 표시되는 스탯이 원래대로 돌아오기 위함임.
         Time.timeScale = 1;         //속도를 원래대로 돌린다.
     }
@@ -167,7 +176,7 @@ public class GameManager : MonoBehaviour
     //진행중이던 게임을 클리어 처리한다(7층의 보스를 처치했을 때).
     void OnGameClear(int a, int b)
     {
-        BattleManager.instance.ResetBattleSystem();     //배틀시스템을 모두 종료한다.
+        BattleManager.instance.StopBattleSystem();     //배틀시스템을 모두 종료한다.
         ResetBases(true);           //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 DB값과 일치시킨다. 도감 열었을 때 표시되는 스탯이 원래대로 돌아오기 위함임.
         Time.timeScale = 1;         //속도를 원래대로 돌린다.
     }

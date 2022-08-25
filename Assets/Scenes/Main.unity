@@ -13735,6 +13735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugFlag: 0
+  ringPrefab: {fileID: 671390583966524708, guid: 485b518439648114fa5cb4919d015a23, type: 3}
   spum_prefabs:
   - {fileID: 5766477943239229958, guid: 0b1be082e5140df4b91d7aa927534c26, type: 3}
   - {fileID: 972298806471768025, guid: a32592b56a7b24e45a3ce721d8af529d, type: 3}
@@ -13766,9 +13767,6 @@ MonoBehaviour:
   - {fileID: 3554379089997096429, guid: 8fa052d2ac5fbe544af126e880f2d2d3, type: 3}
   - {fileID: 8231759861074269447, guid: 19f054c673dbf9f4dbc9bbc0844d62de, type: 3}
   - {fileID: 7698824791315696642, guid: d01abd1c5374d7b46b6f7a3e08906145, type: 3}
-  sinkholeNorth: {fileID: 1898551215}
-  sinkholeSouth: {fileID: 1800651976}
-  ringPrefab: {fileID: 671390583966524708, guid: 485b518439648114fa5cb4919d015a23, type: 3}
   monsterPrefabs:
   - {fileID: 2410639051035358923, guid: da5ea7a317ca59345a40cb59944b4309, type: 3}
   - {fileID: 2410639051035358923, guid: b4da1f8596bc04e44b783bf680eb1210, type: 3}
@@ -14030,10 +14028,12 @@ MonoBehaviour:
   - {fileID: 30956877}
   - {fileID: 1468556535}
   - {fileID: 489912894}
+  sinkholeNorth: {fileID: 1898551215}
+  sinkholeSouth: {fileID: 1800651976}
+  diamond: 0
   playerMaxHP: 0
   playerCurHP: 0
   gold: 0
-  diamond: 0
   relics: 
   cursedRelics: 
 --- !u!4 &672386625
@@ -41876,7 +41876,7 @@ GameObject:
   - component: {fileID: 1800651978}
   - component: {fileID: 1800651977}
   m_Layer: 9
-  m_Name: sinkhole (1)
+  m_Name: Sinkhole South
   m_TagString: Monster Path
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41961,7 +41961,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1804262667
 GameObject:
@@ -43089,7 +43089,7 @@ GameObject:
   - component: {fileID: 1898551217}
   - component: {fileID: 1898551216}
   m_Layer: 9
-  m_Name: sinkhole
+  m_Name: Sinkhole North
   m_TagString: Monster Path
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43174,7 +43174,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1899805857
 GameObject:

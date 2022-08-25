@@ -282,7 +282,7 @@ public class FloorManager : MonoBehaviour
         curRoom.visited = true;
 
         //지도에 변화를 준다.
-        UIManager.instance.RevealMapAndMove(playerX, playerY);
+        UIManager.instance.RevealMapAndMoveMarker(playerX, playerY);
 
         //스프라이트를 올바른 모양으로 바꾼다.
         roomImage.sprite = GameManager.instance.sceneRoomSprites[floor.floorNum];
@@ -363,7 +363,7 @@ public class FloorManager : MonoBehaviour
     {
         item.Pay();
         curRoom.items.Remove(item);
-        UIManager.instance.RevealMapAndMove(playerX, playerY);
+        UIManager.instance.RevealMapAndMoveMarker(playerX, playerY);
 
         if (item.itemType >= 2000)
         {

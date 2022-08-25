@@ -26,7 +26,6 @@ public class UIManager : MonoBehaviour
 
     public GameObject battleArrangeFail;
     public TextMeshProUGUI battleArrangeFailText;
-    //public GameObject nextFloorButton;
 
     public GameObject battleDeckPanel;
     public TextMeshProUGUI battleHaveRPText;
@@ -170,7 +169,7 @@ public class UIManager : MonoBehaviour
     }
 
     //맵의 일부분을 밝히고, 마커를 해당 위치로 이동한다.
-    public void RevealMapAndMove(int x, int y)
+    public void RevealMapAndMoveMarker(int x, int y)
     {
         int[] dx = { 0, 0, 0, -1, 1 };
         int[] dy = { 0, -1, 1, 0, 0 };
@@ -322,8 +321,8 @@ public class UIManager : MonoBehaviour
         else ringInfoRingUpgradeImage.sprite = GameManager.instance.ringInfoUpgradeSprites[baseRing.level];
         ringInfoRPText.text = ((int)baseRing.baseRP).ToString();
         ringInfoNameText.text = baseRing.name;
-        ringInfoATKText.text = baseRing.baseATK.ToString();
-        ringInfoSPDText.text = baseRing.baseSPD.ToString();
+        ringInfoATKText.text = (Mathf.Round(baseRing.baseATK * 100) * 0.01f).ToString();
+        ringInfoSPDText.text = (Mathf.Round(baseRing.baseSPD * 100) * 0.01f).ToString();
         ringInfoRNGText.text = (baseRing.range - 2).ToString();
         ringInfoTARText.text = baseRing.baseNumTarget.ToString();
         ringInfoBaseText.text = baseRing.description;
