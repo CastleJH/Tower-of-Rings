@@ -18,7 +18,10 @@ public class Endline : MonoBehaviour
                 DeckManager.instance.isAngelEffect = false;
                 DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.angelRing);
                 for (int i = 0; i < BattleManager.instance.monsters.Count; i++)
+                {
+                    BattleManager.instance.monsters[i].PlayParticleCollision(27, 0.0f);
                     BattleManager.instance.monsters[i].AE_Angel();
+                }
             }
             else    //그렇지 않다면 HP를 몬스터의 공격력만큼 감소시키고 애니메이션을 적용한 뒤 몬스터를 제거한다.
             {
