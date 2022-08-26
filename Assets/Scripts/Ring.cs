@@ -445,7 +445,7 @@ public class Ring : MonoBehaviour
                 break;
             case 28:
                 monster.AE_Chase(curATK * (1.0f + (curNumTarget * 0.5f)), chaseAttackRadius);
-                monster.PlayParticleCollision(baseRing.id, 0.0f);
+                monster.PlayParticleCollision(baseRing.id, 0.0f, chaseAttackRadius * 2);
                 break;
             case 29:
                 monster.AE_InstantDeath(curATK, curEFF);

@@ -159,6 +159,17 @@ public class Monster : MonoBehaviour
         par.PlayParticle(transform, time);
     }
 
+    //파티클을 플레이한다.
+    public void PlayParticleCollision(int id, float time, float scale)
+    {
+        //피격 파티클을 가져와 저장한다.
+        ParticleChecker par = GameManager.instance.GetParticleFromPool(id);
+        par.transform.localScale = Vector3.one * scale;
+
+        //플레이한다.
+        par.PlayParticle(transform, time);
+    }
+
     //HP 텍스트를 갱신한다. 소수점을 버리고 표현하되, 남은 HP가 0초과 1이하인 경우는 1로 표현한다.
     public void SetHPText()
     {
