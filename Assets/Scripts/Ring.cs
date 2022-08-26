@@ -410,6 +410,7 @@ public class Ring : MonoBehaviour
                 break;
             case 5:
                 monster.AE_Poison(curATK);
+                monster.PlayParticleCollision(baseRing.id, 0.0f);
                 break;
             case 6:
                 monster.AE_DecreaseHP(Random.Range(0.0f, curATK), dmgTextColor);
@@ -421,7 +422,7 @@ public class Ring : MonoBehaviour
                 break;
             case 13:
                 monster.AE_Paralyze(curATK, curEFF);
-                monster.PlayParticleCollision(baseRing.id, 0.0f);
+                monster.PlayParticleCollision(baseRing.id, curEFF);
                 break;
             case 16:
                 monster.AE_Teleport(curATK, curEFF);

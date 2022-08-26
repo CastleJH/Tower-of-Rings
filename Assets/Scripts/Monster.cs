@@ -87,6 +87,7 @@ public class Monster : MonoBehaviour
                 if (poisonTime >= 1.0f)
                 {
                     AE_DecreaseHP(poisonDmg, Color.green);
+                    PlayParticleCollision(5, 0.0f);
                     poisonTime = 0.0f;
                 }
             }

@@ -327,8 +327,8 @@ public class BattleManager : MonoBehaviour
             {
                 switch (UIManager.instance.battleDeckRingRPText[i].text)
                 {
-                    case "20.00":
-                    case "20/20":
+                    case "10.00":
+                    case "10/10":
                         UIManager.instance.battleDeckRPNotEnoughCover[i].SetActive(false);
                         break;
                     default:
