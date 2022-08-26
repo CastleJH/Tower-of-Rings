@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public bool debugFlag;
+    public int debugInt;
 
     //ÇÁ¸®ÆÕ
     public GameObject ringPrefab;
@@ -115,8 +116,12 @@ public class GameManager : MonoBehaviour
         if (debugFlag)
         {
             debugFlag = false;
+            //BattleManager.instance.StopBattleSystem();
+            //UIManager.instance.lobbyPanel.SetActive(true);
+            UIManager.instance.gameStartPanel.SetActive(false);
             BattleManager.instance.StopBattleSystem();
-            UIManager.instance.lobbyPanel.SetActive(true);
+            NormaleModeGameStart();
+            DeckManager.instance.AddRingToDeck(debugInt);
         }
     }
 

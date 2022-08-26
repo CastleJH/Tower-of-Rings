@@ -9,12 +9,7 @@ public class Bullet : MonoBehaviour
     Monster target;         //이 불렛이 향하여 이동할 타겟
     bool isInBattle;        //전투 안에 유효하게 존재하는지 여부
 
-    TrailRenderer trailRenderer;    //트레일
-
-    void Awake()
-    {
-        trailRenderer = GetComponent<TrailRenderer>();
-    }
+    public TrailRenderer trailRenderer;    //트레일
 
     void Update()
     {
@@ -53,7 +48,7 @@ public class Bullet : MonoBehaviour
             Monster monster = collision.gameObject.GetComponent<Monster>();
             if (monster == target)    //올바른 타겟에 도달한 경우
             {
-                if (parent.baseRing != null) parent.AttackEffect(monster);  //부모링이 유효하다면 공격한다.
+                if (parent.baseRing != null) parent.AttackEffect(monster, trailRenderer.startColor);  //부모링이 유효하다면 공격한다.
                 isInBattle = false;
                 RemoveFromBattle();     //전투에서 제거한다.
             }

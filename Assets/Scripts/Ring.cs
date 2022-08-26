@@ -368,7 +368,7 @@ public class Ring : MonoBehaviour
     }
 
     //불렛이 몬스터에 닿았을 때의 효과를 정한다.
-    public void AttackEffect(Monster monster)
+    public void AttackEffect(Monster monster, Color dmgTextColor)
     {
         switch (baseRing.id)
         {
@@ -383,7 +383,7 @@ public class Ring : MonoBehaviour
             case 30:
             case 31:
             case 32:
-                monster.AE_DecreaseHP(curATK, new Color32(100, 0, 0, 255));
+                monster.AE_DecreaseHP(curATK, dmgTextColor);
                 monster.PlayParticleCollision(baseRing.id, 0.0f);
                 break;
             case 1:
@@ -393,11 +393,11 @@ public class Ring : MonoBehaviour
                 for (int i = 0; i < targets.Count && numTarget != 0; i++)
                     if (targets[i] != monster)
                     {
-                        targets[i].AE_DecreaseHP(curATK, Color.yellow);
+                        targets[i].AE_DecreaseHP(curATK, dmgTextColor);
                         targets[i].PlayParticleCollision(baseRing.id, 0.0f);
                         numTarget--;
                     }
-                monster.AE_DecreaseHP(curATK, Color.yellow);
+                monster.AE_DecreaseHP(curATK, dmgTextColor);
                 monster.PlayParticleCollision(baseRing.id, 0.0f);
                 break;
             case 3:
@@ -412,10 +412,10 @@ public class Ring : MonoBehaviour
                 monster.AE_Poison(curATK);
                 break;
             case 6:
-                monster.AE_DecreaseHP(Random.Range(0.0f, curATK), new Color32(255, 0, 100, 255));
+                monster.AE_DecreaseHP(Random.Range(0.0f, curATK), dmgTextColor);
                 break;
             case 8:
-                monster.AE_DecreaseHP(curATK, new Color32(100, 0, 0, 255));
+                monster.AE_DecreaseHP(curATK, dmgTextColor);
                 monster.PlayParticleCollision(baseRing.id, 0.0f);
                 GenerateRP(curATK);
                 break;
