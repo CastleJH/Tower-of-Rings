@@ -6920,8 +6920,8 @@ MonoBehaviour:
   ringInfoAllSynergyText: {fileID: 1970540413}
   ringInfoTakeButton: {fileID: 1878973054}
   ringInfoTakeText: {fileID: 1454904598}
-  ringInfoCannotTake: {fileID: 0}
-  ringInfoCannotTakeText: {fileID: 0}
+  ringInfoCannotTake: {fileID: 489405943}
+  ringInfoCannotTakeText: {fileID: 535189406}
   relicInfoPanel: {fileID: 784115629}
   relicInfoRelicImage: {fileID: 1527389701}
   relicInfoNameText: {fileID: 302723824}
@@ -6931,7 +6931,7 @@ MonoBehaviour:
   relicInfoCursedNotify: {fileID: 713796116}
   relicInfoTakeButton: {fileID: 2022873499}
   relicInfoTakeText: {fileID: 1527223417}
-  relicInfoCannotTake: {fileID: 0}
+  relicInfoCannotTake: {fileID: 101031104}
 --- !u!4 &326758172
 Transform:
   m_ObjectHideFlags: 0
@@ -14311,7 +14311,7 @@ MonoBehaviour:
   - {fileID: 8320238553207949081, guid: 08be81334eba1304992c8e2ec6a7ab10, type: 3}
   - {fileID: 3416776120990079515, guid: 7b78049fc8f937e4dbee0dd6f4a173a9, type: 3}
   - {fileID: 8009810557976228652, guid: 7089a091a8ffe2149a19f47c1084ac39, type: 3}
-  - {fileID: 3599427726562046272, guid: 2005b12f566f9ae4697885f4fcacb866, type: 3}
+  - {fileID: 2441957620631877770, guid: 528608fbbf9c6554086bab6f752c5938, type: 3}
   - {fileID: 7727571949918887036, guid: 5ce53c0a947185d45b0d99a4da002ec6, type: 3}
   - {fileID: 3416776120990079515, guid: 3b05b93bd15fa2c4b9b264845d2c9b14, type: 3}
   - {fileID: 3416776120990079515, guid: 79ef52e983b9cfe479edbaa28740c56f, type: 3}

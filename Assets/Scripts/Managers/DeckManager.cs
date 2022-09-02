@@ -205,6 +205,7 @@ public class DeckManager : MonoBehaviour
             GetCommanderNearestForAllRings();
         }
         else GameManager.instance.ReturnRingToPool(genRing);
+        BattleManager.instance.ChangePlayerRP(0);
     }
 
     //링을 전투에서 제거한다.

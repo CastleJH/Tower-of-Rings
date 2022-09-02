@@ -77,6 +77,8 @@ public class BattleManager : MonoBehaviour
     //전투를 시작한다.
     public void StartBattle()
     {
+        Time.timeScale = 1.0f;
+
         //전투 별 변수 초기화
         ringDowngrade.Clear();
         isBossKilled = false;

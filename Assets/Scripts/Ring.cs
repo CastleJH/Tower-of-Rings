@@ -34,6 +34,7 @@ public class Ring : MonoBehaviour
     //개별 링 변수
     int oxyRemoveCount;             //산화 링의 소멸 카운트
     float explosionSplash;          //폭발 링의 스플래쉬 데미지(비율)
+    float crankyMinDMG;             //변덕 링의 최소 데미지 비율
     Blizzard blizzard;              //눈보라
     int curseStack;                 //저주 링의 공격 당 쌓는 스택
     Amplifier amplifier;            //증폭
@@ -83,6 +84,7 @@ public class Ring : MonoBehaviour
                             break;
                         case 22:    //제자리에서 폭발
                             BombardAttack();
+                            shootCoolTime = -100.0f;
                             break;
                         case 32:    //3개인 경우만 공격
                             if (DeckManager.instance.sleepActivated == 3) TryShoot();
@@ -132,6 +134,9 @@ public class Ring : MonoBehaviour
                 break;
             case 4:
                 explosionSplash = 0.5f;
+                break;
+            case 6:
+                crankyMinDMG = 0.0f;
                 break;
             case 11:
                 blizzard = GameManager.instance.GetBlizzardFromPool();
@@ -413,7 +418,8 @@ public class Ring : MonoBehaviour
                 monster.PlayParticleCollision(baseRing.id, 0.0f);
                 break;
             case 6:
-                monster.AE_DecreaseHP(Random.Range(0.0f, curATK), dmgTextColor);
+                monster.AE_DecreaseHP(Random.Range(curATK * Mathf.Clamp01(crankyMinDMG), curATK * 2.0f), dmgTextColor);
+                monster.PlayParticleCollision(baseRing.id, 0.0f);
                 break;
             case 8:
                 monster.AE_DecreaseHP(curATK, dmgTextColor);
@@ -492,7 +498,6 @@ public class Ring : MonoBehaviour
         switch (baseRing.id)
         {
             case 0: //공 10 공 5
-            case 6:
             case 7:
             case 11:
             case 15:
@@ -526,6 +531,10 @@ public class Ring : MonoBehaviour
             case 5:
                 if (ring.baseRing.id == baseRing.id) ring.ChangeCurATK(mult * 0.5f);
                 ring.ChangeCurSPD(mult * -0.08f);
+                break;
+            case 6:
+                if (ring.baseRing.id == baseRing.id) ring.crankyMinDMG += mult * 0.1f;
+                ring.ChangeCurATK(mult * 0.05f);
                 break;
             case 9:
                 if (ring.baseRing.id == baseRing.id) ring.ChangeCurATK(mult * 0.2f);
@@ -711,7 +720,7 @@ public class Ring : MonoBehaviour
         PlayParticle(baseRing.id);
 
         //게임에서 바로 제거한다.
-        DeckManager.instance.RemoveRingFromBattle(this);
+        Invoke("InvokeRemoveRingFromBattle", 0.8f);
     }
 
     //현재 링 위치에서 파티클을 재생한다.
@@ -724,5 +733,10 @@ public class Ring : MonoBehaviour
 
         //플레이한다.
         particle.PlayParticle(transform, 0.0f);
+    }
+
+    void InvokeRemoveRingFromBattle()
+    {
+        DeckManager.instance.RemoveRingFromBattle(this);
     }
 }
