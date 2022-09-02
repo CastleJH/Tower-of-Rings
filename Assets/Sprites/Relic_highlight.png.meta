@@ -63,7 +63,7 @@ TextureImporter:
       213: -188665832897150959
     second: Relic_highlight_19
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -84,6 +84,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -122,6 +123,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -173,6 +175,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -616,6 +630,27 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Relic_highlight_8: -2190784554242031780
+      Relic_highlight_15: 7075529136559637838
+      Relic_highlight_4: 4705383101640300445
+      Relic_highlight_17: -1344710977877852345
+      Relic_highlight_18: -3456894071594851580
+      Relic_highlight_12: 4596738017961644225
+      Relic_highlight_6: 7138393517614291322
+      Relic_highlight_13: 5167870093895036466
+      Relic_highlight_16: -3793631998922868452
+      Relic_highlight_1: 650312294965595112
+      Relic_highlight_3: -8663002583659358510
+      Relic_highlight_10: -8354359039116820970
+      Relic_highlight_14: 718899429300843161
+      Relic_highlight_5: -2792953489088502860
+      Relic_highlight_0: 2730154744958878550
+      Relic_highlight_2: 921833273759133976
+      Relic_highlight_9: -770104585414942203
+      Relic_highlight_19: -188665832897150959
+      Relic_highlight_7: 4787823267603347031
+      Relic_highlight_11: 1803719972873830413
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

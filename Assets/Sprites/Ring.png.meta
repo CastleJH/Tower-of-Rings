@@ -102,7 +102,7 @@ TextureImporter:
       213: 3275805373080368544
     second: Ring_32
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -123,6 +123,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -161,6 +162,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -212,6 +214,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -928,6 +942,40 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Ring_19: -7798430623154920118
+      Ring_8: -5480468504741716077
+      Ring_15: -131369055084144854
+      Ring_21: 3231028609667672001
+      Ring_31: -5512384134514566226
+      Ring_12: 23584326800434632
+      Ring_13: -7179288559180606696
+      Ring_3: -6673147589521896033
+      Ring_6: 802879136454210966
+      Ring_14: -2205157694857922683
+      Ring_22: 8600428080114567234
+      Ring_5: -2115420830505224574
+      Ring_25: 7845987341181534459
+      Ring_26: 6106977814324797040
+      Ring_1: -5400542443128171897
+      Ring_16: -575155370584653370
+      Ring_20: 1891788749979711558
+      Ring_30: -3673113815009815638
+      Ring_11: -2201862278539263975
+      Ring_4: 7168475762293652931
+      Ring_27: -6345958079230104290
+      Ring_17: 9018304868546886144
+      Ring_23: 6963772231916330116
+      Ring_28: 5778515264242307154
+      Ring_7: -6914084895347813649
+      Ring_0: 4004708080983207187
+      Ring_9: -2528051119814327294
+      Ring_10: 1153278037751351165
+      Ring_32: 3275805373080368544
+      Ring_24: -1412607297335059009
+      Ring_2: 6203491974699578629
+      Ring_18: -5171988948021587854
+      Ring_29: -5339909947723717418
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

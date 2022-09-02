@@ -51,7 +51,7 @@ TextureImporter:
       213: -3171498388102269211
     second: Button_UI_15
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -72,6 +72,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -110,6 +111,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -161,6 +163,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -520,6 +534,23 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Button_UI_4: 4694131651281769593
+      Button_UI_0: -1413147806543791720
+      Button_UI_6: 5035601436481425053
+      Button_UI_14: -3724327721277038514
+      Button_UI_9: -6597590584381933078
+      Button_UI_11: -3263562800407086228
+      Button_UI_1: 971915468736538151
+      Button_UI_3: 7049014767191604786
+      Button_UI_5: 9047328815098973799
+      Button_UI_12: 5496923428379515321
+      Button_UI_2: -7810316573695522972
+      Button_UI_10: 8780310952213164725
+      Button_UI_7: 5125859816507845940
+      Button_UI_8: -9119322868731615834
+      Button_UI_15: -3171498388102269211
+      Button_UI_13: -528650698207577956
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
