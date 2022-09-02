@@ -219,8 +219,18 @@ public class DeckManager : MonoBehaviour
     //덱에 링을 넣는다.
     public bool AddRingToDeck(int ringID)
     {
-        if (deck.Count >= maxDeckLength) return false;
-        if (deck.Contains(ringID)) return false;
+        if (deck.Count >= maxDeckLength)
+        {
+            UIManager.instance.ringInfoCannotTakeText.text = "이미 6개의 링을 보유하고 있습니다.";
+            UIManager.instance.ringInfoCannotTake.SetActive(true);
+            return false;
+        }
+        if (deck.Contains(ringID))
+        {
+            UIManager.instance.ringInfoCannotTakeText.text = "이미 보유한 링입니다.";
+            UIManager.instance.ringInfoCannotTake.SetActive(true);
+            return false;
+        }
         if (ringID < 0 || ringID >= GameManager.instance.baseRings.Count) return false;
         deck.Add(ringID);
         return true;

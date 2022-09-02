@@ -67,6 +67,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI ringInfoAllSynergyText;
     public GameObject ringInfoTakeButton;
     public TextMeshProUGUI ringInfoTakeText;
+    public GameObject ringInfoCannotTake;
+    public TextMeshProUGUI ringInfoCannotTakeText;
 
     public GameObject relicInfoPanel;
     public Image relicInfoRelicImage;
@@ -77,6 +79,7 @@ public class UIManager : MonoBehaviour
     public GameObject relicInfoCursedNotify;
     public GameObject relicInfoTakeButton;
     public TextMeshProUGUI relicInfoTakeText;
+    public GameObject relicInfoCannotTake;
 
     float titleTextBlinkTime;
 
@@ -327,6 +330,7 @@ public class UIManager : MonoBehaviour
         ringInfoAllSynergyText.text = baseRing.toAll;
 
         ringInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf && !ringSelectionPanel.activeSelf);
+        ringInfoCannotTake.SetActive(false);
 
         ringInfoPanel.SetActive(true);
     }
@@ -354,6 +358,7 @@ public class UIManager : MonoBehaviour
         }
 
         relicInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf);
+        relicInfoCannotTake.SetActive(false);
 
         relicInfoPanel.SetActive(true);
     }
@@ -443,23 +448,20 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    //재화를 소모해야 하면 소모한다. 재화가 부족한 경우거나 이미 덱이 다 차있다면 획득하지 않는다.
+    //재화를 소모해야 하면 소모한다. 재화가 부족한 경우거나 이미 있는 링이거나 이미 덱이 다 차있다면 획득하지 않는다.
     public void ButtonTakeRing()
     {
         if (ringInfoTakeText.text[0] != '이') return;
         int type = -1;
+        string targetName = ringInfoNameText.text.Substring(0, ringInfoNameText.text.Length - 2);
         for (int i = 0; i < GameManager.instance.baseRings.Count; i++)
-            if (GameManager.instance.baseRings[i].name == ringInfoNameText.text)
+            if (GameManager.instance.baseRings[i].name == targetName)
             {
                 type = i;
                 break;
             }
 
-        if (DeckManager.instance.AddRingToDeck(type))
-        {
-            ClosePanel(3);
-            return;
-        }
+        if (!DeckManager.instance.AddRingToDeck(type)) return;
 
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
             if (FloorManager.instance.curRoom.items[i].itemType == 1000 + type)
@@ -471,7 +473,7 @@ public class UIManager : MonoBehaviour
         ClosePanel(3);
     }
 
-    //재화를 소모해야 하면 소모한다. 재화가 부족한 경우라면 획득하지 않는다.
+    //재화를 소모해야 하면 소모한다. 이미 보유하였거나 재화가 부족한 경우라면 획득하지 않는다.
     public void ButtonTakeRelic()
     {
         if (relicInfoTakeText.text[0] != '이') return;
@@ -482,6 +484,12 @@ public class UIManager : MonoBehaviour
                 type = i;
                 break;
             }
+
+        if (GameManager.instance.relics.Contains(type))
+        {
+            relicInfoCannotTake.SetActive(true);
+            return;
+        }
 
         //유물의 방에서 획득한 것이라면 일정 확률로 저주
         bool isRelicPure = true;

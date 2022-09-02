@@ -528,7 +528,7 @@ public class GameManager : MonoBehaviour
     //유물을 플레이어에게 준다. 이미 있던 유물이면서 저주 여부까지 똑같다면 false를 반환한다. 그렇지 않다면 획득시의 효과를 적용하고 true를 반환한다.
     public bool AddRelicToPlayer(int id, bool isPure)
     {
-        if (baseRelics[id].have && baseRelics[id].isPure == isPure) return false;
+        if (baseRelics[id].isPure == isPure) return false;
         if (!baseRelics[id].have)
         {
             relics.Add(id);
