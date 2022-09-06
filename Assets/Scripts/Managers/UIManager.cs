@@ -10,8 +10,12 @@ public class UIManager : MonoBehaviour
 
     public GameObject gameStartPanel;
     public GameObject gameStartText;
+
     public GameObject lobbyPanel;
-    public GameObject gameEndPanel;
+    public Toggle lobbyHardModeToggleButton;
+    
+    public Image gameEndPanel;
+    public Sprite[] gameEndSprites;
     
     public GameObject mapPanel;
     public Image[] mapRow1, mapRow2, mapRow3, mapRow4, mapRow5, mapRow6, mapRow7, mapRow8, mapRow9;
@@ -98,6 +102,7 @@ public class UIManager : MonoBehaviour
         maps[9] = mapRow9;
 
         titleTextBlinkTime = 0.0f;
+        gameStartPanel.SetActive(true);
     }
 
     void Update()
@@ -363,9 +368,10 @@ public class UIManager : MonoBehaviour
         relicInfoPanel.SetActive(true);
     }
 
-    public void OpenGameEndPanel()
+    public void OpenEndingPanel(int endingState)
     {
-        gameEndPanel.SetActive(true);
+        gameEndPanel.sprite = gameEndSprites[endingState];
+        gameEndPanel.gameObject.SetActive(true);
     }
 
     public void ClosePanel(int panelNum)
@@ -539,9 +545,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ButtonStartNormalMode()
+    public void ButtonStartGame()
     {
-        GameManager.instance.NormaleModeGameStart();
+        GameManager.instance.GameStart();
     }
 
     public void ButtonOpenLobby()
@@ -552,6 +558,8 @@ public class UIManager : MonoBehaviour
     public void ChangeSceneToLobby(int a, int b)
     {
         lobbyPanel.SetActive(true);
+        lobbyHardModeToggleButton.isOn = false;
+
         battleArrangeFail.SetActive(false);
         battleDeckPanel.SetActive(false);
         ringSelectionPanel.SetActive(false);
@@ -559,7 +567,7 @@ public class UIManager : MonoBehaviour
         ringInfoPanel.SetActive(false);
         relicInfoPanel.SetActive(false);
         gameStartPanel.SetActive(false);
-        gameEndPanel.SetActive(false);
+        gameEndPanel.gameObject.SetActive(false);
     }
 
     void InvokeReloadAndCloseRingSelectionPanel()

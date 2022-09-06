@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
     public int diamond;
 
     //개별 게임 관련 변수
+    public bool isNormalMode;
     public int playerMaxHP;
     public int playerCurHP;
     public int gold;
@@ -120,27 +121,32 @@ public class GameManager : MonoBehaviour
             //UIManager.instance.lobbyPanel.SetActive(true);
             UIManager.instance.gameStartPanel.SetActive(false);
             BattleManager.instance.StopBattleSystem();
-            NormaleModeGameStart();
+            GameStart();
             DeckManager.instance.AddRingToDeck(debugInt);
         }
     }
 
-    //노말모드 게임을 시작한다.
-    public void NormaleModeGameStart()
+    //게임을 시작한다.
+    public void GameStart()
     {
-        InitializeGame(true);
+        InitializeGame();
+        UIManager.instance.mapPanel.SetActive(true);
+        FloorManager.instance.endPortal.SetActive(false);
         FloorManager.instance.CreateAndMoveToFloor(1);
     }
 
-    //게임을 초기화한다. isNormal이 true이면 노말모드, false이면 하드모드로 초기화한다.
-    void InitializeGame(bool isNormal)
+    //게임을 초기화한다.
+    void InitializeGame()
     {
+        isNormalMode = !UIManager.instance.lobbyHardModeToggleButton.isOn;
+        
         //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 초기로 되돌린다(DB값과 일치하도록).
-        ResetBases(isNormal);
+        ResetBases(isNormalMode);
 
         //플레이어 시작 HP값을 정한다.
         playerMaxHP = 100;
-        playerCurHP = 100;
+        if (!isNormalMode) playerMaxHP /= 2;
+        playerCurHP = playerMaxHP;
         ChangePlayerCurHP(0);
 
         //플레이어 시작 골드량을 정한다. 다이아몬드는 개별 게임과 독립적이므로 바꾸지 않는다.
@@ -171,15 +177,17 @@ public class GameManager : MonoBehaviour
     //진행중이던 게임을 게임오버 처리한다(HP가 0이 되었거나, 플레이어가 메뉴에서 포기를 눌렀거나).
     void OnGameOver(int a, int b)
     {
-        UIManager.instance.OpenGameEndPanel();  //게임오버패널을 연다.
+        UIManager.instance.OpenEndingPanel(0);  //게임오버 이미지로 패널을 연다.
         BattleManager.instance.StopBattleSystem();     //배틀시스템을 모두 종료한다.
         ResetBases(true);           //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 DB값과 일치시킨다. 도감 열었을 때 표시되는 스탯이 원래대로 돌아오기 위함임.
         Time.timeScale = 1;         //속도를 원래대로 돌린다.
     }
 
     //진행중이던 게임을 클리어 처리한다(7층의 보스를 처치했을 때).
-    void OnGameClear(int a, int b)
+    public void OnGameClear(int a, int b)
     {
+        UIManager.instance.OpenEndingPanel(1);  //게임클리어 이미지로 패널을 연다.
+        UIManager.instance.lobbyHardModeToggleButton.gameObject.SetActive(true);
         BattleManager.instance.StopBattleSystem();     //배틀시스템을 모두 종료한다.
         ResetBases(true);           //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 DB값과 일치시킨다. 도감 열었을 때 표시되는 스탯이 원래대로 돌아오기 위함임.
         Time.timeScale = 1;         //속도를 원래대로 돌린다.

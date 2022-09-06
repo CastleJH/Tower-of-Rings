@@ -12,6 +12,7 @@ public class FloorManager : MonoBehaviour
     //그래픽 관련 변수
     bool isPortalOn;
     public Animator[] portals;
+    public GameObject endPortal;
     public SpriteRenderer roomImage;
     float portalScale;
 
@@ -223,6 +224,7 @@ public class FloorManager : MonoBehaviour
                         if (GameManager.instance.baseRelics[11].isPure) price = 0.5f;
                         else price = 1.3f;
                     }
+                    if (!GameManager.instance.isNormalMode) price *= 2.0f;
                     Item item;
                     int itemID;
 
@@ -325,9 +327,17 @@ public class FloorManager : MonoBehaviour
         }
         if (curRoom.visited && curRoom.type == 9)
         {
-            portals[4].gameObject.transform.localScale = Vector3.zero;
-            portals[4].gameObject.SetActive(true);
-            portals[4].SetFloat("portalColor", 0.8f);
+            if (floor.floorNum < 7)
+            {
+                portals[4].gameObject.transform.localScale = Vector3.zero;
+                portals[4].gameObject.SetActive(true);
+                portals[4].SetFloat("portalColor", 0.8f);
+            }
+            else
+            {
+                for (int i = 0; i < 4; i++) portals[i].gameObject.SetActive(false);
+                endPortal.SetActive(true);
+            }
         }
         else portals[4].gameObject.SetActive(false);
     }
@@ -347,9 +357,13 @@ public class FloorManager : MonoBehaviour
             if (hit.collider != null)
             {
                 if (hit.collider.tag != "Portal" || Time.timeScale == 0) return;
-                int dir = hit.collider.name[hit.collider.name.Length - 1] - '0'; 
+                int dir = hit.collider.name[hit.collider.name.Length - 1] - '0';
                 if (hit.collider.gameObject != portals[4].gameObject) SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir]);
-                else CreateAndMoveToFloor(floor.floorNum + 1);
+                else
+                {
+                    if (floor.floorNum < 7) CreateAndMoveToFloor(floor.floorNum + 1);
+                    else SceneChanger.instance.ChangeScene(GameManager.instance.OnGameClear, 0, 0);
+                }
             }
         }
     }
