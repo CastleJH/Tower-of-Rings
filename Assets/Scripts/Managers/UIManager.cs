@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using GooglePlayGames.BasicApi.SavedGame;
 
 public class UIManager : MonoBehaviour
 {
@@ -13,7 +14,11 @@ public class UIManager : MonoBehaviour
 
     public GameObject lobbyPanel;
     public Toggle lobbyHardModeToggleButton;
-    
+
+    public GameObject spiritEnhancePanel;
+    public TextMeshProUGUI[] spiritEnhanceLevelText;
+    public TextMeshProUGUI[] spiritEnhanceCostText;
+
     public Image gameEndPanel;
     public Sprite[] gameEndSprites;
     
@@ -201,6 +206,17 @@ public class UIManager : MonoBehaviour
     public void TurnMapOnOff(bool isOn)
     {
         mapPanel.SetActive(isOn);
+    }
+
+    public void OpenLobbySpiritEnhancePanel()
+    {
+        for (int i = 0; i < GameManager.instance.spiritEnhanceLevel.Length; i++)
+        {
+            spiritEnhanceLevelText[i].text = "Level\n" + GameManager.instance.spiritEnhanceLevel[i].ToString() + "/" + GameManager.instance.spiritMaxLevel[i].ToString();
+            if (GameManager.instance.spiritEnhanceLevel[i] == GameManager.instance.spiritMaxLevel[i]) spiritEnhanceCostText[i].text = "MAX";
+            else spiritEnhanceCostText[i].text = ((int)GameManager.instance.spiritEnhanceCost[i]).ToString();
+        }
+        spiritEnhancePanel.SetActive(true);
     }
 
     public void OpenBattleDeckPanel()
@@ -552,7 +568,22 @@ public class UIManager : MonoBehaviour
 
     public void ButtonOpenLobby()
     {
+        GameManager.instance.ChangeDiamond(0);
         SceneChanger.instance.ChangeScene(ChangeSceneToLobby, 0, 0);
+    }
+
+    public void ButtonSpiritEnhancePanelOpen()
+    {
+        OpenLobbySpiritEnhancePanel();
+    }
+
+    public void ButtonEnhanceSpirit(int idx)
+    {
+        if (GameManager.instance.spiritMaxLevel[idx] == GameManager.instance.spiritEnhanceLevel[idx]) return;
+        if (!GameManager.instance.ChangeDiamond(-(int)GameManager.instance.spiritEnhanceCost[idx])) return;
+        GameManager.instance.spiritEnhanceLevel[idx]++;
+        GameManager.instance.spiritEnhanceCost[idx] *= 1.2f;
+        OpenLobbySpiritEnhancePanel();
     }
 
     public void ChangeSceneToLobby(int a, int b)

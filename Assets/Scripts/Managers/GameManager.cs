@@ -63,8 +63,11 @@ public class GameManager : MonoBehaviour
     private Queue<DropRP> dropRPPool;
     private Queue<Item> itemPool;
 
-    //통합 게임 관련 변수
+    //통합 게임 관련 변수 & 플레이어 통합 능력치
     public int diamond;
+    public int[] spiritMaxLevel;
+    public float[] spiritEnhanceCost;
+    public int[] spiritEnhanceLevel;
 
     //개별 게임 관련 변수
     public bool isNormalMode;
@@ -74,6 +77,7 @@ public class GameManager : MonoBehaviour
     public List<int> relics;
     public List<int> cursedRelics;
     bool revivable;
+
 
     void Awake()
     {
@@ -109,7 +113,37 @@ public class GameManager : MonoBehaviour
             particlePool[i] = new Queue<ParticleChecker>();
         }
 
-        diamond = 0;
+        //영혼 강화 기록
+        spiritMaxLevel = new int[11] { 10, 10, 5, 5, 5, 5, 4, 5, 1, 1, 1 };
+        /* 인덱스 설명
+            0: 링 기본 공격력 5% 증가
+            1: 링 기본 공격 쿨타임 3% 감소
+            2: 시작 HP 4 증가
+            3: 시작 RP 2 증가
+            4: 시작 골드 2 증가
+            5: 물약의 HP 회복량 10% 증가
+            6: 유물 저주 확률 5% 감소
+            7: 전투 후 링 드랍률 2% 증가
+            8: 모든 다이아몬드 획득량 1 증가
+            9: 시작 시 랜덤한 링 하나 드랍
+            10: 시작 시 랜덤한 유물 하나 드랍
+        */
+        //GPGS 플레이어 정보 읽기
+        if (true)   //최초로 플레이 하는 경우
+        {
+            //영혼 강화 정보 초기화
+            spiritEnhanceLevel = new int[11] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            spiritEnhanceCost = new float[11] { 3.0f, 3.0f, 10.0f, 10.0f, 10.0f, 5.0f, 20.0f, 20.0f, 50.0f, 70.0f, 70.0f };
+
+            gold = 0;
+            diamond = 0;
+        }
+        else
+        {
+
+        }
+
+        //탑의 지식 오픈 기록
     }
 
     void Update()
