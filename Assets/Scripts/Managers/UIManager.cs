@@ -420,6 +420,9 @@ public class UIManager : MonoBehaviour
             case 4:
                 relicInfoPanel.SetActive(false);
                 break;
+            case 5:
+                spiritEnhancePanel.SetActive(false);
+                break;
         }
     }
     
@@ -523,6 +526,7 @@ public class UIManager : MonoBehaviour
                 if (GameManager.instance.baseRelics[8].isPure) curseProb = 0.1f;
                 else curseProb = 0.3f;
             }
+            curseProb -= GameManager.instance.spiritEnhanceLevel[6] * 0.025f;
             if (Random.Range(0.0f, 1.0f) <= curseProb)
             {
                 isRelicPure = false;
@@ -530,6 +534,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
+        Debug.Log(type);
         GameManager.instance.AddRelicToPlayer(type, isRelicPure);
 
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)

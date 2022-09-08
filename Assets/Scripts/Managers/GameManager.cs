@@ -177,14 +177,21 @@ public class GameManager : MonoBehaviour
         //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 초기로 되돌린다(DB값과 일치하도록).
         ResetBases(isNormalMode);
 
+        //플레이어가 강화한 기본 링 공격력/공격 쿨타임을 적용한다.
+        for (int i = 0; i < baseRings.Count; i++) baseRings[i].RenewStat();
+
+        //유물을 모두 비운다.
+        relics.Clear();
+        cursedRelics.Clear();
+
         //플레이어 시작 HP값을 정한다.
-        playerMaxHP = 100;
+        playerMaxHP = 100 + spiritEnhanceLevel[2] * 4;
         if (!isNormalMode) playerMaxHP /= 2;
         playerCurHP = playerMaxHP;
         ChangePlayerCurHP(0);
 
         //플레이어 시작 골드량을 정한다. 다이아몬드는 개별 게임과 독립적이므로 바꾸지 않는다.
-        gold = 0;
+        gold = spiritEnhanceLevel[4] * 2 ;
         ChangeGold(0);
         ChangeDiamond(0);
 
@@ -194,17 +201,6 @@ public class GameManager : MonoBehaviour
         //덱을 초기화한다.
         DeckManager.instance.InitializeDeck();
 
-        //유물을 모두 비운다.
-        relics.Clear();
-        cursedRelics.Clear();
-
-        //플레이어가 강화한 자체 스탯을 적용한다.
-        ApplyPlayerStat();
-    }
-
-    //플레이어가 강화한 자체 스탯을 적용한다(로비에서 강화한 스탯, 시작 링/유물로 선정한 것들을 덱에 넣기 등).
-    void ApplyPlayerStat()
-    {
 
     }
 
@@ -570,7 +566,7 @@ public class GameManager : MonoBehaviour
     //유물을 플레이어에게 준다. 이미 있던 유물이면서 저주 여부까지 똑같다면 false를 반환한다. 그렇지 않다면 획득시의 효과를 적용하고 true를 반환한다.
     public bool AddRelicToPlayer(int id, bool isPure)
     {
-        if (baseRelics[id].isPure == isPure) return false;
+        if (baseRelics[id].have && baseRelics[id].isPure == isPure) return false;
         if (!baseRelics[id].have)
         {
             relics.Add(id);

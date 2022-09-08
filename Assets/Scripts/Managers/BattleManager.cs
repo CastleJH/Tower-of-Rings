@@ -85,11 +85,11 @@ public class BattleManager : MonoBehaviour
         pathAlpha = 0;
         rpGenerateTime = 0.0f;
         rpNextGenerateTime = 5.0f;
-        rp = 50;
+        rp = 50 + GameManager.instance.spiritEnhanceLevel[3] * 2;
         if (GameManager.instance.baseRelics[19].have)
         {
-            if (GameManager.instance.baseRelics[19].isPure) rp = 55;
-            else rp = 47;
+            if (GameManager.instance.baseRelics[19].isPure) rp *= 1.1f;
+            else rp *= 0.9f;
         }
 
         //전장을 키고 UI를 셋팅한다.
@@ -216,6 +216,7 @@ public class BattleManager : MonoBehaviour
                 if (GameManager.instance.baseRelics[10].isPure) goldProb = 0.8f;
                 else goldProb = 2.0f;
             }
+            goldProb -= GameManager.instance.spiritEnhanceLevel[7] * 0.02f;
             if (Random.Range(0.0f, 1.0f) < goldProb)    //재화 획득인 경우
             {
                 //골드 드랍(0~2개)
@@ -269,6 +270,18 @@ public class BattleManager : MonoBehaviour
                 item.InitializeItem(2000 + itemID, FloorManager.instance.itemPos[3], 0, 0);
                 FloorManager.instance.curRoom.AddItem(item);
                 isItemDrop = true;
+
+                item = GameManager.instance.GetItemFromPool();
+                item.InitializeItem(5, FloorManager.instance.itemPos[2], 0, 0);
+                FloorManager.instance.curRoom.AddItem(item);
+
+                int diamondGet = 4 + Random.Range(0, 3);
+                for (int i = 4; i < diamondGet; i++)
+                {
+                    item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(5, FloorManager.instance.itemPos[i], 0, 0);
+                    FloorManager.instance.curRoom.AddItem(item);
+                }
             }
         }
         return isItemDrop;

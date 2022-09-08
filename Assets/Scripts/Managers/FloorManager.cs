@@ -95,6 +95,29 @@ public class FloorManager : MonoBehaviour
             if (GameManager.instance.baseRelics[0].isPure) GameManager.instance.ChangePlayerCurHP(10); 
             else GameManager.instance.ChangePlayerCurHP(-10);
         }
+        if (f == 1)
+        {
+            if (GameManager.instance.spiritEnhanceLevel[9] == 1)
+            {
+                Item item = GameManager.instance.GetItemFromPool();
+                int ringID;
+                do ringID = Random.Range(0, GameManager.instance.baseRings.Count);
+                while (DeckManager.instance.deck.Contains(ringID));
+                if (GameManager.instance.spiritEnhanceLevel[10] == 0) item.InitializeItem(1000 + ringID, Vector3.forward, 0, 0);
+                else item.InitializeItem(1000 + ringID, itemPos[0], 0, 0);
+                floor.rooms[floor.startX, floor.startY].AddItem(item);
+            }
+            if (GameManager.instance.spiritEnhanceLevel[10] == 1)
+            {
+                Item item = GameManager.instance.GetItemFromPool();
+                int relicID;
+                do relicID = Random.Range(0, GameManager.instance.baseRelics.Count);
+                while (GameManager.instance.relics.Contains(relicID));
+                if (GameManager.instance.spiritEnhanceLevel[9] == 0) item.InitializeItem(2000 + relicID, Vector3.forward, 0, 0);
+                else item.InitializeItem(2000 + relicID, itemPos[1], 0, 0);
+                floor.rooms[floor.startX, floor.startY].AddItem(item);
+            }
+        }
     }
 
     //해당 방으로 이동한다.
@@ -142,7 +165,7 @@ public class FloorManager : MonoBehaviour
                         curRoom.AddItem(item);
                     }
                 }
-                ShowItems();
+                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 3:
@@ -155,7 +178,7 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(1000 + ringID, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                ShowItems();
+                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 4:
@@ -168,7 +191,7 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(2000 + relicID, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                ShowItems();
+                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 5:
@@ -178,7 +201,7 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(1, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                ShowItems();
+                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 6:
@@ -202,7 +225,7 @@ public class FloorManager : MonoBehaviour
                         }
                     }
                 }
-                ShowItems();
+                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 7:
@@ -212,7 +235,7 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(2, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                ShowItems();
+                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 8:
@@ -267,7 +290,7 @@ public class FloorManager : MonoBehaviour
                         curRoom.AddItem(item);
                     }
                 }
-                ShowItems();
+                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 9:
@@ -277,10 +300,11 @@ public class FloorManager : MonoBehaviour
                     curRoom.AddSinkhole();
                     BattleManager.instance.StartBattle();
                 }
-                else ShowItems();
+                //else ShowItems();
                 TurnPortalsOnOff(curRoom.visited);
                 break;
         }
+        ShowItems();
         curRoom.visited = true;
 
         //지도에 변화를 준다.

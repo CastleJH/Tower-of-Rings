@@ -56,8 +56,8 @@ public class BaseRing
     //레벨, 유물, 플레이어 스탯을 적용한 링 원형의 스탯
     public void RenewStat()    
     {
-        baseATK = csvATK * (1.0f + (level - 1) * 0.25f);
-        baseSPD = csvSPD * (1.0f - (level - 1) * 0.05f);
+        baseATK = csvATK * (1.0f + (level - 1) * 0.25f) * (1.0f + GameManager.instance.spiritEnhanceLevel[0] * 0.05f);
+        baseSPD = csvSPD * (1.0f - (level - 1) * 0.05f) * (1.0f - GameManager.instance.spiritEnhanceLevel[1] * 0.03f);
         if (GameManager.instance.baseRelics[2].have && GameManager.instance.playerCurHP < GameManager.instance.playerMaxHP * 0.2f)
         {
             if (GameManager.instance.baseRelics[2].isPure) baseATK *= 1.2f;

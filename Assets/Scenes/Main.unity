@@ -6034,7 +6034,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC720\uBB3C \uC800\uC8FC \uD655\uB960 5% \uAC10\uC18C"
+  m_text: "\uC720\uBB3C \uC800\uC8FC \uD655\uB960 2.5% \uAC10\uC18C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c6d32859ed8a2b439ef9ee8ef07dae8, type: 2}
   m_sharedMaterial: {fileID: -3544637589369034898, guid: 4c6d32859ed8a2b439ef9ee8ef07dae8, type: 2}
@@ -17301,7 +17301,7 @@ MonoBehaviour:
   - {fileID: 489912894}
   sinkholeNorth: {fileID: 1898551215}
   sinkholeSouth: {fileID: 1800651976}
-  diamond: 0
+  diamond: 694
   spiritMaxLevel: 
   spiritEnhanceCost: []
   spiritEnhanceLevel: 
@@ -47045,7 +47045,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1589694858}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ClosePanel
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 5
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1589694858
 MonoBehaviour:
   m_ObjectHideFlags: 0

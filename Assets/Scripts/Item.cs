@@ -72,7 +72,7 @@ public class Item : MonoBehaviour
                     UIManager.instance.OpenRingSelectionPanel(0);
                     break;
                 case 2:     //HP 회복
-                    float healAmount = GameManager.instance.playerMaxHP * Random.Range(0.15f, 0.3f);
+                    float healAmount = GameManager.instance.playerMaxHP * Random.Range(0.15f, 0.3f) * (1.0f + GameManager.instance.spiritEnhanceLevel[5] * 0.1f);
                     if (GameManager.instance.baseRelics[9].have)    //유물 보유 여부에 따라 회복량을 조정한다.
                     {
                         if (GameManager.instance.baseRelics[9].isPure) healAmount *= 2;
@@ -92,7 +92,7 @@ public class Item : MonoBehaviour
                     FloorManager.instance.RemoveItem(this, false);
                     break;
                 case 5:     //1다이아몬드 획득
-                    GameManager.instance.ChangeDiamond(1);
+                    GameManager.instance.ChangeDiamond(1 + GameManager.instance.spiritEnhanceLevel[8]);
                     FloorManager.instance.RemoveItem(this, false);
                     break;
                 case 6:     //유물 정화
