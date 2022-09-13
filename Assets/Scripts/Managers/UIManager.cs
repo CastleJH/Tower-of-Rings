@@ -439,6 +439,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ButtonRingCollectionSelectRing(int id)
+    {
+
+    }
+
     public void ButtonRelicInfoOpen(int listIdx)
     {
         if (listIdx < GameManager.instance.relics.Count)
