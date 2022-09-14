@@ -444,6 +444,11 @@ public class UIManager : MonoBehaviour
 
     }
 
+    public void ButtonRelicCollectionSelectRelic(int id)
+    {
+
+    }
+
     public void ButtonRelicInfoOpen(int listIdx)
     {
         if (listIdx < GameManager.instance.relics.Count)
