@@ -82,6 +82,7 @@ public class FloorManager : MonoBehaviour
     //해당 층을 새로 생성하고 이동한다.
     public void CreateAndMoveToFloor(int f)
     {
+        ResetFloor();
         floor.Generate(f); 
         UIManager.instance.InitializeMap();
 
@@ -118,6 +119,14 @@ public class FloorManager : MonoBehaviour
                 floor.rooms[floor.startX, floor.startY].AddItem(item);
             }
         }
+    }
+
+    public void ResetFloor()
+    {
+        if (floor != null)
+            for (int i = 1; i <= 9; i++)
+                for (int j = 1; j <= 9; j++)
+                    floor.rooms[i, j].RemoveAllItems();
     }
 
     //해당 방으로 이동한다.
@@ -422,7 +431,7 @@ public class FloorManager : MonoBehaviour
         for (int i = 0; i < curRoom.items.Count; i++)
         {
             curRoom.items[i].transform.position = Camera.main.transform.position + curRoom.items[i].pos;
-            if (curRoom.items[i].itemType >= 1000) GameManager.instance.RingCollectionProgressUp(curRoom.items[i].itemType - 1000, 0);
+            if (curRoom.items[i].itemType >= 1000 && curRoom.items[i].itemType < 2000) GameManager.instance.RingCollectionProgressUp(curRoom.items[i].itemType - 1000, 0);
             curRoom.items[i].gameObject.SetActive(true);
         }
     }

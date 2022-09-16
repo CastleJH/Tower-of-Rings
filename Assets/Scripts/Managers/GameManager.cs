@@ -181,9 +181,6 @@ public class GameManager : MonoBehaviour
         //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 초기로 되돌린다(DB값과 일치하도록).
         ResetBases(isNormalMode);
 
-        //플레이어가 강화한 기본 링 공격력/공격 쿨타임을 적용한다.
-        for (int i = 0; i < baseRings.Count; i++) baseRings[i].RenewStat();
-
         //유물을 모두 비운다.
         relics.Clear();
         cursedRelics.Clear();
@@ -192,7 +189,7 @@ public class GameManager : MonoBehaviour
         playerMaxHP = 100 + spiritEnhanceLevel[2] * 4;
         if (!isNormalMode) playerMaxHP /= 2;
         playerCurHP = playerMaxHP;
-        ChangePlayerCurHP(0);
+        ChangePlayerCurHP(0);   //여기서 영혼강화로 인한 링 기본 공격력/공격 쿨타임도 변한다.
 
         //플레이어 시작 골드량을 정한다. 다이아몬드는 개별 게임과 독립적이므로 바꾸지 않는다.
         gold = spiritEnhanceLevel[4] * 2 ;
@@ -204,8 +201,6 @@ public class GameManager : MonoBehaviour
 
         //덱을 초기화한다.
         DeckManager.instance.InitializeDeck();
-
-
     }
 
     //진행중이던 게임을 게임오버 처리한다(HP가 0이 되었거나, 플레이어가 메뉴에서 포기를 눌렀거나).
@@ -539,8 +534,12 @@ public class GameManager : MonoBehaviour
                 SceneChanger.instance.ChangeScene(OnGameOver, 0, 0);
             }
         }
-        
-        for (int i = 0; i < baseRings.Count; i++) baseRings[i].RenewStat();
+
+        for (int i = 0; i < baseRings.Count; i++)
+        {
+            baseRings[i].RenewStat();
+            Debug.Log(baseRings[i].baseATK);
+        }
         for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) DeckManager.instance.rings[i].ChangeCurATK(0);
 
         if (_HP == 0) return false;
