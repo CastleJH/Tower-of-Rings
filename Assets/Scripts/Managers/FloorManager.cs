@@ -386,7 +386,11 @@ public class FloorManager : MonoBehaviour
                 else
                 {
                     if (floor.floorNum < 7) CreateAndMoveToFloor(floor.floorNum + 1);
-                    else SceneChanger.instance.ChangeScene(GameManager.instance.OnGameClear, 0, 0);
+                    else
+                    {
+                        SceneChanger.instance.ChangeScene(GameManager.instance.OnGameClear, 0, 0);
+                        for (int i = 0; i < DeckManager.instance.deck.Count; i++) GameManager.instance.RingCollectionProgressUp(DeckManager.instance.deck[i], 4);
+                    }
                 }
             }
         }
@@ -418,6 +422,7 @@ public class FloorManager : MonoBehaviour
         for (int i = 0; i < curRoom.items.Count; i++)
         {
             curRoom.items[i].transform.position = Camera.main.transform.position + curRoom.items[i].pos;
+            if (curRoom.items[i].itemType >= 1000) GameManager.instance.RingCollectionProgressUp(curRoom.items[i].itemType - 1000, 0);
             curRoom.items[i].gameObject.SetActive(true);
         }
     }

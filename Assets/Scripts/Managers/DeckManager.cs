@@ -234,6 +234,10 @@ public class DeckManager : MonoBehaviour
         }
         if (ringID < 0 || ringID >= GameManager.instance.baseRings.Count) return false;
         deck.Add(ringID);
+        GameManager.instance.RingCollectionProgressUp(ringID, 0);
+        GameManager.instance.RingCollectionProgressUp(ringID, 1);
+        if (GameManager.instance.baseRings[ringID].maxlvl == 1)
+            GameManager.instance.RingCollectionProgressUp(ringID, 2);
         return true;
     }
 

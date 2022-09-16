@@ -627,4 +627,10 @@ public class GameManager : MonoBehaviour
         ChangePlayerCurHP(0);
         return true;
     }
+
+    //링 콜렉션 진행상황을 하나 올린다.
+    public void RingCollectionProgressUp(int ringID, int questID)
+    {
+        if (ringCollectionProgress[ringID, questID] != -1) ringCollectionProgress[ringID, questID] = Mathf.Clamp(ringCollectionProgress[ringID, questID] + 1, 0, ringCollectionMaxProgress[ringID, questID]);
+    }
 }

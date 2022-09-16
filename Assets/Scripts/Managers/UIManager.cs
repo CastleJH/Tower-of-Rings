@@ -457,8 +457,10 @@ public class UIManager : MonoBehaviour
     {
         if (deckIdx < DeckManager.instance.deck.Count)
         {
+            int ringID = DeckManager.instance.deck[deckIdx];
             if (ringSelectionButtonText[0].text == "ÆÄ±«")
             {
+                GameManager.instance.RingCollectionProgressUp(ringID, 3);
                 DeckManager.instance.RemoveRingFromDeck(deckIdx);
                 FloorManager.instance.RemoveItem(FloorManager.instance.lastTouchItem, true);
                 ringSelectionEffectImage.sprite = GameManager.instance.itemSprites[1];
@@ -466,8 +468,9 @@ public class UIManager : MonoBehaviour
             else
             {
                 if (GameManager.instance.baseRelics[6].have && !GameManager.instance.baseRelics[6].isPure)
-                    GameManager.instance.baseRings[DeckManager.instance.deck[deckIdx]].Upgrade(0.8f);
-                else GameManager.instance.baseRings[DeckManager.instance.deck[deckIdx]].Upgrade(2.0f);
+                    GameManager.instance.baseRings[ringID].Upgrade(0.8f);
+                else GameManager.instance.baseRings[ringID].Upgrade(2.0f);
+                if (GameManager.instance.baseRings[ringID].level == GameManager.instance.baseRings[ringID].maxlvl) GameManager.instance.RingCollectionProgressUp(ringID, 2);
                 FloorManager.instance.RemoveItem(FloorManager.instance.lastTouchItem, true);
                 ringSelectionEffectImage.sprite = GameManager.instance.itemSprites[0];
             }
