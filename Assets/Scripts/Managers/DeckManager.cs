@@ -250,6 +250,7 @@ public class DeckManager : MonoBehaviour
             GameManager.instance.EmptyParticlePool(ringID);
             GameManager.instance.EmptyBulletPool(ringID);
             GameManager.instance.baseRings[ringID].Init();
+            GameManager.instance.baseRings[ringID].RenewStat();
             deck.RemoveAt(index);
             return true;
         }
