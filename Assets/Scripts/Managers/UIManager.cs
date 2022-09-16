@@ -680,6 +680,7 @@ public class UIManager : MonoBehaviour
         if (GameManager.instance.ringCollectionProgress[tarRingID, idx] != GameManager.instance.ringCollectionMaxProgress[tarRingID, idx]) return;
 
         //ÇØ´ç ÄÝ·º¼Ç Äù½ºÆ®ÀÇ ´ÙÀÌ¾Æ¸óµå¸¦ È¹µæÇÏ°í È¹µæ °¡´É Ç¥½Ã¸¦ ¾ø¾Ø´Ù.
+        GameManager.instance.ChangeDiamond(GameManager.instance.ringCollecionRewardAmount[idx]);
         lobbyRingCollectionQuestDiamondsAmountText[idx].text = "È¹µæ\n¿Ï·á";
         lobbyRingCollectionQuestDiamonds[idx].SetActive(false);
         GameManager.instance.ringCollectionProgress[tarRingID, idx] = -1;
