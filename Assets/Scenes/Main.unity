@@ -12343,6 +12343,14 @@ MonoBehaviour:
   gameStartText: {fileID: 1804739339}
   lobbyPanel: {fileID: 1630713582}
   lobbyHardModeToggleButton: {fileID: 1790064982}
+  lobbyRingCollectionPanel: {fileID: 0}
+  lobbyRingCollectionSelectCircle: []
+  lobbyRingCollectionRingDiamonds: []
+  lobbyRingCollectionQuestDiamonds: []
+  lobbyRingCollectionQuestDiamondsAmountText: []
+  lobbyRingCollectionRingNameText: {fileID: 0}
+  lobbyRingCollectionProgressText: []
+  lobbyRingCollectionProgressBar: []
   spiritEnhancePanel: {fileID: 1822058433}
   spiritEnhanceLevelText:
   - {fileID: 477973242}
@@ -27276,7 +27284,7 @@ GameObject:
   - component: {fileID: 674703480}
   - component: {fileID: 674703479}
   m_Layer: 5
-  m_Name: Relic Guide Button
+  m_Name: Relic Collection Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27345,7 +27353,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 674703480}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRelicCollectionPanelOpen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &674703480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30469,7 +30489,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &764959938
 RectTransform:
   m_ObjectHideFlags: 0
@@ -39304,7 +39324,7 @@ GameObject:
   - component: {fileID: 962089357}
   - component: {fileID: 962089356}
   m_Layer: 5
-  m_Name: Ring Guide Button
+  m_Name: Ring Collection Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39373,7 +39393,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 962089357}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRingCollectionPanelOpen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &962089357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62521,7 +62553,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
+          m_IntArgument: 6
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -73817,7 +73849,7 @@ GameObject:
   - component: {fileID: 1617307189}
   - component: {fileID: 1617307188}
   m_Layer: 5
-  m_Name: Guide Buttons
+  m_Name: Collection Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79559,7 +79591,7 @@ GameObject:
   - component: {fileID: 1764579648}
   - component: {fileID: 1764579647}
   m_Layer: 5
-  m_Name: Monster Guide Button
+  m_Name: Monster Collection Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79628,7 +79660,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1764579648}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonMonsterCollectionPanelOpen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1764579648
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using GooglePlayGames.BasicApi.SavedGame;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,6 +13,15 @@ public class UIManager : MonoBehaviour
 
     public GameObject lobbyPanel;
     public Toggle lobbyHardModeToggleButton;
+
+    public GameObject lobbyRingCollectionPanel;
+    public GameObject[] lobbyRingCollectionSelectCircle;
+    public GameObject[] lobbyRingCollectionRingDiamonds;
+    public GameObject[] lobbyRingCollectionQuestDiamonds;
+    public TextMeshProUGUI[] lobbyRingCollectionQuestDiamondsAmountText;
+    public TextMeshProUGUI lobbyRingCollectionRingNameText;
+    public TextMeshProUGUI[] lobbyRingCollectionProgressText;
+    public RectTransform[] lobbyRingCollectionProgressBar;
 
     public GameObject spiritEnhancePanel;
     public TextMeshProUGUI[] spiritEnhanceLevelText;
@@ -112,7 +120,7 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))    //항상 터치 지점에 작은 파티클을 띄운다.
         {
             Vector2 touchPos;
 
@@ -123,7 +131,7 @@ public class UIManager : MonoBehaviour
             touchParticle.Play();
         }
     
-        if (gameStartPanel.activeSelf)
+        if (gameStartPanel.activeSelf)  //타이틀 화면에서 터치하라는 텍스트를 반복 점멸한다.
         {
             titleTextBlinkTime += Time.deltaTime;
             if (titleTextBlinkTime > 0.5f)
@@ -203,22 +211,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //맵을 끈다.
     public void TurnMapOnOff(bool isOn)
     {
         mapPanel.SetActive(isOn);
     }
 
-    public void OpenLobbySpiritEnhancePanel()
-    {
-        for (int i = 0; i < GameManager.instance.spiritEnhanceLevel.Length; i++)
-        {
-            spiritEnhanceLevelText[i].text = "Level\n" + GameManager.instance.spiritEnhanceLevel[i].ToString() + "/" + GameManager.instance.spiritMaxLevel[i].ToString();
-            if (GameManager.instance.spiritEnhanceLevel[i] == GameManager.instance.spiritMaxLevel[i]) spiritEnhanceCostText[i].text = "MAX";
-            else spiritEnhanceCostText[i].text = ((int)GameManager.instance.spiritEnhanceCost[i]).ToString();
-        }
-        spiritEnhancePanel.SetActive(true);
-    }
-
+    //하단의 전투 덱을 연다.
     public void OpenBattleDeckPanel()
     {
         int i;
@@ -259,6 +258,7 @@ public class UIManager : MonoBehaviour
         battleDeckRingRPText[index].text = str;
     }
 
+    //링 선택 패널을 연다.
     public void OpenRingSelectionPanel(int mode)
     {
 
@@ -300,40 +300,7 @@ public class UIManager : MonoBehaviour
         ringSelectionPanel.SetActive(true);
     }
 
-    public void OpenPlayerStatusPanel()
-    {
-        Time.timeScale = 0;
-        int i;
-        int type;
-        for (i = 0; i < DeckManager.instance.deck.Count; i++)
-        {
-            type = DeckManager.instance.deck[i];
-            playerStatusRingImage[i].sprite = GameManager.instance.ringSprites[type];
-            if (GameManager.instance.baseRings[type].level == GameManager.instance.baseRings[type].maxlvl) playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
-            else playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.baseRings[type].level];
-            playerStatusRPText[i].text = GameManager.instance.baseRings[type].baseRP.ToString();
-            playerStatusRingUpgradeImage[i].gameObject.SetActive(true);
-            playerStatusRP[i].SetActive(true);
-        }
-        for (;i < playerStatusRingImage.Length; i++)
-        {
-            playerStatusRingImage[i].sprite = GameManager.instance.emptyRingSprite;
-            playerStatusRingUpgradeImage[i].gameObject.SetActive(false);
-            playerStatusRP[i].SetActive(false);
-        }
-
-        for (i = 0; i < GameManager.instance.relics.Count; i++)
-        {
-            playerStatusRelicImage[i].sprite = GameManager.instance.relicSprites[GameManager.instance.relics[i]];
-            playerStatusRelicCursedImage[i].SetActive(!GameManager.instance.baseRelics[GameManager.instance.relics[i]].isPure);
-            playerStatusRelicImage[i].gameObject.SetActive(true);
-        }
-        for (; i < playerStatusRelicImage.Length; i++)
-            playerStatusRelicImage[i].gameObject.SetActive(false);
-
-        playerStatusPanel.SetActive(true);
-    }
-
+    //링 정보 패널을 연다.
     public void OpenRingInfoPanel(int id)
     {
         BaseRing baseRing = GameManager.instance.baseRings[id];
@@ -356,6 +323,7 @@ public class UIManager : MonoBehaviour
         ringInfoPanel.SetActive(true);
     }
 
+    //유물 정보 패널을 연다.
     public void OpenRelicInfoPanel(int id)
     {
         BaseRelic baseRelic = GameManager.instance.baseRelics[id];
@@ -384,12 +352,14 @@ public class UIManager : MonoBehaviour
         relicInfoPanel.SetActive(true);
     }
 
+    //엔딩 패널을 연다.
     public void OpenEndingPanel(int endingState)
     {
         gameEndPanel.sprite = gameEndSprites[endingState];
         gameEndPanel.gameObject.SetActive(true);
     }
 
+    //패널을 닫는다.
     public void ClosePanel(int panelNum)
     {
         switch (panelNum)
@@ -423,14 +393,48 @@ public class UIManager : MonoBehaviour
             case 5:
                 spiritEnhancePanel.SetActive(false);
                 break;
+            case 6:
+                lobbyRingCollectionPanel.SetActive(false);
+                break;
         }
     }
     
+    //플레이어 상태(인벤토리)창 버튼이 눌렸을 때 불린다.
     public void ButtonPlayerStatusOpen()
     {
-        OpenPlayerStatusPanel();
+        Time.timeScale = 0;
+        int i;
+        int type;
+        for (i = 0; i < DeckManager.instance.deck.Count; i++)
+        {
+            type = DeckManager.instance.deck[i];
+            playerStatusRingImage[i].sprite = GameManager.instance.ringSprites[type];
+            if (GameManager.instance.baseRings[type].level == GameManager.instance.baseRings[type].maxlvl) playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[0];
+            else playerStatusRingUpgradeImage[i].sprite = GameManager.instance.ringUpgradeSprites[GameManager.instance.baseRings[type].level];
+            playerStatusRPText[i].text = GameManager.instance.baseRings[type].baseRP.ToString();
+            playerStatusRingUpgradeImage[i].gameObject.SetActive(true);
+            playerStatusRP[i].SetActive(true);
+        }
+        for (; i < playerStatusRingImage.Length; i++)
+        {
+            playerStatusRingImage[i].sprite = GameManager.instance.emptyRingSprite;
+            playerStatusRingUpgradeImage[i].gameObject.SetActive(false);
+            playerStatusRP[i].SetActive(false);
+        }
+
+        for (i = 0; i < GameManager.instance.relics.Count; i++)
+        {
+            playerStatusRelicImage[i].sprite = GameManager.instance.relicSprites[GameManager.instance.relics[i]];
+            playerStatusRelicCursedImage[i].SetActive(!GameManager.instance.baseRelics[GameManager.instance.relics[i]].isPure);
+            playerStatusRelicImage[i].gameObject.SetActive(true);
+        }
+        for (; i < playerStatusRelicImage.Length; i++)
+            playerStatusRelicImage[i].gameObject.SetActive(false);
+
+        playerStatusPanel.SetActive(true);
     }
 
+    //로비의 링 콜렉션 창을 제외한 곳에서 링 정보창 버튼이 눌렸을 때 불린다.
     public void ButtonRingInfoOpen(int deckIdx)
     {
         if (deckIdx < DeckManager.instance.deck.Count)
@@ -439,16 +443,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ButtonRingCollectionSelectRing(int id)
-    {
-
-    }
-
-    public void ButtonRelicCollectionSelectRelic(int id)
-    {
-
-    }
-
+    //로비의 유물 콜렉션 창을 제외한 곳에서 유물 정보창 버튼이 눌렸을 때 불린다.
     public void ButtonRelicInfoOpen(int listIdx)
     {
         if (listIdx < GameManager.instance.relics.Count)
@@ -457,6 +452,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //링 선택 창에서 선택 버튼이 눌렸을 때 불린다.
     public void ButtonSelectRing(int deckIdx)
     {
         if (deckIdx < DeckManager.instance.deck.Count)
@@ -483,7 +479,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    //재화를 소모해야 하면 소모한다. 재화가 부족한 경우거나 이미 있는 링이거나 이미 덱이 다 차있다면 획득하지 않는다.
+    //링 획득 버튼이 눌렸을 때 불린다. 재화를 소모해야 하면 소모한다. 재화가 부족한 경우거나 이미 있는 링이거나 이미 덱이 다 차있다면 획득하지 않는다.
     public void ButtonTakeRing()
     {
         if (ringInfoTakeText.text[0] != '이') return;
@@ -508,7 +504,7 @@ public class UIManager : MonoBehaviour
         ClosePanel(3);
     }
 
-    //재화를 소모해야 하면 소모한다. 이미 보유하였거나 재화가 부족한 경우라면 획득하지 않는다.
+    //유물 획득 버튼이 눌렸을 때 불린다. 재화를 소모해야 하면 소모한다. 이미 보유하였거나 재화가 부족한 경우라면 획득하지 않는다.
     public void ButtonTakeRelic()
     {
         if (relicInfoTakeText.text[0] != '이') return;
@@ -558,6 +554,7 @@ public class UIManager : MonoBehaviour
         ClosePanel(4);
     }
 
+    //빨리감기 버튼이 눌렸을 때 불린다.
     public void ButtonFasterSpeed()
     {
         if (BattleManager.instance.isBattlePlaying)
@@ -567,6 +564,8 @@ public class UIManager : MonoBehaviour
             battleDeckSpeedButtonImage.sprite = GameManager.instance.speedSprites[(int)Mathf.Round(Time.timeScale) / 2];
         }
     }
+
+    //1배속 버튼이 눌렸을 때 불린다.
     public void ButtonNormalSpeed()
     {
         if (BattleManager.instance.isBattlePlaying)
@@ -576,31 +575,75 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //게임 시작(탑에 입장) 버튼이 눌렸을 때 불린다.
     public void ButtonStartGame()
     {
         GameManager.instance.GameStart();
     }
 
+    //로비로 가는 버튼이 눌렸을 때 불린다.
     public void ButtonOpenLobby()
     {
         GameManager.instance.ChangeDiamond(0);
         SceneChanger.instance.ChangeScene(ChangeSceneToLobby, 0, 0);
     }
 
+    //로비의 영혼 강화창 오픈 버튼이 눌렸을 때 불린다.
     public void ButtonSpiritEnhancePanelOpen()
     {
-        OpenLobbySpiritEnhancePanel();
+        for (int i = 0; i < GameManager.instance.spiritEnhanceLevel.Length; i++)
+        {
+            spiritEnhanceLevelText[i].text = "Level\n" + GameManager.instance.spiritEnhanceLevel[i].ToString() + "/" + GameManager.instance.spiritMaxLevel[i].ToString();
+            if (GameManager.instance.spiritEnhanceLevel[i] == GameManager.instance.spiritMaxLevel[i]) spiritEnhanceCostText[i].text = "MAX";
+            else spiritEnhanceCostText[i].text = ((int)GameManager.instance.spiritEnhanceCost[i]).ToString();
+        }
+        spiritEnhancePanel.SetActive(true);
     }
 
+    //로비의 영혼 강화창에서 강화 버튼이 눌렸을 때 불린다.
     public void ButtonEnhanceSpirit(int idx)
     {
         if (GameManager.instance.spiritMaxLevel[idx] == GameManager.instance.spiritEnhanceLevel[idx]) return;
         if (!GameManager.instance.ChangeDiamond(-(int)GameManager.instance.spiritEnhanceCost[idx])) return;
         GameManager.instance.spiritEnhanceLevel[idx]++;
         GameManager.instance.spiritEnhanceCost[idx] *= 1.2f;
-        OpenLobbySpiritEnhancePanel();
+        ButtonSpiritEnhancePanelOpen();
     }
 
+    //로비의 링 콜렉션(탑의 지식) 오픈 버튼이 눌렸을 때 불린다.
+    public void ButtonRingCollectionPanelOpen()
+    {
+        ButtonRingCollectionSelectRing(0);
+        lobbyRingCollectionPanel.SetActive(true);
+    }
+
+    //로비의 링 콜렉션 창에서 특정 링을 선택하는 버튼이 눌렸을 때 불린다.
+    public void ButtonRingCollectionSelectRing(int id)
+    {
+
+    }
+    
+    //로비의 링 콜렉션 창에서 리워드를 획득하는 버튼이 눌렸을 때 불린다.
+    public void ButtonRingCollecionRequestReward(TextMeshProUGUI text)
+    {
+
+    }
+
+    public void ButtonRelicCollectionPanelOpen()
+    {
+
+    }
+    public void ButtonMonsterCollectionPanelOpen()
+    {
+
+    }
+
+    public void ButtonRelicCollectionSelectRelic(int id)
+    {
+
+    }
+
+    //로비로 장면 전환 시 불린다.
     public void ChangeSceneToLobby(int a, int b)
     {
         lobbyPanel.SetActive(true);
