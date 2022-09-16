@@ -12343,7 +12343,7 @@ MonoBehaviour:
   gameStartText: {fileID: 1804739339}
   lobbyPanel: {fileID: 1630713582}
   lobbyHardModeToggleButton: {fileID: 1790064982}
-  lobbyRingCollectionPanel: {fileID: 0}
+  lobbyRingCollectionPanel: {fileID: 764959937}
   lobbyRingCollectionSelectCircle: []
   lobbyRingCollectionRingDiamonds: []
   lobbyRingCollectionQuestDiamonds: []

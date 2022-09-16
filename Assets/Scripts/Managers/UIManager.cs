@@ -595,7 +595,7 @@ public class UIManager : MonoBehaviour
         {
             spiritEnhanceLevelText[i].text = "Level\n" + GameManager.instance.spiritEnhanceLevel[i].ToString() + "/" + GameManager.instance.spiritMaxLevel[i].ToString();
             if (GameManager.instance.spiritEnhanceLevel[i] == GameManager.instance.spiritMaxLevel[i]) spiritEnhanceCostText[i].text = "MAX";
-            else spiritEnhanceCostText[i].text = ((int)GameManager.instance.spiritEnhanceCost[i]).ToString();
+            else spiritEnhanceCostText[i].text = ((int)(Mathf.Pow(1.2f, GameManager.instance.spiritEnhanceLevel[i]) * GameManager.instance.spiritBaseEnhanceCost[i])).ToString();
         }
         spiritEnhancePanel.SetActive(true);
     }
@@ -604,9 +604,8 @@ public class UIManager : MonoBehaviour
     public void ButtonEnhanceSpirit(int idx)
     {
         if (GameManager.instance.spiritMaxLevel[idx] == GameManager.instance.spiritEnhanceLevel[idx]) return;
-        if (!GameManager.instance.ChangeDiamond(-(int)GameManager.instance.spiritEnhanceCost[idx])) return;
+        if (!GameManager.instance.ChangeDiamond(-int.Parse(spiritEnhanceCostText[idx].text))) return;
         GameManager.instance.spiritEnhanceLevel[idx]++;
-        GameManager.instance.spiritEnhanceCost[idx] *= 1.2f;
         ButtonSpiritEnhancePanelOpen();
     }
 
@@ -620,7 +619,19 @@ public class UIManager : MonoBehaviour
     //로비의 링 콜렉션 창에서 특정 링을 선택하는 버튼이 눌렸을 때 불린다.
     public void ButtonRingCollectionSelectRing(int id)
     {
-
+        lobbyRingCollectionRingNameText.text = GameManager.instance.baseRings[id].name + " 링";
+        for (int i = 0; i < 5; i++)
+        {
+            int progress = GameManager.instance.ringCollectionProgress[id, i];
+            int maxProgress = GameManager.instance.ringCollectionMaxProgress[id, i];
+            if (progress == -1)
+            {
+                progress = maxProgress;
+                lobbyRingCollectionQuestDiamondsAmountText[i].text = "획득\n완료";
+            }
+            else lobbyRingCollectionQuestDiamondsAmountText[i].text = GameManager.instance.ringCollecionRewardAmount[i].ToString();
+            lobbyRingCollectionProgressText[i].text = string.Format("{0}/{1}", progress, maxProgress);
+        }
     }
     
     //로비의 링 콜렉션 창에서 리워드를 획득하는 버튼이 눌렸을 때 불린다.
