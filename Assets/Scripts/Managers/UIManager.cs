@@ -17,9 +17,9 @@ public class UIManager : MonoBehaviour
     public GameObject lobbyRingCollectionPanel;
     public GameObject[] lobbyRingCollectionSelectCircle;
     public GameObject[] lobbyRingCollectionRingDiamonds;
+    public TextMeshProUGUI lobbyRingCollectionRingNameText;
     public GameObject[] lobbyRingCollectionQuestDiamonds;
     public TextMeshProUGUI[] lobbyRingCollectionQuestDiamondsAmountText;
-    public TextMeshProUGUI lobbyRingCollectionRingNameText;
     public TextMeshProUGUI[] lobbyRingCollectionProgressText;
     public RectTransform[] lobbyRingCollectionProgressBar;
 
@@ -317,7 +317,7 @@ public class UIManager : MonoBehaviour
         ringInfoSameSynergyText.text = baseRing.toSame;
         ringInfoAllSynergyText.text = baseRing.toAll;
 
-        ringInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf && !ringSelectionPanel.activeSelf);
+        ringInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf && !ringSelectionPanel.activeSelf && !lobbyRingCollectionPanel.activeSelf);
         ringInfoCannotTake.SetActive(false);
 
         ringInfoPanel.SetActive(true);
@@ -612,6 +612,16 @@ public class UIManager : MonoBehaviour
     //로비의 링 콜렉션(탑의 지식) 오픈 버튼이 눌렸을 때 불린다.
     public void ButtonRingCollectionPanelOpen()
     {
+        for (int i = 0; i < lobbyRingCollectionRingDiamonds.Length; i++)
+        {
+            lobbyRingCollectionRingDiamonds[i].SetActive(false);
+            for (int j = 0; j < 5; j++)
+                if (GameManager.instance.ringCollectionProgress[i, j] == GameManager.instance.ringCollectionMaxProgress[i, j])
+                {
+                    lobbyRingCollectionRingDiamonds[i].SetActive(true);
+                    break;
+                }
+        }
         ButtonRingCollectionSelectRing(0);
         lobbyRingCollectionPanel.SetActive(true);
     }
@@ -624,6 +634,7 @@ public class UIManager : MonoBehaviour
         {
             int progress = GameManager.instance.ringCollectionProgress[id, i];
             int maxProgress = GameManager.instance.ringCollectionMaxProgress[id, i];
+            lobbyRingCollectionQuestDiamonds[i].SetActive(progress == maxProgress);
             if (progress == -1)
             {
                 progress = maxProgress;
@@ -631,13 +642,48 @@ public class UIManager : MonoBehaviour
             }
             else lobbyRingCollectionQuestDiamondsAmountText[i].text = GameManager.instance.ringCollecionRewardAmount[i].ToString();
             lobbyRingCollectionProgressText[i].text = string.Format("{0}/{1}", progress, maxProgress);
+            lobbyRingCollectionProgressBar[i].sizeDelta = new Vector2(400 * (float)progress / maxProgress, lobbyRingCollectionProgressBar[i].rect.height);
         }
+    }
+
+    //로비의 링 콜렉션 창에서 링 정보를 오픈하는 버튼이 눌렸을 때 불린다.
+    public void ButtonRingCollectionRingInfoOpen()
+    {
+        int tarRingID = -1;
+        for (int i = 0; i < GameManager.instance.baseRings.Count; i++)
+            if (GameManager.instance.baseRings[i].name + " 링" == lobbyRingCollectionRingNameText.text)
+            {
+                tarRingID = i;
+                break;
+            }
+        OpenRingInfoPanel(tarRingID);
     }
     
     //로비의 링 콜렉션 창에서 리워드를 획득하는 버튼이 눌렸을 때 불린다.
-    public void ButtonRingCollecionRequestReward(TextMeshProUGUI text)
+    public void ButtonRingCollecionRequestReward(int idx)
     {
+        //영향을 받는 링을 찾는다.
+        int tarRingID = -1;
+        for (int i = 0; i < GameManager.instance.baseRings.Count; i++)
+            if (GameManager.instance.baseRings[i].name + " 링" == lobbyRingCollectionRingNameText.text)
+            {
+                tarRingID = i;
+                break;
+            }
 
+        //해당 콜렉션 퀘스트의 다이아몬드를 획득하고 획득 가능 표시를 없앤다.
+        lobbyRingCollectionQuestDiamondsAmountText[idx].text = "획득\n완료";
+        lobbyRingCollectionQuestDiamonds[idx].SetActive(false);
+        GameManager.instance.ringCollectionProgress[tarRingID, idx] = -1;
+
+        //더 이상 현재 링에서 다이아몬드를 획득할 일이 없다면 획득 가능 표시를 없앤다.
+        lobbyRingCollectionRingDiamonds[tarRingID].SetActive(false);
+        for (int j = 0; j < 5; j++)
+            if (GameManager.instance.ringCollectionProgress[tarRingID, j] == GameManager.instance.ringCollectionMaxProgress[tarRingID, j])
+            {
+                lobbyRingCollectionRingDiamonds[tarRingID].SetActive(true);
+                break;
+            }
     }
 
     public void ButtonRelicCollectionPanelOpen()

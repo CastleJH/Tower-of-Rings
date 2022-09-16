@@ -12344,13 +12344,99 @@ MonoBehaviour:
   lobbyPanel: {fileID: 1630713582}
   lobbyHardModeToggleButton: {fileID: 1790064982}
   lobbyRingCollectionPanel: {fileID: 764959937}
-  lobbyRingCollectionSelectCircle: []
-  lobbyRingCollectionRingDiamonds: []
-  lobbyRingCollectionQuestDiamonds: []
-  lobbyRingCollectionQuestDiamondsAmountText: []
-  lobbyRingCollectionRingNameText: {fileID: 0}
-  lobbyRingCollectionProgressText: []
-  lobbyRingCollectionProgressBar: []
+  lobbyRingCollectionSelectCircle:
+  - {fileID: 286277183}
+  - {fileID: 1608422646}
+  - {fileID: 549158806}
+  - {fileID: 2133429184}
+  - {fileID: 777647544}
+  - {fileID: 146506112}
+  - {fileID: 1867044247}
+  - {fileID: 848522856}
+  - {fileID: 408173860}
+  - {fileID: 882000734}
+  - {fileID: 328656225}
+  - {fileID: 772394443}
+  - {fileID: 1453252697}
+  - {fileID: 1381828466}
+  - {fileID: 854913856}
+  - {fileID: 1183379802}
+  - {fileID: 1966385979}
+  - {fileID: 2092463808}
+  - {fileID: 56877478}
+  - {fileID: 1144951291}
+  - {fileID: 838177565}
+  - {fileID: 130995603}
+  - {fileID: 2085333857}
+  - {fileID: 1744769718}
+  - {fileID: 1900816880}
+  - {fileID: 1799263857}
+  - {fileID: 1215139455}
+  - {fileID: 946150371}
+  - {fileID: 1518284677}
+  - {fileID: 1295462414}
+  - {fileID: 144776053}
+  - {fileID: 2083516349}
+  - {fileID: 1537550486}
+  lobbyRingCollectionRingDiamonds:
+  - {fileID: 1345762204}
+  - {fileID: 893904705}
+  - {fileID: 977510728}
+  - {fileID: 282952679}
+  - {fileID: 1020119349}
+  - {fileID: 2061243038}
+  - {fileID: 94935699}
+  - {fileID: 1968441289}
+  - {fileID: 46728783}
+  - {fileID: 1701497867}
+  - {fileID: 977367314}
+  - {fileID: 1789054447}
+  - {fileID: 1496554053}
+  - {fileID: 261356363}
+  - {fileID: 185776823}
+  - {fileID: 1783677679}
+  - {fileID: 1971720237}
+  - {fileID: 6053445}
+  - {fileID: 1578928059}
+  - {fileID: 980030926}
+  - {fileID: 550670815}
+  - {fileID: 607952368}
+  - {fileID: 1621485027}
+  - {fileID: 1204176840}
+  - {fileID: 23552346}
+  - {fileID: 864018028}
+  - {fileID: 994585394}
+  - {fileID: 534583684}
+  - {fileID: 1863582358}
+  - {fileID: 34938229}
+  - {fileID: 537069334}
+  - {fileID: 1830147072}
+  - {fileID: 1481052366}
+  lobbyRingCollectionRingNameText: {fileID: 1304891001}
+  lobbyRingCollectionQuestDiamonds:
+  - {fileID: 515839929}
+  - {fileID: 869926069}
+  - {fileID: 469899040}
+  - {fileID: 765167247}
+  - {fileID: 1030997459}
+  lobbyRingCollectionQuestDiamondsAmountText:
+  - {fileID: 1098533203}
+  - {fileID: 292814625}
+  - {fileID: 340593760}
+  - {fileID: 1989010101}
+  - {fileID: 1630165071}
+  lobbyRingCollectionProgressText:
+  - {fileID: 691814486}
+  - {fileID: 2020718446}
+  - {fileID: 61092976}
+  - {fileID: 1710938658}
+  - {fileID: 1308355388}
+  lobbyRingCollectionProgressBar:
+  - {fileID: 627434881}
+  - {fileID: 1514244538}
+  - {fileID: 1640412953}
+  - {fileID: 1938055076}
+  - {fileID: 539199965}
   spiritEnhancePanel: {fileID: 1822058433}
   spiritEnhanceLevelText:
   - {fileID: 477973242}
@@ -12765,7 +12851,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 326945900}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRingCollectionRingInfoOpen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &326945900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21002,7 +21100,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 514101590}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRingCollecionRequestReward
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &514101590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27249,8 +27359,9 @@ MonoBehaviour:
   sinkholeSouth: {fileID: 1800651976}
   diamond: 694
   spiritMaxLevel: 
-  spiritEnhanceCost: []
+  spiritBaseEnhanceCost: []
   spiritEnhanceLevel: 
+  ringCollecionRewardAmount: 
   isNormalMode: 0
   playerMaxHP: 0
   playerCurHP: 0
@@ -34007,7 +34118,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 849055074}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRingCollecionRequestReward
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &849055074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78532,7 +78655,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1724308009}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRingCollecionRequestReward
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1724308009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80300,7 +80435,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1772771905}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRingCollecionRequestReward
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1772771905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92550,7 +92697,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2045637475}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRingCollecionRequestReward
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2045637475
 MonoBehaviour:
   m_ObjectHideFlags: 0
