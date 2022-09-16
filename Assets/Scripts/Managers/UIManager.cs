@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject lobbyPanel;
     public Toggle lobbyHardModeToggleButton;
+    public GameObject[] lobbyCollectionDiamonds;
 
     public GameObject lobbyRingCollectionPanel;
     public GameObject[] lobbyRingCollectionSelectCircle;
@@ -394,6 +395,15 @@ public class UIManager : MonoBehaviour
                 spiritEnhancePanel.SetActive(false);
                 break;
             case 6:
+                //"링" 콜렉션에서 다이아몬드를 획득 가능한 경우 표시한다.
+                lobbyCollectionDiamonds[0].SetActive(false);
+                for (int i = 0; i < lobbyRingCollectionRingDiamonds.Length; i++)
+                    for (int j = 0; j < lobbyRingCollectionQuestDiamonds.Length; j++)
+                        if (GameManager.instance.ringCollectionProgress[i, j] == GameManager.instance.ringCollectionMaxProgress[i, j])
+                        {
+                            lobbyCollectionDiamonds[0].SetActive(true);
+                            break;
+                        }
                 lobbyRingCollectionPanel.SetActive(false);
                 break;
         }
@@ -713,6 +723,18 @@ public class UIManager : MonoBehaviour
     public void ChangeSceneToLobby(int a, int b)
     {
         GameManager.instance.ResetBases(true);
+
+        //콜렉션에서 다이아몬드를 획득 가능한 경우 표시한다.
+        lobbyCollectionDiamonds[0].SetActive(false);
+        for (int i = 0; i < lobbyRingCollectionRingDiamonds.Length; i++)
+            for (int j = 0; j < lobbyRingCollectionQuestDiamonds.Length; j++)
+                if (GameManager.instance.ringCollectionProgress[i, j] == GameManager.instance.ringCollectionMaxProgress[i, j])
+                {
+                    lobbyCollectionDiamonds[0].SetActive(true);
+                    break;
+                }
+
+
         lobbyPanel.SetActive(true);
         lobbyHardModeToggleButton.isOn = false;
 
