@@ -629,6 +629,8 @@ public class UIManager : MonoBehaviour
     //로비의 링 콜렉션 창에서 특정 링을 선택하는 버튼이 눌렸을 때 불린다.
     public void ButtonRingCollectionSelectRing(int id)
     {
+        for (int i = 0; i < lobbyRingCollectionSelectCircle.Length; i++)
+            lobbyRingCollectionSelectCircle[i].SetActive(id == i);
         lobbyRingCollectionRingNameText.text = GameManager.instance.baseRings[id].name + " 링";
         for (int i = 0; i < 5; i++)
         {
@@ -671,6 +673,9 @@ public class UIManager : MonoBehaviour
                 break;
             }
 
+        //보상을 획득 가능한지 확인한다.
+        if (GameManager.instance.ringCollectionProgress[tarRingID, idx] != GameManager.instance.ringCollectionMaxProgress[tarRingID, idx]) return;
+
         //해당 콜렉션 퀘스트의 다이아몬드를 획득하고 획득 가능 표시를 없앤다.
         lobbyRingCollectionQuestDiamondsAmountText[idx].text = "획득\n완료";
         lobbyRingCollectionQuestDiamonds[idx].SetActive(false);
@@ -703,6 +708,7 @@ public class UIManager : MonoBehaviour
     //로비로 장면 전환 시 불린다.
     public void ChangeSceneToLobby(int a, int b)
     {
+        GameManager.instance.ResetBases(true);
         lobbyPanel.SetActive(true);
         lobbyHardModeToggleButton.isOn = false;
 

@@ -213,7 +213,6 @@ public class GameManager : MonoBehaviour
     {
         UIManager.instance.OpenEndingPanel(0);  //게임오버 이미지로 패널을 연다.
         BattleManager.instance.StopBattleSystem();     //배틀시스템을 모두 종료한다.
-        ResetBases(true);           //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 DB값과 일치시킨다. 도감 열었을 때 표시되는 스탯이 원래대로 돌아오기 위함임.
         Time.timeScale = 1;         //속도를 원래대로 돌린다.
     }
 
@@ -223,12 +222,11 @@ public class GameManager : MonoBehaviour
         UIManager.instance.OpenEndingPanel(1);  //게임클리어 이미지로 패널을 연다.
         UIManager.instance.lobbyHardModeToggleButton.gameObject.SetActive(true);
         BattleManager.instance.StopBattleSystem();     //배틀시스템을 모두 종료한다.
-        ResetBases(true);           //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 DB값과 일치시킨다. 도감 열었을 때 표시되는 스탯이 원래대로 돌아오기 위함임.
         Time.timeScale = 1;         //속도를 원래대로 돌린다.
     }
 
     //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 DB값과 일치시킨다(다만, 하드모드면 몬스터 HP가 2배가 될 수 있다).
-    void ResetBases(bool isNormal)
+    public void ResetBases(bool isNormal)
     {
         int mult = isNormal ? 1 : 2;    //하드모드면 몬스터 HP만 두배로 해준다.
         for (int i = 0; i < baseRings.Count; i++) baseRings[i].Init();
