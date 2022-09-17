@@ -98,6 +98,7 @@ public class FloorManager : MonoBehaviour
         }
         if (f == 1)
         {
+            floor.rooms[floor.startX, floor.startY].visited = true;
             if (GameManager.instance.spiritEnhanceLevel[9] == 1)
             {
                 Item item = GameManager.instance.GetItemFromPool();
@@ -107,6 +108,7 @@ public class FloorManager : MonoBehaviour
                 if (GameManager.instance.spiritEnhanceLevel[10] == 0) item.InitializeItem(1000 + ringID, Vector3.forward, 0, 0);
                 else item.InitializeItem(1000 + ringID, itemPos[0], 0, 0);
                 floor.rooms[floor.startX, floor.startY].AddItem(item);
+                floor.rooms[floor.startX, floor.startY].type = 6;
             }
             if (GameManager.instance.spiritEnhanceLevel[10] == 1)
             {
@@ -117,6 +119,7 @@ public class FloorManager : MonoBehaviour
                 if (GameManager.instance.spiritEnhanceLevel[9] == 0) item.InitializeItem(2000 + relicID, Vector3.forward, 0, 0);
                 else item.InitializeItem(2000 + relicID, itemPos[1], 0, 0);
                 floor.rooms[floor.startX, floor.startY].AddItem(item);
+                floor.rooms[floor.startX, floor.startY].type = 6;
             }
         }
     }
@@ -174,7 +177,6 @@ public class FloorManager : MonoBehaviour
                         curRoom.AddItem(item);
                     }
                 }
-                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 3:
@@ -187,7 +189,6 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(1000 + ringID, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 4:
@@ -200,7 +201,6 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(2000 + relicID, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 5:
@@ -210,7 +210,6 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(1, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 6:
@@ -234,7 +233,6 @@ public class FloorManager : MonoBehaviour
                         }
                     }
                 }
-                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 7:
@@ -244,7 +242,6 @@ public class FloorManager : MonoBehaviour
                     item.InitializeItem(2, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
-                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 8:
@@ -299,7 +296,6 @@ public class FloorManager : MonoBehaviour
                         curRoom.AddItem(item);
                     }
                 }
-                //ShowItems();
                 TurnPortalsOnOff(true);
                 break;
             case 9:
@@ -309,11 +305,9 @@ public class FloorManager : MonoBehaviour
                     curRoom.AddSinkhole();
                     BattleManager.instance.StartBattle();
                 }
-                //else ShowItems();
                 TurnPortalsOnOff(curRoom.visited);
                 break;
         }
-        ShowItems();
         curRoom.visited = true;
 
         //지도에 변화를 준다.
@@ -326,6 +320,7 @@ public class FloorManager : MonoBehaviour
 
         //카메라를 해당하는 전장으로 이동한다.
         Camera.main.transform.position = roomImage.transform.position + new Vector3(0.0f, 1.5f, -15f);
+        ShowItems();
     } 
 
     private void TurnPortalsOnOff(bool isOn)
