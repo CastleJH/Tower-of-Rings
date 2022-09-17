@@ -373,6 +373,7 @@ public class UIManager : MonoBehaviour
     //엔딩 패널을 연다.
     public void OpenEndingPanel(int endingState)
     {
+        Camera.main.transform.position = new Vector2(-100, -100);
         gameEndPanel.sprite = gameEndSprites[endingState];
         gameEndPanel.gameObject.SetActive(true);
     }
@@ -430,7 +431,7 @@ public class UIManager : MonoBehaviour
                     for (int j = 0; j < lobbyRelicCollectionQuestDiamonds.Length; j++)
                         if (GameManager.instance.relicCollectionProgress[i, j] == GameManager.instance.relicCollectionMaxProgress[i, j])
                         {
-                            lobbyCollectionDiamonds[0].SetActive(true);
+                            lobbyCollectionDiamonds[1].SetActive(true);
                             break;
                         }
                 lobbyRelicCollectionPanel.SetActive(false);
@@ -568,13 +569,13 @@ public class UIManager : MonoBehaviour
         bool isRelicPure = true;
         if (FloorManager.instance.curRoom.type == 4)
         {
-            float curseProb = 0.2f;
+            float curseProb = 0.4f;
             if (GameManager.instance.baseRelics[8].have)
             {
-                if (GameManager.instance.baseRelics[8].isPure) curseProb = 0.1f;
-                else curseProb = 0.3f;
+                if (GameManager.instance.baseRelics[8].isPure) curseProb = 0.3f;
+                else curseProb = 0.5f;
             }
-            curseProb -= GameManager.instance.spiritEnhanceLevel[6] * 0.025f;
+            curseProb -= GameManager.instance.spiritEnhanceLevel[6] * 0.02f;
             if (Random.Range(0.0f, 1.0f) <= curseProb)
             {
                 isRelicPure = false;
@@ -846,7 +847,7 @@ public class UIManager : MonoBehaviour
                     break;
                 }
 
-        FloorManager.instance.ResetFloor();
+        //FloorManager.instance.ResetFloor();
 
         lobbyPanel.SetActive(true);
         lobbyHardModeToggleButton.isOn = false;

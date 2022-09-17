@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
         }
 
         //영혼 강화&콜렉션 기록
-        spiritMaxLevel = new int[11] { 10, 10, 5, 5, 5, 5, 4, 5, 1, 1, 1 };
+        spiritMaxLevel = new int[11] { 10, 10, 5, 5, 5, 5, 5, 5, 1, 1, 1 };
         spiritBaseEnhanceCost = new float[11] { 3.0f, 3.0f, 10.0f, 10.0f, 10.0f, 5.0f, 20.0f, 20.0f, 50.0f, 70.0f, 70.0f };
         ringCollectionMaxProgress = new int[baseRings.Count, 5];
         for (int i = 0; i < baseRings.Count; i++)
