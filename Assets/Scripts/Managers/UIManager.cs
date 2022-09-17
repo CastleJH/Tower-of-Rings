@@ -24,6 +24,15 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI[] lobbyRingCollectionProgressText;
     public RectTransform[] lobbyRingCollectionProgressBar;
 
+    public GameObject lobbyRelicCollectionPanel;
+    public GameObject[] lobbyRelicCollectionSelectSquare;
+    public GameObject[] lobbyRelicCollectionRelicDiamonds;
+    public TextMeshProUGUI lobbyRelicCollectionRelicNameText;
+    public GameObject[] lobbyRelicCollectionQuestDiamonds;
+    public TextMeshProUGUI[] lobbyRelicCollectionQuestDiamondsAmountText;
+    public TextMeshProUGUI[] lobbyRelicCollectionProgressText;
+    public RectTransform[] lobbyRelicCollectionProgressBar;
+
     public GameObject spiritEnhancePanel;
     public TextMeshProUGUI[] spiritEnhanceLevelText;
     public TextMeshProUGUI[] spiritEnhanceCostText;
@@ -336,18 +345,26 @@ public class UIManager : MonoBehaviour
 
         relicInfoCursedNotify.gameObject.SetActive(!baseRelic.isPure);
         relicInfoCursedImage.gameObject.SetActive(!baseRelic.isPure);
-        if (baseRelic.isPure)
+        if (!lobbyRelicCollectionPanel.activeSelf)
         {
-            relicInfoBaseEffectText.color = new Color32(200, 200, 200, 255);
-            relicInfoCursedEffectText.color = new Color32(70, 70, 70, 255);
+            if (baseRelic.isPure)
+            {
+                relicInfoBaseEffectText.color = new Color32(200, 200, 200, 255);
+                relicInfoCursedEffectText.color = new Color32(70, 70, 70, 255);
+            }
+            else
+            {
+                relicInfoBaseEffectText.color = new Color32(70, 70, 70, 255);
+                relicInfoCursedEffectText.color = new Color32(200, 200, 200, 255);
+            }
         }
         else
         {
-            relicInfoBaseEffectText.color = new Color32(70, 70, 70, 255);
+            relicInfoBaseEffectText.color = new Color32(200, 200, 200, 255);
             relicInfoCursedEffectText.color = new Color32(200, 200, 200, 255);
         }
 
-        relicInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf);
+        relicInfoTakeButton.gameObject.SetActive(!playerStatusPanel.activeSelf && !lobbyRelicCollectionPanel.activeSelf);
         relicInfoCannotTake.SetActive(false);
 
         relicInfoPanel.SetActive(true);
@@ -405,6 +422,18 @@ public class UIManager : MonoBehaviour
                             break;
                         }
                 lobbyRingCollectionPanel.SetActive(false);
+                break;
+            case 7:
+                //"유물" 콜렉션에서 다이아몬드를 획득 가능한 경우 표시한다.
+                lobbyCollectionDiamonds[1].SetActive(false);
+                for (int i = 0; i < lobbyRelicCollectionRelicDiamonds.Length; i++)
+                    for (int j = 0; j < lobbyRelicCollectionQuestDiamonds.Length; j++)
+                        if (GameManager.instance.relicCollectionProgress[i, j] == GameManager.instance.relicCollectionMaxProgress[i, j])
+                        {
+                            lobbyCollectionDiamonds[0].SetActive(true);
+                            break;
+                        }
+                lobbyRelicCollectionPanel.SetActive(false);
                 break;
         }
     }
@@ -705,19 +734,95 @@ public class UIManager : MonoBehaviour
             }
     }
 
+    //로비의 유물 콜렉션(탑의 지식) 오픈 버튼이 눌렸을 때 불린다.
     public void ButtonRelicCollectionPanelOpen()
     {
-
+        for (int i = 0; i < lobbyRelicCollectionRelicDiamonds.Length; i++)
+        {
+            lobbyRelicCollectionRelicDiamonds[i].SetActive(false);
+            for (int j = 0; j < 5; j++)
+                if (GameManager.instance.relicCollectionProgress[i, j] == GameManager.instance.relicCollectionMaxProgress[i, j])
+                {
+                    lobbyRelicCollectionRelicDiamonds[i].SetActive(true);
+                    break;
+                }
+        }
+        ButtonRelicCollectionSelectRelic(0);
+        lobbyRelicCollectionPanel.SetActive(true);
     }
+
+    //로비의 유물 콜렉션 창에서 특정 유물을 선택하는 버튼이 눌렸을 때 불린다.
+    public void ButtonRelicCollectionSelectRelic(int id)
+    {
+        for (int i = 0; i < lobbyRelicCollectionSelectSquare.Length; i++)
+            lobbyRelicCollectionSelectSquare[i].SetActive(id == i);
+        lobbyRelicCollectionRelicNameText.text = GameManager.instance.baseRelics[id].name;
+        for (int i = 0; i < 5; i++)
+        {
+            int progress = GameManager.instance.relicCollectionProgress[id, i];
+            int maxProgress = GameManager.instance.relicCollectionMaxProgress[id, i];
+            lobbyRelicCollectionQuestDiamonds[i].SetActive(progress == maxProgress);
+            if (progress == -1)
+            {
+                progress = maxProgress;
+                lobbyRelicCollectionQuestDiamondsAmountText[i].text = "획득\n완료";
+            }
+            else lobbyRelicCollectionQuestDiamondsAmountText[i].text = GameManager.instance.ringCollecionRewardAmount[i].ToString();
+            lobbyRelicCollectionProgressText[i].text = string.Format("{0}/{1}", progress, maxProgress);
+            lobbyRelicCollectionProgressBar[i].sizeDelta = new Vector2(400 * (float)progress / maxProgress, lobbyRelicCollectionProgressBar[i].rect.height);
+        }
+    }
+
+
+    //로비의 유물 콜렉션 창에서 유물 정보를 오픈하는 버튼이 눌렸을 때 불린다.
+    public void ButtonRelicCollectionRelicInfoOpen()
+    {
+        int tarRelicID = -1;
+        for (int i = 0; i < GameManager.instance.baseRelics.Count; i++)
+            if (GameManager.instance.baseRelics[i].name == lobbyRelicCollectionRelicNameText.text)
+            {
+                tarRelicID = i;
+                break;
+            }
+        OpenRelicInfoPanel(tarRelicID);
+    }
+
+    //로비의 유물 콜렉션 창에서 리워드를 획득하는 버튼이 눌렸을 때 불린다.
+    public void ButtonRelicCollecionRequestReward(int idx)
+    {
+        //영향을 받는 유물을 찾는다.
+        int tarRelicID = -1;
+        for (int i = 0; i < GameManager.instance.baseRelics.Count; i++)
+            if (GameManager.instance.baseRelics[i].name == lobbyRelicCollectionRelicNameText.text)
+            {
+                tarRelicID = i;
+                break;
+            }
+
+        //보상을 획득 가능한지 확인한다.
+        if (GameManager.instance.relicCollectionProgress[tarRelicID, idx] != GameManager.instance.relicCollectionMaxProgress[tarRelicID, idx]) return;
+
+        //해당 콜렉션 퀘스트의 다이아몬드를 획득하고 획득 가능 표시를 없앤다.
+        GameManager.instance.ChangeDiamond(GameManager.instance.ringCollecionRewardAmount[idx]);
+        lobbyRelicCollectionQuestDiamondsAmountText[idx].text = "획득\n완료";
+        lobbyRelicCollectionQuestDiamonds[idx].SetActive(false);
+        GameManager.instance.relicCollectionProgress[tarRelicID, idx] = -1;
+
+        //더 이상 현재 유물에서 다이아몬드를 획득할 일이 없다면 획득 가능 표시를 없앤다.
+        lobbyRelicCollectionRelicDiamonds[tarRelicID].SetActive(false);
+        for (int j = 0; j < 5; j++)
+            if (GameManager.instance.relicCollectionProgress[tarRelicID, j] == GameManager.instance.relicCollectionMaxProgress[tarRelicID, j])
+            {
+                lobbyRelicCollectionRelicDiamonds[tarRelicID].SetActive(true);
+                break;
+            }
+    }
+
     public void ButtonMonsterCollectionPanelOpen()
     {
 
     }
 
-    public void ButtonRelicCollectionSelectRelic(int id)
-    {
-
-    }
 
     //로비로 장면 전환 시 불린다.
     public void ChangeSceneToLobby(int a, int b)

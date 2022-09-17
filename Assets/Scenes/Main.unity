@@ -1967,14 +1967,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2149,7 +2149,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 55164803}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRelicCollectionRelicInfoOpen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &55164803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6745,14 +6757,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8996,14 +9008,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12284,14 +12296,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12441,6 +12453,74 @@ MonoBehaviour:
   - {fileID: 1640412953}
   - {fileID: 1938055076}
   - {fileID: 539199965}
+  lobbyRelicCollectionPanel: {fileID: 511725420}
+  lobbyRelicCollectionSelectSquare:
+  - {fileID: 510757157}
+  - {fileID: 1840622258}
+  - {fileID: 1092389893}
+  - {fileID: 1282911416}
+  - {fileID: 1387957596}
+  - {fileID: 966548323}
+  - {fileID: 906014948}
+  - {fileID: 2128656927}
+  - {fileID: 1306520399}
+  - {fileID: 1790622008}
+  - {fileID: 334182047}
+  - {fileID: 783186732}
+  - {fileID: 1614821868}
+  - {fileID: 1886597544}
+  - {fileID: 232944758}
+  - {fileID: 51005150}
+  - {fileID: 183296096}
+  - {fileID: 322959271}
+  - {fileID: 930479447}
+  - {fileID: 1386081478}
+  lobbyRelicCollectionRelicDiamonds:
+  - {fileID: 267712660}
+  - {fileID: 362625944}
+  - {fileID: 1761106182}
+  - {fileID: 1000071899}
+  - {fileID: 1403559546}
+  - {fileID: 1027176493}
+  - {fileID: 449192194}
+  - {fileID: 491271007}
+  - {fileID: 846912980}
+  - {fileID: 1214696217}
+  - {fileID: 666040345}
+  - {fileID: 1254902507}
+  - {fileID: 1390694613}
+  - {fileID: 337756065}
+  - {fileID: 1741403457}
+  - {fileID: 728897149}
+  - {fileID: 1104393768}
+  - {fileID: 1283430411}
+  - {fileID: 1603781686}
+  - {fileID: 1147614473}
+  lobbyRelicCollectionRelicNameText: {fileID: 766097580}
+  lobbyRelicCollectionQuestDiamonds:
+  - {fileID: 108270958}
+  - {fileID: 1179620530}
+  - {fileID: 1171177380}
+  - {fileID: 1243663689}
+  - {fileID: 169149124}
+  lobbyRelicCollectionQuestDiamondsAmountText:
+  - {fileID: 583089515}
+  - {fileID: 310569187}
+  - {fileID: 102207747}
+  - {fileID: 1413497702}
+  - {fileID: 1123953072}
+  lobbyRelicCollectionProgressText:
+  - {fileID: 335687251}
+  - {fileID: 1226976397}
+  - {fileID: 1234209893}
+  - {fileID: 1572955813}
+  - {fileID: 1584337756}
+  lobbyRelicCollectionProgressBar:
+  - {fileID: 890132827}
+  - {fileID: 1304411405}
+  - {fileID: 1540195003}
+  - {fileID: 1648531927}
+  - {fileID: 1783281472}
   spiritEnhancePanel: {fileID: 1822058433}
   spiritEnhanceLevelText:
   - {fileID: 477973242}
@@ -13031,14 +13111,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -20934,7 +21014,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &510757158
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20952,7 +21032,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 10}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &510757159
 MonoBehaviour:
@@ -20967,14 +21047,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -26498,7 +26578,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 659982172}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRelicCollecionRequestReward
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &659982172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27441,6 +27533,7 @@ MonoBehaviour:
   spiritBaseEnhanceCost: []
   spiritEnhanceLevel: 
   ringCollecionRewardAmount: 
+  relicCollecionRewardAmount: 
   isNormalMode: 0
   playerMaxHP: 0
   playerCurHP: 0
@@ -32153,14 +32246,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -36684,14 +36777,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -38142,14 +38235,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -39698,14 +39791,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -50024,14 +50117,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -59099,14 +59192,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -60205,14 +60298,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -63574,14 +63667,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -63724,14 +63817,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -74166,14 +74259,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -77083,7 +77176,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1681563112}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRelicCollecionRequestReward
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1681563112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81715,14 +81820,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -83458,14 +83563,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -84946,14 +85051,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -88614,7 +88719,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1961698568}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRelicCollecionRequestReward
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1961698568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88930,7 +89047,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
+          m_IntArgument: 7
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -89265,7 +89382,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1970755026}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRelicCollecionRequestReward
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1970755026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95731,14 +95860,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3145975690631301842, guid: d165047a42ed1bf4f990119f6f0d68f3, type: 3}
+  m_Sprite: {fileID: -1843197933104017171, guid: d9dbf389fe6d09c4796b63235e14ba0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -96189,7 +96318,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2146207971}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 326758171}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ButtonRelicCollecionRequestReward
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2146207971
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -71,6 +71,9 @@ public class GameManager : MonoBehaviour
     public int[] ringCollecionRewardAmount;
     public int[,] ringCollectionMaxProgress;
     public int[,] ringCollectionProgress;       //GPGS 저장(-1이면 이미 보상을 획득하였다는 뜻임)
+    public int[] relicCollecionRewardAmount;
+    public int[,] relicCollectionMaxProgress;
+    public int[,] relicCollectionProgress;       //GPGS 저장(-1이면 이미 보상을 획득하였다는 뜻임)
 
     //개별 게임 관련 변수
     public bool isNormalMode;
@@ -119,8 +122,8 @@ public class GameManager : MonoBehaviour
         //영혼 강화&콜렉션 기록
         spiritMaxLevel = new int[11] { 10, 10, 5, 5, 5, 5, 4, 5, 1, 1, 1 };
         spiritBaseEnhanceCost = new float[11] { 3.0f, 3.0f, 10.0f, 10.0f, 10.0f, 5.0f, 20.0f, 20.0f, 50.0f, 70.0f, 70.0f };
-        ringCollectionMaxProgress = new int[33, 5];
-        for (int i = 0; i < 33; i++)
+        ringCollectionMaxProgress = new int[baseRings.Count, 5];
+        for (int i = 0; i < baseRings.Count; i++)
         {
             ringCollectionMaxProgress[i, 0] = 1;
             ringCollectionMaxProgress[i, 1] = 10;
@@ -129,16 +132,30 @@ public class GameManager : MonoBehaviour
             ringCollectionMaxProgress[i, 4] = 1;
         }
         ringCollecionRewardAmount = new int[5] { 1, 2, 3, 3, 3 };
+        relicCollectionMaxProgress = new int[baseRelics.Count, 5];
+        for (int i = 0; i < baseRelics.Count; i++)
+        {
+            relicCollectionMaxProgress[i, 0] = 1;
+            relicCollectionMaxProgress[i, 1] = 10;
+            relicCollectionMaxProgress[i, 2] = 5;
+            relicCollectionMaxProgress[i, 3] = 3;
+            relicCollectionMaxProgress[i, 4] = 1;
+        }
+        relicCollecionRewardAmount = new int[5] { 1, 2, 2, 3, 3 };
 
         //GPGS 플레이어 정보 읽기
         if (true)   //최초로 플레이 하는 경우
         {
             //영혼 강화 정보 초기화
             spiritEnhanceLevel = new int[11] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            ringCollectionProgress = new int[33, 5];
-            for (int i = 0; i < 33; i++)
+            ringCollectionProgress = new int[baseRings.Count, 5];
+            for (int i = 0; i < baseRings.Count; i++)
                 for (int j = 0; j < 5; j++)
                     ringCollectionProgress[i, j] = 0;
+            relicCollectionProgress = new int[baseRelics.Count, 5];
+            for (int i = 0; i < baseRelics.Count; i++)
+                for (int j = 0; j < 5; j++)
+                    relicCollectionProgress[i, j] = 0;
             gold = 0;
             diamond = 0;
         }
@@ -631,5 +648,11 @@ public class GameManager : MonoBehaviour
     public void RingCollectionProgressUp(int ringID, int questID)
     {
         if (ringCollectionProgress[ringID, questID] != -1) ringCollectionProgress[ringID, questID] = Mathf.Clamp(ringCollectionProgress[ringID, questID] + 1, 0, ringCollectionMaxProgress[ringID, questID]);
+    }
+
+    //유물 콜렉션 진행상황을 하나 올린다.
+    public void RelicCollectionProgressUp(int relicID, int questID)
+    {
+        if (relicCollectionProgress[relicID, questID] != -1) relicCollectionProgress[relicID, questID] = Mathf.Clamp(relicCollectionProgress[relicID, questID] + 1, 0, relicCollectionMaxProgress[relicID, questID]);
     }
 }
