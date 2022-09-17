@@ -641,6 +641,8 @@ public class GameManager : MonoBehaviour
                 break;
         }
         ChangePlayerCurHP(0);
+        RelicCollectionProgressUp(id, 1);
+        if (!isPure) RelicCollectionProgressUp(id, 2);
         return true;
     }
 

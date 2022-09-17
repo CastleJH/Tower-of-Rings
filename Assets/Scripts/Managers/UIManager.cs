@@ -582,7 +582,6 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        Debug.Log(type);
         GameManager.instance.AddRelicToPlayer(type, isRelicPure);
 
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
@@ -838,7 +837,16 @@ public class UIManager : MonoBehaviour
                     lobbyCollectionDiamonds[0].SetActive(true);
                     break;
                 }
+        lobbyCollectionDiamonds[1].SetActive(false);
+        for (int i = 0; i < lobbyRelicCollectionRelicDiamonds.Length; i++)
+            for (int j = 0; j < lobbyRelicCollectionQuestDiamonds.Length; j++)
+                if (GameManager.instance.relicCollectionProgress[i, j] == GameManager.instance.relicCollectionMaxProgress[i, j])
+                {
+                    lobbyCollectionDiamonds[1].SetActive(true);
+                    break;
+                }
 
+        FloorManager.instance.ResetFloor();
 
         lobbyPanel.SetActive(true);
         lobbyHardModeToggleButton.isOn = false;

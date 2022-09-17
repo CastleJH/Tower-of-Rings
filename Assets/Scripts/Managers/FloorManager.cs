@@ -391,7 +391,7 @@ public class FloorManager : MonoBehaviour
             {
                 if (hit.collider.tag != "Portal" || Time.timeScale == 0) return;
                 int dir = hit.collider.name[hit.collider.name.Length - 1] - '0';
-                if (hit.collider.gameObject != portals[4].gameObject) SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir]);
+                if (hit.collider.gameObject != portals[4].gameObject && hit.collider.gameObject != endPortal) SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir]);
                 else
                 {
                     if (floor.floorNum < 7) CreateAndMoveToFloor(floor.floorNum + 1);
@@ -399,6 +399,7 @@ public class FloorManager : MonoBehaviour
                     {
                         SceneChanger.instance.ChangeScene(GameManager.instance.OnGameClear, 0, 0);
                         for (int i = 0; i < DeckManager.instance.deck.Count; i++) GameManager.instance.RingCollectionProgressUp(DeckManager.instance.deck[i], 4);
+                        for (int i = 0; i < GameManager.instance.relics.Count; i++) GameManager.instance.RelicCollectionProgressUp(GameManager.instance.relics[i], 4);
                     }
                 }
             }
@@ -431,7 +432,8 @@ public class FloorManager : MonoBehaviour
         for (int i = 0; i < curRoom.items.Count; i++)
         {
             curRoom.items[i].transform.position = Camera.main.transform.position + curRoom.items[i].pos;
-            if (curRoom.items[i].itemType >= 1000 && curRoom.items[i].itemType < 2000) GameManager.instance.RingCollectionProgressUp(curRoom.items[i].itemType - 1000, 0);
+            if (curRoom.items[i].itemType >= 2000) GameManager.instance.RelicCollectionProgressUp(curRoom.items[i].itemType - 2000, 0);
+            else if (curRoom.items[i].itemType >= 1000) GameManager.instance.RingCollectionProgressUp(curRoom.items[i].itemType - 1000, 0);
             curRoom.items[i].gameObject.SetActive(true);
         }
     }

@@ -100,6 +100,7 @@ public class Item : MonoBehaviour
                     {
                         int targetIdx = Random.Range(0, GameManager.instance.cursedRelics.Count);
                         GameManager.instance.AddRelicToPlayer(GameManager.instance.cursedRelics[targetIdx], true);    //정화해서 다시 덱에 넣는다.
+                        GameManager.instance.RelicCollectionProgressUp(GameManager.instance.cursedRelics[targetIdx], 3);
                         GameManager.instance.cursedRelics.RemoveAt(targetIdx);
                         FloorManager.instance.RemoveItem(this, false);
                     }
