@@ -34,7 +34,7 @@ public class UIManager : MonoBehaviour
     public RectTransform[] lobbyRelicCollectionProgressBar;
 
     public GameObject lobbyMonsterCollectionPanel;
-    public GameObject[] lobbyMonsterCollectionSelectSquare;
+    public Image[] lobbyMonsterCollectionSelectSquare;
     public GameObject[] lobbyMonsterCollectionMonsterDiamonds;
     public TextMeshProUGUI lobbyMonsterCollectionMonsterNameText;
     public TextMeshProUGUI lobbyMonsterCollectionMonsterTierText;
@@ -788,7 +788,7 @@ public class UIManager : MonoBehaviour
                 progress = maxProgress;
                 lobbyRelicCollectionQuestDiamondsAmountText[i].text = "획득\n완료";
             }
-            else lobbyRelicCollectionQuestDiamondsAmountText[i].text = GameManager.instance.ringCollecionRewardAmount[i].ToString();
+            else lobbyRelicCollectionQuestDiamondsAmountText[i].text = GameManager.instance.relicCollecionRewardAmount[i].ToString();
             lobbyRelicCollectionProgressText[i].text = string.Format("{0}/{1}", progress, maxProgress);
             lobbyRelicCollectionProgressBar[i].sizeDelta = new Vector2(400 * (float)progress / maxProgress, lobbyRelicCollectionProgressBar[i].rect.height);
         }
@@ -824,7 +824,7 @@ public class UIManager : MonoBehaviour
         if (GameManager.instance.relicCollectionProgress[tarRelicID, idx] != GameManager.instance.relicCollectionMaxProgress[tarRelicID, idx]) return;
 
         //해당 콜렉션 퀘스트의 다이아몬드를 획득하고 획득 가능 표시를 없앤다.
-        GameManager.instance.ChangeDiamond(GameManager.instance.ringCollecionRewardAmount[idx]);
+        GameManager.instance.ChangeDiamond(GameManager.instance.relicCollecionRewardAmount[idx]);
         lobbyRelicCollectionQuestDiamondsAmountText[idx].text = "획득\n완료";
         lobbyRelicCollectionQuestDiamonds[idx].SetActive(false);
         GameManager.instance.relicCollectionProgress[tarRelicID, idx] = -1;
@@ -859,21 +859,23 @@ public class UIManager : MonoBehaviour
     public void ButtonMonsterCollectionSelectMonster(int id)
     {
         for (int i = 0; i < lobbyMonsterCollectionSelectSquare.Length; i++)
-            lobbyMonsterCollectionSelectSquare[i].SetActive(id == i);
+            lobbyMonsterCollectionSelectSquare[i].color = (id == i) ? new Color(1, 1, 1, 1) : new Color(0, 0, 0, 0);
         lobbyMonsterCollectionMonsterNameText.text = GameManager.instance.baseMonsters[id].name;
         lobbyMonsterCollectionMonsterHPText.text = GameManager.instance.baseMonsters[id].csvHP.ToString();
         lobbyMonsterCollectionMonsterATKText.text = GameManager.instance.baseMonsters[id].csvATK.ToString();
         lobbyMonsterCollectionMonsterSPDText.text = GameManager.instance.baseMonsters[id].csvSPD.ToString();
+        lobbyMonsterCollectionMonsterDescriptionText.text = GameManager.instance.baseMonsters[id].description.ToString();
+        lobbyMonsterCollectionMonsterTierText.text = "타입: ";
         switch (GameManager.instance.baseMonsters[id].tier)
         {
             case 'n':
-                lobbyMonsterCollectionMonsterTierText.text = "NORMAL";
+                lobbyMonsterCollectionMonsterTierText.text += "NORMAL";
                 break;
             case 'e':
-                lobbyMonsterCollectionMonsterTierText.text = "ELITE";
+                lobbyMonsterCollectionMonsterTierText.text += "ELITE";
                 break;
             case 'b':
-                lobbyMonsterCollectionMonsterTierText.text = "BOSS";
+                lobbyMonsterCollectionMonsterTierText.text += "BOSS";
                 break;
         }
         int progress = GameManager.instance.monsterCollectionProgress[id];
@@ -890,7 +892,7 @@ public class UIManager : MonoBehaviour
     }
 
     //로비의 적 콜렉션 창에서 리워드를 획득하는 버튼이 눌렸을 때 불린다.
-    public void ButtonMonsterCollecionRequestReward(int idx)
+    public void ButtonMonsterCollecionRequestReward()
     {
         //영향을 받는 적을 찾는다.
         int tarMonsterID = -1;
@@ -905,7 +907,7 @@ public class UIManager : MonoBehaviour
         if (GameManager.instance.monsterCollectionProgress[tarMonsterID] != GameManager.instance.monsterCollectionMaxProgress[tarMonsterID]) return;
 
         //해당 콜렉션 퀘스트의 다이아몬드를 획득하고 획득 가능 표시를 없앤다.
-        GameManager.instance.ChangeDiamond(GameManager.instance.ringCollecionRewardAmount[idx]);
+        GameManager.instance.ChangeDiamond(10);
         lobbyMonsterCollectionQuestDiamondsAmountText.text = "획득\n완료";
         lobbyMonsterCollectionQuestDiamond.SetActive(false);
         GameManager.instance.monsterCollectionProgress[tarMonsterID] = -1;
