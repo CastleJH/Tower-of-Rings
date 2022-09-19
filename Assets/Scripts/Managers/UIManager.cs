@@ -33,6 +33,20 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI[] lobbyRelicCollectionProgressText;
     public RectTransform[] lobbyRelicCollectionProgressBar;
 
+    public GameObject lobbyMonsterCollectionPanel;
+    public GameObject[] lobbyMonsterCollectionSelectSquare;
+    public GameObject[] lobbyMonsterCollectionMonsterDiamonds;
+    public TextMeshProUGUI lobbyMonsterCollectionMonsterNameText;
+    public TextMeshProUGUI lobbyMonsterCollectionMonsterTierText;
+    public TextMeshProUGUI lobbyMonsterCollectionMonsterATKText;
+    public TextMeshProUGUI lobbyMonsterCollectionMonsterSPDText;
+    public TextMeshProUGUI lobbyMonsterCollectionMonsterHPText;
+    public TextMeshProUGUI lobbyMonsterCollectionMonsterDescriptionText;
+    public GameObject lobbyMonsterCollectionQuestDiamond;
+    public TextMeshProUGUI lobbyMonsterCollectionQuestDiamondsAmountText;
+    public TextMeshProUGUI lobbyMonsterCollectionProgressText;
+    public RectTransform lobbyMonsterCollectionProgressBar;
+
     public GameObject spiritEnhancePanel;
     public TextMeshProUGUI[] spiritEnhanceLevelText;
     public TextMeshProUGUI[] spiritEnhanceCostText;
@@ -436,6 +450,15 @@ public class UIManager : MonoBehaviour
                         }
                 lobbyRelicCollectionPanel.SetActive(false);
                 break;
+            case 8:
+                lobbyCollectionDiamonds[2].SetActive(false);
+                for (int i = 0; i < lobbyMonsterCollectionMonsterDiamonds.Length; i++)
+                    if (GameManager.instance.monsterCollectionProgress[i] == GameManager.instance.monsterCollectionMaxProgress[i])
+                    {
+                        lobbyCollectionDiamonds[2].SetActive(true);
+                        break;
+                    }
+                break;
         }
     }
     
@@ -816,9 +839,79 @@ public class UIManager : MonoBehaviour
             }
     }
 
+    //로비의 적 콜렉션(탑의 지식) 오픈 버튼이 눌렸을 때 불린다.
     public void ButtonMonsterCollectionPanelOpen()
     {
+        for (int i = 0; i < lobbyMonsterCollectionMonsterDiamonds.Length; i++)
+        {
+            lobbyMonsterCollectionMonsterDiamonds[i].SetActive(false);
+            if (GameManager.instance.monsterCollectionProgress[i] == GameManager.instance.monsterCollectionMaxProgress[i])
+            {
+                lobbyMonsterCollectionMonsterDiamonds[i].SetActive(true);
+                break;
+            }
+        }
+        ButtonMonsterCollectionSelectMonster(0);
+        lobbyMonsterCollectionPanel.SetActive(true);
+    }
 
+    //로비의 적 콜렉션 창에서 특정 적을 선택하는 버튼이 눌렸을 때 불린다.
+    public void ButtonMonsterCollectionSelectMonster(int id)
+    {
+        for (int i = 0; i < lobbyMonsterCollectionSelectSquare.Length; i++)
+            lobbyMonsterCollectionSelectSquare[i].SetActive(id == i);
+        lobbyMonsterCollectionMonsterNameText.text = GameManager.instance.baseMonsters[id].name;
+        lobbyMonsterCollectionMonsterHPText.text = GameManager.instance.baseMonsters[id].csvHP.ToString();
+        lobbyMonsterCollectionMonsterATKText.text = GameManager.instance.baseMonsters[id].csvATK.ToString();
+        lobbyMonsterCollectionMonsterSPDText.text = GameManager.instance.baseMonsters[id].csvSPD.ToString();
+        switch (GameManager.instance.baseMonsters[id].tier)
+        {
+            case 'n':
+                lobbyMonsterCollectionMonsterTierText.text = "NORMAL";
+                break;
+            case 'e':
+                lobbyMonsterCollectionMonsterTierText.text = "ELITE";
+                break;
+            case 'b':
+                lobbyMonsterCollectionMonsterTierText.text = "BOSS";
+                break;
+        }
+        int progress = GameManager.instance.monsterCollectionProgress[id];
+        int maxProgress = GameManager.instance.monsterCollectionMaxProgress[id];
+        lobbyMonsterCollectionQuestDiamond.SetActive(progress == maxProgress);
+        if (progress == -1)
+        {
+            progress = maxProgress;
+            lobbyMonsterCollectionQuestDiamondsAmountText.text = "획득\n완료";
+        }
+        else lobbyMonsterCollectionQuestDiamondsAmountText.text = "10";
+        lobbyMonsterCollectionProgressText.text = string.Format("{0}/{1}", progress, maxProgress);
+        lobbyMonsterCollectionProgressBar.sizeDelta = new Vector2(400 * (float)progress / maxProgress, lobbyMonsterCollectionProgressBar.rect.height);
+    }
+
+    //로비의 적 콜렉션 창에서 리워드를 획득하는 버튼이 눌렸을 때 불린다.
+    public void ButtonMonsterCollecionRequestReward(int idx)
+    {
+        //영향을 받는 적을 찾는다.
+        int tarMonsterID = -1;
+        for (int i = 0; i < GameManager.instance.baseMonsters.Count; i++)
+            if (GameManager.instance.baseMonsters[i].name == lobbyMonsterCollectionMonsterNameText.text)
+            {
+                tarMonsterID = i;
+                break;
+            }
+
+        //보상을 획득 가능한지 확인한다.
+        if (GameManager.instance.monsterCollectionProgress[tarMonsterID] != GameManager.instance.monsterCollectionMaxProgress[tarMonsterID]) return;
+
+        //해당 콜렉션 퀘스트의 다이아몬드를 획득하고 획득 가능 표시를 없앤다.
+        GameManager.instance.ChangeDiamond(GameManager.instance.ringCollecionRewardAmount[idx]);
+        lobbyMonsterCollectionQuestDiamondsAmountText.text = "획득\n완료";
+        lobbyMonsterCollectionQuestDiamond.SetActive(false);
+        GameManager.instance.monsterCollectionProgress[tarMonsterID] = -1;
+
+        //더 이상 현재 적에서 다이아몬드를 획득할 일이 없으므로 획득 가능 표시를 없앤다.
+        lobbyMonsterCollectionMonsterDiamonds[tarMonsterID].SetActive(false);
     }
 
 
@@ -844,8 +937,13 @@ public class UIManager : MonoBehaviour
                     lobbyCollectionDiamonds[1].SetActive(true);
                     break;
                 }
-
-        //FloorManager.instance.ResetFloor();
+        lobbyCollectionDiamonds[2].SetActive(false);
+        for (int i = 0; i < lobbyMonsterCollectionMonsterDiamonds.Length; i++)
+            if (GameManager.instance.monsterCollectionProgress[i] == GameManager.instance.monsterCollectionMaxProgress[i])
+            {
+                lobbyCollectionDiamonds[2].SetActive(true);
+                break;
+            }
 
         lobbyPanel.SetActive(true);
         lobbyHardModeToggleButton.isOn = false;
