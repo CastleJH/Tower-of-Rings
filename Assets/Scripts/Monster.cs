@@ -237,6 +237,8 @@ public class Monster : MonoBehaviour
                 else UIManager.instance.SetBattleDeckRingRPText(DeckManager.instance.necroIdx, DeckManager.instance.necroCount.ToString() + "/10");
             }
         }
+
+        GameManager.instance.MonsterCollectionProgressUp(baseMonster.type);
     }
 
     //몬스터의 스킬을 사용한다(엘리트/보스인 경우만 불린다).

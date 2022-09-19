@@ -678,4 +678,10 @@ public class GameManager : MonoBehaviour
     {
         if (relicCollectionProgress[relicID, questID] != -1) relicCollectionProgress[relicID, questID] = Mathf.Clamp(relicCollectionProgress[relicID, questID] + 1, 0, relicCollectionMaxProgress[relicID, questID]);
     }
+
+    //적 콜렉션 진행상황을 하나 올린다.
+    public void MonsterCollectionProgressUp(int monsterID)
+    {
+        if (monsterCollectionProgress[monsterID] != -1) monsterCollectionProgress[monsterID] = Mathf.Clamp(monsterCollectionProgress[monsterID] + 1, 0, monsterCollectionMaxProgress[monsterID]);
+    }
 }

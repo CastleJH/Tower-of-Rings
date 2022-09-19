@@ -737,6 +737,6 @@ public class Ring : MonoBehaviour
 
     void InvokeRemoveRingFromBattle()
     {
-        DeckManager.instance.RemoveRingFromBattle(this);
+        if (gameObject.activeSelf) DeckManager.instance.RemoveRingFromBattle(this);
     }
 }

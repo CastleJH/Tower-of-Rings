@@ -458,6 +458,7 @@ public class UIManager : MonoBehaviour
                         lobbyCollectionDiamonds[2].SetActive(true);
                         break;
                     }
+                lobbyMonsterCollectionPanel.SetActive(false);
                 break;
         }
     }
