@@ -73,7 +73,9 @@ public class GameManager : MonoBehaviour
     public int[,] ringCollectionProgress;       //GPGS 저장(-1이면 이미 보상을 획득하였다는 뜻임)
     public int[] relicCollecionRewardAmount;
     public int[,] relicCollectionMaxProgress;
-    public int[,] relicCollectionProgress;       //GPGS 저장(-1이면 이미 보상을 획득하였다는 뜻임)
+    public int[,] relicCollectionProgress;      //GPGS 저장(-1이면 이미 보상을 획득하였다는 뜻임)
+    public int[] monsterCollectionMaxProgress;  
+    public int[] monsterCollectionProgress;     //GPGS 저장(-1이면 이미 보상을 획득하였다는 뜻임)
 
     //개별 게임 관련 변수
     public bool isNormalMode;
@@ -142,6 +144,22 @@ public class GameManager : MonoBehaviour
             relicCollectionMaxProgress[i, 4] = 1;
         }
         relicCollecionRewardAmount = new int[5] { 1, 2, 2, 3, 3 };
+        monsterCollectionMaxProgress = new int[baseMonsters.Count];
+        for (int i = 0; i < baseMonsters.Count; i++)
+        {
+            switch (baseMonsters[i].tier)
+            {
+                case 'n':
+                    monsterCollectionMaxProgress[i] = 200;
+                    break;
+                case 'e':
+                    monsterCollectionMaxProgress[i] = 10;
+                    break;
+                case 'b':
+                    monsterCollectionMaxProgress[i] = 1;
+                    break;
+            }
+        }
 
         //GPGS 플레이어 정보 읽기
         if (true)   //최초로 플레이 하는 경우
@@ -156,6 +174,9 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < baseRelics.Count; i++)
                 for (int j = 0; j < 5; j++)
                     relicCollectionProgress[i, j] = 0;
+            monsterCollectionProgress = new int[baseMonsters.Count];
+            for (int i = 0; i < baseMonsters.Count; i++)
+                monsterCollectionProgress[i] = 0;
             gold = 0;
             diamond = 0;
         }
