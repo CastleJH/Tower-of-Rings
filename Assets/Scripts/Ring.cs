@@ -364,7 +364,7 @@ public class Ring : MonoBehaviour
                 case 23:
                     break;
                 default:
-                    Debug.Log(string.Format("Not implemented yet. {0} TryShoot", baseRing.id.ToString()));
+                    Debug.Log(string.Format("Not implemented. {0} TryShoot", baseRing.id.ToString()));
                     break;
             }
             shootCoolTime = 0.0f;
@@ -465,7 +465,7 @@ public class Ring : MonoBehaviour
             case 22:
                 break;
             default:
-                Debug.Log(string.Format("Not implemented yet. {0} AttackEffect", baseRing.id.ToString()));
+                Debug.Log(string.Format("Not implemented. {0} AttackEffect", baseRing.id.ToString()));
                 break;
         }
     }

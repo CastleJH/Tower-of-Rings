@@ -297,7 +297,7 @@ public class Monster : MonoBehaviour
         if (dmg >= 0)
         {
             if (immuneDamage) dmg = 0;
-            if (dmg != 1987654321)
+            if (dmg < 1000000000)
             {
                 if (isInAmplify) dmg *= (1.0f + amplifyInc);   //증폭 효과를 받는중이면 데미지를 올린다.
                 curHP -= dmg;
@@ -310,8 +310,9 @@ public class Monster : MonoBehaviour
             {
                 curHP = 0;
                 DamageText t = GameManager.instance.GetDamageTextFromPool();
-                if (color.r == 0) t.InitializeDamageText("즉사!", transform.position, new Color32(70, 70, 70, 255));
-                else t.InitializeDamageText("처형!", transform.position, new Color32(70, 70, 70, 255));
+                if (color.r == 0) t.InitializeDamageText("즉사!", transform.position, Color.red);
+                else t.InitializeDamageText("처형!", transform.position, Color.red);
+                t.gameObject.SetActive(true);
             }
         }
         else //HP 회복인 경우

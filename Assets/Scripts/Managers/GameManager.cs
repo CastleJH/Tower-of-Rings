@@ -572,7 +572,6 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < baseRings.Count; i++)
         {
             baseRings[i].RenewStat();
-            Debug.Log(baseRings[i].baseATK);
         }
         for (int i = DeckManager.instance.rings.Count - 1; i >= 0; i--) DeckManager.instance.rings[i].ChangeCurATK(0);
 
