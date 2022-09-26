@@ -230,7 +230,7 @@ public class UIManager : MonoBehaviour
 
     public void ButtonBackToLobbyAgree()
     {
-        OpenEndingPanel(0);
+        SceneChanger.instance.ChangeScene(GameManager.instance.OnGameOver, 0, 0);
     }
 
     public void ButtonBackToLobbyCancel()

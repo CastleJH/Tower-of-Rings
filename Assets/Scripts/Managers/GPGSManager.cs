@@ -11,12 +11,22 @@ public class GPGSManager : MonoBehaviour
 
     private PlayGamesClientConfiguration clientConfiguration;
 
+    public bool useGPGS;
 
     void Awake()
     {
-        instance = this; 
-        clientConfiguration = new PlayGamesClientConfiguration.Builder().EnableSavedGames().Build();
-        SignIn();
+        instance = this;
+        if (useGPGS)
+        {
+            clientConfiguration = new PlayGamesClientConfiguration.Builder().EnableSavedGames().Build();
+            SignIn();
+        }
+        else
+        {
+            GameManager.instance.InitializeUserData();
+            UIManager.instance.gameStartPanelSignInButton.SetActive(false);
+            UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
+        }
     }
 
     //로그인(저장된 게임을 불러온다)

@@ -161,6 +161,7 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
+        InitializeUserData();
     }
 
     void Update()
@@ -236,7 +237,7 @@ public class GameManager : MonoBehaviour
     }
 
     //진행중이던 게임을 게임오버 처리한다(HP가 0이 되었거나, 플레이어가 메뉴에서 포기를 눌렀거나).
-    void OnGameOver(int a, int b)
+    public void OnGameOver(int a, int b)
     {
         UIManager.instance.OpenEndingPanel(0);  //게임오버 이미지로 패널을 연다.
         BattleManager.instance.StopBattleSystem();     //배틀시스템을 모두 종료한다.
