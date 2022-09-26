@@ -64,7 +64,8 @@ public class GameManager : MonoBehaviour
     private Queue<Item> itemPool;
 
     //통합 게임 관련 변수 & 플레이어 통합 진행사항(일부는 GPGS에 저장됨)
-    public int diamond;
+    public int diamond;                         //GPGS 저장
+    public int hardModeOpen;                    //GPGS 저장
     public int[] spiritMaxLevel;
     public float[] spiritBaseEnhanceCost;
     public int[] spiritEnhanceLevel;            //GPGS 저장
@@ -160,32 +161,6 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
-
-        //GPGS 플레이어 정보 읽기
-        if (true)   //최초로 플레이 하는 경우
-        {
-            //영혼 강화 정보 초기화
-            spiritEnhanceLevel = new int[11] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            ringCollectionProgress = new int[baseRings.Count, 5];
-            for (int i = 0; i < baseRings.Count; i++)
-                for (int j = 0; j < 5; j++)
-                    ringCollectionProgress[i, j] = 0;
-            relicCollectionProgress = new int[baseRelics.Count, 5];
-            for (int i = 0; i < baseRelics.Count; i++)
-                for (int j = 0; j < 5; j++)
-                    relicCollectionProgress[i, j] = 0;
-            monsterCollectionProgress = new int[baseMonsters.Count];
-            for (int i = 0; i < baseMonsters.Count; i++)
-                monsterCollectionProgress[i] = 0;
-            gold = 0;
-            diamond = 0;
-        }
-        else
-        {
-
-        }
-
-        //탑의 지식 오픈 기록
     }
 
     void Update()
@@ -193,13 +168,30 @@ public class GameManager : MonoBehaviour
         if (debugFlag)
         {
             debugFlag = false;
-            //BattleManager.instance.StopBattleSystem();
-            //UIManager.instance.lobbyPanel.SetActive(true);
             UIManager.instance.gameStartPanel.SetActive(false);
             BattleManager.instance.StopBattleSystem();
             GameStart();
             DeckManager.instance.AddRingToDeck(debugInt);
         }
+    }
+
+    public void InitializeUserData()
+    {
+        //영혼 강화 정보 초기화
+        spiritEnhanceLevel = new int[11] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        ringCollectionProgress = new int[baseRings.Count, 5];
+        for (int i = 0; i < baseRings.Count; i++)
+            for (int j = 0; j < 5; j++)
+                ringCollectionProgress[i, j] = 0;
+        relicCollectionProgress = new int[baseRelics.Count, 5];
+        for (int i = 0; i < baseRelics.Count; i++)
+            for (int j = 0; j < 5; j++)
+                relicCollectionProgress[i, j] = 0;
+        monsterCollectionProgress = new int[baseMonsters.Count];
+        for (int i = 0; i < baseMonsters.Count; i++)
+            monsterCollectionProgress[i] = 0;
+        gold = 0;
+        diamond = 0;
     }
 
     //게임을 시작한다.
@@ -254,6 +246,7 @@ public class GameManager : MonoBehaviour
     {
         UIManager.instance.OpenEndingPanel(1);  //게임클리어 이미지로 패널을 연다.
         UIManager.instance.lobbyHardModeToggleButton.gameObject.SetActive(true);
+        GameManager.instance.hardModeOpen = 1;
         BattleManager.instance.StopBattleSystem();     //배틀시스템을 모두 종료한다.
         Time.timeScale = 1;         //속도를 원래대로 돌린다.
     }

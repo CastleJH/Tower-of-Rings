@@ -10,10 +10,15 @@ public class UIManager : MonoBehaviour
 
     public GameObject gameStartPanel;
     public GameObject gameStartText;
+    public GameObject gameStartPanelSignInButton;
+    public GameObject gameStartPanelMoveToLobbyButton;
 
     public GameObject lobbyPanel;
     public Toggle lobbyHardModeToggleButton;
     public GameObject[] lobbyCollectionDiamonds;
+
+    public GameObject lobbyAccountSettingPanel;
+    public GameObject lobbyAccountSettingAskDeletePanel;
 
     public GameObject lobbyRingCollectionPanel;
     public GameObject[] lobbyRingCollectionSelectCircle;
@@ -93,6 +98,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI[] playerStatusRPText;
     public Image[] playerStatusRelicImage;
     public GameObject[] playerStatusRelicCursedImage;
+    public GameObject playerStatusPanelAskBackToLobby;
 
     public GameObject ringInfoPanel;
     public Image ringInfoRingImage;
@@ -164,6 +170,65 @@ public class UIManager : MonoBehaviour
                 gameStartText.SetActive(!gameStartText.activeSelf);
             }
         }
+    }
+
+    //로그인 버튼이 눌렸을 때 불린다.
+    public void ButtonSignIn()
+    {
+        GPGSManager.instance.SignOut();
+        GPGSManager.instance.SignIn();
+    }
+
+    //로그아웃 버튼이 눌렸을 때 불린다.
+    public void ButtonSignOut()
+    {
+        GPGSManager.instance.SignOut();
+        gameStartPanelMoveToLobbyButton.SetActive(false);
+        gameStartPanelSignInButton.SetActive(true);
+        gameStartPanel.SetActive(true);
+    }
+
+    public void ButtonAccountSettingOpen()
+    {
+        lobbyAccountSettingPanel.SetActive(true);
+    }
+
+    //GPGS 저장 데이터를 지울지 물어보는 버튼이 눌렸을 때 불린다.
+    public void ButtonAskDeleteSave()
+    {
+        lobbyAccountSettingAskDeletePanel.SetActive(true);
+    }
+
+    public void ButtonDeleteSaveAgree()
+    {
+        GameManager.instance.InitializeUserData();
+        GPGSManager.instance.SaveGame();
+        ButtonSignOut();
+    }
+
+    public void ButtonDeleteSaveCancel()
+    {
+        lobbyAccountSettingAskDeletePanel.SetActive(false);
+    }
+
+    public void ButtonOpenAccountSettingPanel()
+    {
+        lobbyAccountSettingPanel.SetActive(true);
+    }
+
+    public void ButtonAskBackToLobby()
+    {
+        playerStatusPanelAskBackToLobby.SetActive(true);
+    }
+
+    public void ButtonBackToLobbyAgree()
+    {
+        OpenEndingPanel(0);
+    }
+
+    public void ButtonBackToLobbyCancel()
+    {
+        playerStatusPanelAskBackToLobby.SetActive(false);
     }
 
     //전투에서 링 생성 버튼이 눌린 경우에 불린다.
@@ -390,6 +455,8 @@ public class UIManager : MonoBehaviour
         Camera.main.transform.position = new Vector2(-100, -100);
         gameEndPanel.sprite = gameEndSprites[endingState];
         gameEndPanel.gameObject.SetActive(true);
+
+        GPGSManager.instance.SaveGame();
     }
 
     //패널을 닫는다.
@@ -459,6 +526,10 @@ public class UIManager : MonoBehaviour
                         break;
                     }
                 lobbyMonsterCollectionPanel.SetActive(false);
+                break;
+            case 9:
+                lobbyAccountSettingAskDeletePanel.SetActive(false);
+                lobbyAccountSettingPanel.SetActive(false);
                 break;
         }
     }
@@ -671,6 +742,8 @@ public class UIManager : MonoBehaviour
         if (!GameManager.instance.ChangeDiamond(-int.Parse(spiritEnhanceCostText[idx].text))) return;
         GameManager.instance.spiritEnhanceLevel[idx]++;
         ButtonSpiritEnhancePanelOpen();
+
+        GPGSManager.instance.SaveGame();
     }
 
     //로비의 링 콜렉션(탑의 지식) 오픈 버튼이 눌렸을 때 불린다.
@@ -955,9 +1028,11 @@ public class UIManager : MonoBehaviour
         battleDeckPanel.SetActive(false);
         ringSelectionPanel.SetActive(false);
         playerStatusPanel.SetActive(false);
+        playerStatusPanelAskBackToLobby.SetActive(false);
         ringInfoPanel.SetActive(false);
         relicInfoPanel.SetActive(false);
         gameStartPanel.SetActive(false);
+        lobbyHardModeToggleButton.gameObject.SetActive(GameManager.instance.hardModeOpen == 1);
         gameEndPanel.gameObject.SetActive(false);
     }
 
