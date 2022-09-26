@@ -192,6 +192,7 @@ public class GameManager : MonoBehaviour
             monsterCollectionProgress[i] = 0;
         gold = 0;
         diamond = 0;
+        Debug.Log("INIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     //게임을 시작한다.
@@ -207,6 +208,7 @@ public class GameManager : MonoBehaviour
     void InitializeGame()
     {
         isNormalMode = !UIManager.instance.lobbyHardModeToggleButton.isOn;
+        Time.timeScale = 1.0f;
         
         //유물 등으로 인해 변한 몬스터/링/유물 원형 값을 초기로 되돌린다(DB값과 일치하도록).
         ResetBases(isNormalMode);

@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     public GameObject gameStartText;
     public GameObject gameStartPanelSignInButton;
     public GameObject gameStartPanelMoveToLobbyButton;
+    public GameObject gameStartPanelInternetConnectionCheck;
 
     public GameObject lobbyPanel;
     public Toggle lobbyHardModeToggleButton;
@@ -146,6 +147,12 @@ public class UIManager : MonoBehaviour
 
         titleTextBlinkTime = 0.0f;
         gameStartPanel.SetActive(true);
+    }
+
+    public void ButtonDebugGPGS()
+    {
+        GameManager.instance.InitializeUserData();
+        GPGSManager.instance.SaveGame();
     }
 
     void Update()
@@ -818,6 +825,7 @@ public class UIManager : MonoBehaviour
         lobbyRingCollectionQuestDiamondsAmountText[idx].text = "획득\n완료";
         lobbyRingCollectionQuestDiamonds[idx].SetActive(false);
         GameManager.instance.ringCollectionProgress[tarRingID, idx] = -1;
+        GPGSManager.instance.SaveGame();
 
         //더 이상 현재 링에서 다이아몬드를 획득할 일이 없다면 획득 가능 표시를 없앤다.
         lobbyRingCollectionRingDiamonds[tarRingID].SetActive(false);
@@ -902,6 +910,7 @@ public class UIManager : MonoBehaviour
         lobbyRelicCollectionQuestDiamondsAmountText[idx].text = "획득\n완료";
         lobbyRelicCollectionQuestDiamonds[idx].SetActive(false);
         GameManager.instance.relicCollectionProgress[tarRelicID, idx] = -1;
+        GPGSManager.instance.SaveGame();
 
         //더 이상 현재 유물에서 다이아몬드를 획득할 일이 없다면 획득 가능 표시를 없앤다.
         lobbyRelicCollectionRelicDiamonds[tarRelicID].SetActive(false);
@@ -985,6 +994,7 @@ public class UIManager : MonoBehaviour
         lobbyMonsterCollectionQuestDiamondsAmountText.text = "획득\n완료";
         lobbyMonsterCollectionQuestDiamond.SetActive(false);
         GameManager.instance.monsterCollectionProgress[tarMonsterID] = -1;
+        GPGSManager.instance.SaveGame();
 
         //더 이상 현재 적에서 다이아몬드를 획득할 일이 없으므로 획득 가능 표시를 없앤다.
         lobbyMonsterCollectionMonsterDiamonds[tarMonsterID].SetActive(false);
@@ -1033,6 +1043,8 @@ public class UIManager : MonoBehaviour
         relicInfoPanel.SetActive(false);
         gameStartPanel.SetActive(false);
         lobbyHardModeToggleButton.gameObject.SetActive(GameManager.instance.hardModeOpen == 1);
+        lobbyAccountSettingPanel.SetActive(false);
+        lobbyAccountSettingAskDeletePanel.SetActive(false);
         gameEndPanel.gameObject.SetActive(false);
     }
 
