@@ -91,8 +91,8 @@
     },
     "m_FilterOptions": {
         "m_Filter": "",
-        "m_UseRegularExpressions": false,
-        "m_MatchCase": false
+        "m_UseRegularExpressions": true,
+        "m_MatchCase": true
     },
     "m_SymbolPaths": [],
     "m_CaptureVideoSettings": {

@@ -7,11 +7,14 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public ParticleSystem touchParticle;
+    public GameObject debugPanel;
+    public Text debugText;
 
     public GameObject gameStartPanel;
     public GameObject gameStartText;
     public GameObject gameStartPanelSignInButton;
     public GameObject gameStartPanelMoveToLobbyButton;
+    public GameObject gameStartPanelMoveToGameButton;
     public GameObject gameStartPanelInternetConnectionCheck;
 
     public GameObject lobbyPanel;
@@ -149,6 +152,16 @@ public class UIManager : MonoBehaviour
         gameStartPanel.SetActive(true);
     }
 
+    public void ButtonOnOffDebugText(bool active)
+    {
+        debugPanel.gameObject.SetActive(active);
+    }
+
+    public void ButtonClearDebugText()
+    {
+        debugText.text = "";
+    }
+
     public void ButtonDebugGPGS()
     {
         GameManager.instance.InitializeUserData();
@@ -191,6 +204,7 @@ public class UIManager : MonoBehaviour
     {
         GPGSManager.instance.SignOut();
         gameStartPanelMoveToLobbyButton.SetActive(false);
+        gameStartPanelMoveToGameButton.SetActive(false);
         gameStartPanelSignInButton.SetActive(true);
         gameStartPanel.SetActive(true);
     }
@@ -230,6 +244,7 @@ public class UIManager : MonoBehaviour
 
     public void ButtonBackToLobbyAgree()
     {
+        UIManager.instance.debugText.text = "ChangeScene ButtonBackToLobbyAgree";
         SceneChanger.instance.ChangeScene(GameManager.instance.OnGameOver, 0, 0);
     }
 
@@ -637,7 +652,7 @@ public class UIManager : MonoBehaviour
                 break;
             }
 
-        if (!DeckManager.instance.AddRingToDeck(type)) return;
+        if (!DeckManager.instance.AddRingToDeck(type, true)) return;
 
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
             if (FloorManager.instance.curRoom.items[i].itemType == 1000 + type)
@@ -680,11 +695,10 @@ public class UIManager : MonoBehaviour
             if (Random.Range(0.0f, 1.0f) <= curseProb)
             {
                 isRelicPure = false;
-                GameManager.instance.cursedRelics.Add(type);
             }
         }
 
-        GameManager.instance.AddRelicToPlayer(type, isRelicPure);
+        GameManager.instance.AddRelicToPlayer(type, isRelicPure, true);
 
         for (int i = 0; i < FloorManager.instance.curRoom.items.Count; i++)
             if (FloorManager.instance.curRoom.items[i].itemType == 2000 + type)
@@ -723,10 +737,17 @@ public class UIManager : MonoBehaviour
         GameManager.instance.GameStart();
     }
 
+    //게임 시작(시작화면에서 저장게임으로 이동) 버튼이 눌렸을 때 불린다.
+    public void ButtonStartGameSaved()
+    {
+        GameManager.instance.GameStartSaved();
+    }
+
     //로비로 가는 버튼이 눌렸을 때 불린다.
     public void ButtonOpenLobby()
     {
         GameManager.instance.ChangeDiamond(0);
+        UIManager.instance.debugText.text = "ChangeScene ButtonOpenLobby";
         SceneChanger.instance.ChangeScene(ChangeSceneToLobby, 0, 0);
     }
 

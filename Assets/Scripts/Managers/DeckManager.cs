@@ -69,8 +69,8 @@ public class DeckManager : MonoBehaviour
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
         RemoveRingFromDeck(0);
-        AddRingToDeck(0);
-        AddRingToDeck(7);
+        AddRingToDeck(0, true);
+        AddRingToDeck(7, true);
     }
 
     //전투 준비한다. 필요한 변수들을 초기화한다.
@@ -218,7 +218,7 @@ public class DeckManager : MonoBehaviour
     }
 
     //덱에 링을 넣는다.
-    public bool AddRingToDeck(int ringID)
+    public bool AddRingToDeck(int ringID, bool isProgressUp)
     {
         if (deck.Count >= maxDeckLength)
         {
@@ -234,10 +234,13 @@ public class DeckManager : MonoBehaviour
         }
         if (ringID < 0 || ringID >= GameManager.instance.baseRings.Count) return false;
         deck.Add(ringID);
-        GameManager.instance.RingCollectionProgressUp(ringID, 0);
-        GameManager.instance.RingCollectionProgressUp(ringID, 1);
-        if (GameManager.instance.baseRings[ringID].maxlvl == 1)
-            GameManager.instance.RingCollectionProgressUp(ringID, 2);
+        if (isProgressUp)
+        {
+            GameManager.instance.RingCollectionProgressUp(ringID, 0);
+            GameManager.instance.RingCollectionProgressUp(ringID, 1);
+            if (GameManager.instance.baseRings[ringID].maxlvl == 1)
+                GameManager.instance.RingCollectionProgressUp(ringID, 2);
+        }
         return true;
     }
 

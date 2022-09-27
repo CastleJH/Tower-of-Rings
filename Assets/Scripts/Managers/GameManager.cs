@@ -85,7 +85,8 @@ public class GameManager : MonoBehaviour
     public int gold;
     public List<int> relics;
     public List<int> cursedRelics;
-    bool revivable;
+    public bool revivable;
+    public bool saveFloor;
 
 
     void Awake()
@@ -172,7 +173,7 @@ public class GameManager : MonoBehaviour
             UIManager.instance.gameStartPanel.SetActive(false);
             BattleManager.instance.StopBattleSystem();
             GameStart();
-            DeckManager.instance.AddRingToDeck(debugInt);
+            DeckManager.instance.AddRingToDeck(debugInt, true);
         }
     }
 
@@ -193,16 +194,28 @@ public class GameManager : MonoBehaviour
             monsterCollectionProgress[i] = 0;
         gold = 0;
         diamond = 0;
-        Debug.Log("INIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     //게임을 시작한다.
     public void GameStart()
     {
+        saveFloor = true;
         InitializeGame();
         UIManager.instance.mapPanel.SetActive(true);
         FloorManager.instance.endPortal.SetActive(false);
         FloorManager.instance.CreateAndMoveToFloor(1);
+    }
+
+    //저장된 게임을 시작한다(1층이 아닌 곳에서 시작).
+    public void GameStartSaved()
+    {
+        saveFloor = false;
+        UIManager.instance.debugText.text += "\nInit Try";
+        InitializeGameSaved();
+        UIManager.instance.mapPanel.SetActive(true);
+        FloorManager.instance.endPortal.SetActive(false);
+        UIManager.instance.debugText.text += "\nInit Finish";
+        FloorManager.instance.CreateAndMoveToFloor(FloorManager.instance.floor.floorNum);
     }
 
     //게임을 초기화한다.
@@ -236,6 +249,18 @@ public class GameManager : MonoBehaviour
         DeckManager.instance.InitializeDeck();
     }
 
+    void InitializeGameSaved()
+    {
+        Time.timeScale = 1.0f;
+
+        playerMaxHP = 100 + spiritEnhanceLevel[2] * 4;
+        if (!isNormalMode) playerMaxHP /= 2;
+        ChangePlayerCurHP(0);   //여기서 영혼강화로 인한 링 기본 공격력/공격 쿨타임도 변한다.
+
+        ChangeGold(0);
+        ChangeDiamond(0);
+    }
+
     //진행중이던 게임을 게임오버 처리한다(HP가 0이 되었거나, 플레이어가 메뉴에서 포기를 눌렀거나).
     public void OnGameOver(int a, int b)
     {
@@ -249,7 +274,7 @@ public class GameManager : MonoBehaviour
     {
         UIManager.instance.OpenEndingPanel(1);  //게임클리어 이미지로 패널을 연다.
         UIManager.instance.lobbyHardModeToggleButton.gameObject.SetActive(true);
-        GameManager.instance.hardModeOpen = 1;
+        hardModeOpen = 1;
         BattleManager.instance.StopBattleSystem();     //배틀시스템을 모두 종료한다.
         Time.timeScale = 1;         //속도를 원래대로 돌린다.
     }
@@ -554,7 +579,7 @@ public class GameManager : MonoBehaviour
         if (playerCurHP <= playerMaxHP * 0.2f) UIManager.instance.playerHPText.color = Color.red;
         else UIManager.instance.playerHPText.color = Color.white;
         UIManager.instance.playerHPText.text = playerCurHP.ToString() + "/" + playerMaxHP.ToString();
-        if (playerCurHP == 0)
+        if (playerCurHP == 0 && !UIManager.instance.gameStartPanel.activeSelf)
         {
             if (baseRelics[4].have && baseRelics[4].isPure && revivable)
             {
@@ -565,6 +590,7 @@ public class GameManager : MonoBehaviour
             {
                 BattleManager.instance.isBattlePlaying = false;
                 Time.timeScale = 0.0f;
+                UIManager.instance.debugText.text += "\nChangeScene ChangePlayerCurHP";
                 SceneChanger.instance.ChangeScene(OnGameOver, 0, 0);
             }
         }
@@ -598,7 +624,7 @@ public class GameManager : MonoBehaviour
     }
 
     //유물을 플레이어에게 준다. 이미 있던 유물이면서 저주 여부까지 똑같다면 false를 반환한다. 그렇지 않다면 획득시의 효과를 적용하고 true를 반환한다.
-    public bool AddRelicToPlayer(int id, bool isPure)
+    public bool AddRelicToPlayer(int id, bool isPure, bool isProgressUp)
     {
         if (baseRelics[id].have && baseRelics[id].isPure == isPure) return false;
         if (!baseRelics[id].have)
@@ -607,23 +633,25 @@ public class GameManager : MonoBehaviour
             baseRelics[id].have = true;
         }
         baseRelics[id].isPure = isPure;
+        if (!isPure) cursedRelics.Add(id);
 
         switch (id)
         {
             case 1:     //거인의 머리
                 if (baseRelics[id].isPure)
                 {
-                    playerMaxHP = 120;
-                    ChangePlayerCurHP(20);
+                    playerMaxHP += 20;
+                    if (isProgressUp) ChangePlayerCurHP(20);
                 }
                 else
                 {
-                    playerMaxHP = 80;
-                    playerCurHP = Mathf.Min(playerCurHP, 80);
-                    ChangePlayerCurHP(0);
+                    playerMaxHP -= 20;
+                    playerCurHP = Mathf.Min(playerCurHP, playerMaxHP);
+                    if (isProgressUp) ChangePlayerCurHP(0);
                 }
                 break;
             case 4:     //불멸자의 심장
+                if (!isProgressUp) break;
                 if (baseRelics[id].isPure) revivable = true;
                 else
                     for (int i = 0; i < baseMonsters.Count; i++)
@@ -657,8 +685,11 @@ public class GameManager : MonoBehaviour
                 break;
         }
         ChangePlayerCurHP(0);
-        RelicCollectionProgressUp(id, 1);
-        if (!isPure) RelicCollectionProgressUp(id, 2);
+        if (isProgressUp)
+        {
+            RelicCollectionProgressUp(id, 1);
+            if (!isPure) RelicCollectionProgressUp(id, 2);
+        }
         return true;
     }
 
