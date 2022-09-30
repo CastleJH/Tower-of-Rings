@@ -735,6 +735,15 @@ public class Ring : MonoBehaviour
         particle.PlayParticle(transform, 0.0f);
     }
 
+    //현재 링 위치에서 파티클을 재생한다.
+    public void PlayParticleMonsterSkill(int parID, float time)
+    {
+        if (particle != null) particle.StopParticle(); //이미 있던 파티클은 멈춘다(이후 ParticleChecker에서 알아서 오브젝트 풀에 돌려준다).
+
+        //파티클을 생성한다.
+        GameManager.instance.GetMonsterParticleFromPool(parID).PlayParticle(transform.position, time);
+    }
+
     void InvokeRemoveRingFromBattle()
     {
         if (gameObject.activeSelf) DeckManager.instance.RemoveRingFromBattle(this);

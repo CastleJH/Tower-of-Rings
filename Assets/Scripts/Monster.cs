@@ -150,7 +150,7 @@ public class Monster : MonoBehaviour
         cloneID = -1;
     }
 
-    //파티클을 플레이한다.
+    //피격 파티클을 플레이한다.
     public void PlayParticleCollision(int id, float time)
     {
         //피격 파티클을 가져와 저장한다.
@@ -160,7 +160,7 @@ public class Monster : MonoBehaviour
         par.PlayParticle(transform, time);
     }
 
-    //파티클을 플레이한다.
+    //피격 파티클을 플레이한다.
     public void PlayParticleCollision(int id, float time, float scale)
     {
         //피격 파티클을 가져와 저장한다.
@@ -169,6 +169,18 @@ public class Monster : MonoBehaviour
 
         //플레이한다.
         par.PlayParticle(transform, time);
+    }
+
+    //몬스터 스킬 이펙트 파티클을 플레이한다.
+    public void PlayParticleMonsterSkill(int id, float time)
+    {
+        //피격 파티클을 가져와 저장한다.
+        ParticleChecker par = GameManager.instance.GetMonsterParticleFromPool(id);
+
+        if (time == 0.0f) time = 0.8f;
+        //플레이한다.
+        par.PlayParticle(transform, time, Vector3.forward * 0.0001f);
+        par.gameObject.SetActive(true);
     }
 
     //HP 텍스트를 갱신한다. 소수점을 버리고 표현하되, 남은 HP가 0초과 1이하인 경우는 1로 표현한다.
@@ -486,6 +498,7 @@ public class Monster : MonoBehaviour
             {
                 skillCoolTime1 = 0.0f;
                 skillUseTime = 0.0001f;
+                PlayParticleMonsterSkill(baseMonster.type, 2.0f);
             }
         }
     }
@@ -495,6 +508,11 @@ public class Monster : MonoBehaviour
     {
         if (curHP < maxHP * 0.2f) //최대 HP 20% 미만이 되면
         {
+            if (skillUseTime == 0)
+            {
+                PlayParticleMonsterSkill(baseMonster.type, 10.0f);
+                anim.SetTrigger("Attack");
+            }
             if (skillUseTime < 10.0f) //10초간 모든 피해&이동 방해 효과 면역
             {
                 immuneDamage = true;
@@ -523,7 +541,10 @@ public class Monster : MonoBehaviour
             {
                 monster = BattleManager.instance.monsters[i];
                 if (monster.isInBattle && Vector2.Distance(transform.position, monster.transform.position) < 3.0f && monster != this)
+                {
                     monster.AE_DecreaseHP(-monster.maxHP * 0.05f, Color.green);
+                    monster.PlayParticleMonsterSkill(baseMonster.type, 0.0f);
+                }
             }
         }
     }
@@ -556,6 +577,8 @@ public class Monster : MonoBehaviour
         {
             skillCoolTime1 = 0.0f;
 
+            PlayParticleMonsterSkill(baseMonster.type, 0.0f);
+            anim.SetTrigger("Attack");
             BattleManager.instance.ChangePlayerRP(-BattleManager.instance.rp * 0.2f); //플레이어 RP 감소
         }
     }
@@ -569,6 +592,7 @@ public class Monster : MonoBehaviour
         {
             skillCoolTime1 = 0.0f;
             anim.SetTrigger("Attack");
+            PlayParticleMonsterSkill(baseMonster.type, 0.0f);
 
             //인형을 소환한다. 초기에는 생성한 인형을 멀리 떨어뜨려놓아야 path의 중간에서 글리치 하지 않는다. 인형의 스탯을 정한 후에는 자신의 조금 앞쪽에다 위치시킨다.
             monster = GameManager.instance.GetMonsterFromPool(29);
@@ -599,6 +623,7 @@ public class Monster : MonoBehaviour
         if (skillCoolTime1 >= 10.0f)    //10초마다
         {
             skillCoolTime1 = 0.0f;
+            PlayParticleMonsterSkill(baseMonster.type, 0.0f);
             anim.SetTrigger("Attack");
 
             //HP를 2/3으로 하는 분신 두 개로 나뉜다.
@@ -614,6 +639,7 @@ public class Monster : MonoBehaviour
             monster.SetHPText();
 
             monster.gameObject.SetActive(true);
+            monster.PlayParticleMonsterSkill(baseMonster.type, 0.0f);
             BattleManager.instance.monsters.Add(monster);
 
             movedDistance -= 0.5f;
@@ -641,17 +667,26 @@ public class Monster : MonoBehaviour
             if (skillCoolTime1 >= 10.0f)    //10초 쿨타임을 기다려서 봉인을 건다.
             {
                 skillUseTime = 0.001f;
+                PlayParticleMonsterSkill(baseMonster.type, 5.0f);
                 anim.SetTrigger("Attack");
 
                 int targetSealNum = DeckManager.instance.rings.Count / 2;   //전체 링의 절반만큼 랜덤하게 봉인건다.
                 int sealNum = 0;
                 int tarIdx;
-                while (sealNum < targetSealNum)
+
+                int notSealedNum = 0;
+                for (int i = 0; i < DeckManager.instance.rings.Count; i++) if (!DeckManager.instance.rings[i].isSealed) notSealedNum++;
+
+                if (notSealedNum >= targetSealNum)
                 {
-                    do tarIdx = Random.Range(0, DeckManager.instance.rings.Count);
-                    while (DeckManager.instance.rings[tarIdx].isSealed);
-                    DeckManager.instance.rings[tarIdx].isSealed = true;
-                    sealNum++;
+                    while (sealNum < targetSealNum)
+                    {
+                        do tarIdx = Random.Range(0, DeckManager.instance.rings.Count);
+                        while (DeckManager.instance.rings[tarIdx].isSealed);
+                        DeckManager.instance.rings[tarIdx].isSealed = true;
+                        DeckManager.instance.rings[tarIdx].PlayParticleMonsterSkill(baseMonster.type, 5.0f);
+                        sealNum++;
+                    }
                 }
             }
         }
@@ -681,6 +716,7 @@ public class Monster : MonoBehaviour
             if (canDowngrade)
             {
                 skillCoolTime1 = 0.0f;
+                PlayParticleMonsterSkill(baseMonster.type, 0.0f);
                 anim.SetTrigger("Attack");
 
                 //랜덤한 링 하나를 다운그레이드하고, 링 생성 덱을 갱신한 뒤(업그레이드 표시를 바꾸기 위해), 다운그레이드 내역을 기록한다(전투 종료 후 50퍼 확률로 각각 복구하기 위해).
@@ -700,6 +736,7 @@ public class Monster : MonoBehaviour
         if (skillCoolTime1 >= 10.0f)    //10초마다
         {
             skillCoolTime1 = 0.0f;
+            PlayParticleMonsterSkill(baseMonster.type, 0.0f);
             anim.SetTrigger("Attack");
 
             //모든 일반몬스터들끼리 자리를 바꾼다.
@@ -722,13 +759,16 @@ public class Monster : MonoBehaviour
     void Boss_Executer()
     {
         skillCoolTime1 += Time.deltaTime;
-        if (skillCoolTime1 >= 10.0f)    //10초마다
+        if (skillCoolTime1 >= 10.0f && DeckManager.instance.rings.Count > 0)    //10초마다
         {
             skillCoolTime1 = 0.0f;
+            PlayParticleMonsterSkill(baseMonster.type, 0.0f);
             anim.SetTrigger("Attack");
 
             //랜덤한 링을 제거한다.
-            DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[Random.Range(0, DeckManager.instance.rings.Count)]);
+            int ridx = Random.Range(0, DeckManager.instance.rings.Count);
+            DeckManager.instance.rings[ridx].PlayParticleMonsterSkill(baseMonster.type, 0.4f);
+            DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[ridx]);
         }
     }
 
@@ -751,7 +791,6 @@ public class Monster : MonoBehaviour
             if (skillCoolTime1 >= 10.0f) //10초마다 강력한 스킬을 사용한다.
             {
                 skillCoolTime1 = 0.0f;
-                anim.SetTrigger("Attack");
 
                 bool canDowngrade = false;
                 do
@@ -759,7 +798,10 @@ public class Monster : MonoBehaviour
                     switch (Random.Range(0, 3)) //다음 셋 중 하나를 성공할 때까지 적용한다.
                     {
                         case 0: //링 하나를 랜덤하게 제거한다.
-                            DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[Random.Range(0, DeckManager.instance.rings.Count)]);
+                            PlayParticleMonsterSkill(27, 0.0f);
+                            int ridx = Random.Range(0, DeckManager.instance.rings.Count);
+                            DeckManager.instance.rings[ridx].PlayParticleMonsterSkill(27, 0.4f);
+                            DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[ridx]);
                             canDowngrade = true;
                             break;
                         case 1: //링 하나를 랜덤하게 다운그레이드한다.
@@ -775,6 +817,7 @@ public class Monster : MonoBehaviour
                             }
                             if (canDowngrade)
                             {
+                                PlayParticleMonsterSkill(25, 0.0f);
                                 skillCoolTime1 = 0.0f;
                                 do ringID = DeckManager.instance.deck[Random.Range(0, DeckManager.instance.deck.Count)];
                                 while (GameManager.instance.baseRings[ringID].level == 1);
@@ -785,6 +828,7 @@ public class Monster : MonoBehaviour
                             break;
                         case 2: //링 절반을 봉인한다.
                             skillUseTime = 0.001f;
+                            PlayParticleMonsterSkill(24, 5.0f);
 
                             int targetSealNum = DeckManager.instance.rings.Count / 2;
                             int sealNum = 0;
@@ -793,9 +837,11 @@ public class Monster : MonoBehaviour
                             {
                                 do tarIdx = Random.Range(0, DeckManager.instance.rings.Count);
                                 while (DeckManager.instance.rings[tarIdx].isSealed);
+                                DeckManager.instance.rings[tarIdx].PlayParticleMonsterSkill(24, 5.0f);
                                 DeckManager.instance.rings[tarIdx].isSealed = true;
                                 sealNum++;
                             }
+                            PlayParticleMonsterSkill(24, 0.0f);
                             canDowngrade = true;
                             break;
                     }
@@ -812,10 +858,12 @@ public class Monster : MonoBehaviour
             switch (Random.Range(0, 2))
             {
                 case 0: //이동 방해 효과에 면역이다.
+                    PlayParticleMonsterSkill(20, 5.0f);
                     immuneInterrupt = true;
                     break;
                 case 1: //잃은 HP의 일부를 회복한다.
                     immuneInterrupt = false;
+                    PlayParticleMonsterSkill(18, 0.0f);
                     AE_DecreaseHP(-(maxHP - curHP) * 0.05f, Color.green);
                     break;
             }

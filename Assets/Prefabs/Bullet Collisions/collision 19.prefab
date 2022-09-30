@@ -4631,7 +4631,7 @@ GameObject:
   - component: {fileID: 3290495964264760375}
   - component: {fileID: 7102590840349367097}
   m_Layer: 0
-  m_Name: collision 18
+  m_Name: collision 19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4728,7 +4728,7 @@ ParticleSystem:
   serializedVersion: 7
   lengthInSec: 0.5
   simulationSpeed: 1
-  stopAction: 1
+  stopAction: 0
   cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}

@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject ringPrefab;
     public SPUM_Prefabs[] spum_prefabs;
     public GameObject[] monsterPrefabs;
+    public GameObject[] monsterParticlePrefabs;
     public GameObject[] bulletPrefabs;
     public GameObject[] particlePrefabs;
     public GameObject barrierPrefab;
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
     //오브젝트 풀
     private Queue<Ring> ringPool;
     private Queue<Monster>[] monsterPool;
+    private Queue<ParticleChecker>[] monsterParticlePool;
     private Queue<Bullet>[] bulletPool;
     private Queue<ParticleChecker>[] particlePool;
     private Queue<Barrier> barrierPool;
@@ -103,6 +105,7 @@ public class GameManager : MonoBehaviour
         //오브젝트 풀 초기화
         ringPool = new Queue<Ring>();
         monsterPool = new Queue<Monster>[baseMonsters.Count];
+        monsterParticlePool = new Queue<ParticleChecker>[baseMonsters.Count];
         bulletPool = new Queue<Bullet>[baseRings.Count];
         particlePool = new Queue<ParticleChecker>[baseRings.Count];
         barrierPool = new Queue<Barrier>();
@@ -115,6 +118,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < baseMonsters.Count; i++)
         {
             monsterPool[i] = new Queue<Monster>();
+            monsterParticlePool[i] = new Queue<ParticleChecker>();
         }
 
         for (int i = 0; i < baseRings.Count; i++)
@@ -162,7 +166,15 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
-        InitializeUserData();
+
+
+        if (!GPGSManager.instance.useGPGS)
+        {
+            InitializeUserData();
+            UIManager.instance.gameStartPanelSignInButton.SetActive(false);
+            UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
+            UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
+        }
     }
 
     void Update()
@@ -366,6 +378,31 @@ public class GameManager : MonoBehaviour
         }
         monster.gameObject.SetActive(false);
         monsterPool[monster.baseMonster.type].Enqueue(monster);
+    }
+
+    //몬스터 파티클을 오브젝트 풀에서 받아온다. disabled 상태로 준다.
+    public ParticleChecker GetMonsterParticleFromPool(int id)
+    {
+        if (monsterParticlePool[id].Count > 0) return monsterParticlePool[id].Dequeue();
+        else
+        {
+            ParticleChecker ret = Instantiate(monsterParticlePrefabs[id]).GetComponent<ParticleChecker>();
+            ret.gameObject.SetActive(false);
+            return ret;
+        }
+    }
+
+    //몬스터 파티클을 오브젝트 풀에 반환한다. enabled 여부에 상관없이 주는 순간 disabled된다.
+    public void ReturnMonsterParticleToPool(ParticleChecker particle, int id)
+    {
+        /*추가 구현 필요 - 예외처리 제거할 것*/
+        if (monsterParticlePool[id].Contains(particle))
+        {
+            Debug.LogError("already enqueued monster particle");
+            return;
+        }
+        particle.gameObject.SetActive(false);
+        monsterParticlePool[id].Enqueue(particle);
     }
 
     //링을 오브젝트 풀에서 받아온다. disabled 상태로 준다.

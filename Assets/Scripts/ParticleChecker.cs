@@ -1,3 +1,4 @@
+using UnityEditorInternal;
 using UnityEngine;
 
 public class ParticleChecker : MonoBehaviour
@@ -19,10 +20,12 @@ public class ParticleChecker : MonoBehaviour
         particle.Play();
     }
 
-    //disable되면 자동으로 풀에 되돌림
-    void OnDisable()
+    //풀에 되돌린다. duration 후 자동으로 불림.
+    void InvokeReturnParticle()
     {
-        GameManager.instance.ReturnParticleToPool(this, id);
+        particle.Stop();
+        if (gameObject.name[0] == 'c') GameManager.instance.ReturnParticleToPool(this, id);
+        else GameManager.instance.ReturnMonsterParticleToPool(this, id);
     }
 
     //파티클을 플레이한다. duration을 0.0f로 주면 원래 duration을 쓴다.
@@ -42,6 +45,28 @@ public class ParticleChecker : MonoBehaviour
                 main.duration = _duration;
             }
         }
+        Invoke("InvokeReturnParticle", particle.main.duration);
+        gameObject.SetActive(true);
+    }
+
+    //파티클을 위치 조정 후 플레이한다.
+    public void PlayParticle(Transform _parent, float _duration, Vector3 move)
+    {
+        //위치를 설정한다.
+        transform.position = _parent.position + move;
+        transform.parent = _parent;
+
+        Invoke("InvokeReturnParticle", _duration);
+        gameObject.SetActive(true);
+    }
+
+    //파티클을 위치에서 고정하여 플레이한다.
+    public void PlayParticle(Vector3 position, float _duration)
+    {
+        //위치를 설정한다.
+        transform.position = position;
+
+        Invoke("InvokeReturnParticle", _duration);
         gameObject.SetActive(true);
     }
 

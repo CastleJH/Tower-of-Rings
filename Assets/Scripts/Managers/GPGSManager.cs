@@ -25,13 +25,6 @@ public class GPGSManager : MonoBehaviour
             clientConfiguration = new PlayGamesClientConfiguration.Builder().EnableSavedGames().Build();
             SignIn();
         }
-        else
-        {
-            GameManager.instance.InitializeUserData();
-            UIManager.instance.gameStartPanelSignInButton.SetActive(false);
-            UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
-            UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
-        }
     }
 
     //로그인(저장된 게임을 불러온다)
