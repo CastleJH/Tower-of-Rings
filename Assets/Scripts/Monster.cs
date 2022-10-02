@@ -43,6 +43,7 @@ public class Monster : MonoBehaviour
     float skillUseTime;         //엘리트/보스 몬스터의 스킬 지속된 시간
     bool immuneDamage;          //데미지 면역 여부
     bool immuneInterrupt;       //이동방해 면역 여부
+    bool devilCommanderEffect;  //악마지휘관 영향 여부
     int cloneID;                //복제술사의 복제된 몬스터 ID
 
     void OnEnable()
@@ -79,6 +80,7 @@ public class Monster : MonoBehaviour
 
                 if (barrierBlock) curSPD = 0;  //결계
             }
+            if (devilCommanderEffect) curSPD *= 1.2f;
 
             //맹독 중첩이 있으면 데미지를 받는다.
             if (poisonDmg > 0)
@@ -147,6 +149,7 @@ public class Monster : MonoBehaviour
         skillUseTime = 0.0f;
         immuneDamage = false;
         immuneInterrupt = false;
+        devilCommanderEffect = false;
         cloneID = -1;
     }
 
@@ -552,14 +555,21 @@ public class Monster : MonoBehaviour
     //엘리트 몬스터 스킬: 악마 지휘관
     void Elite_DevilCommander()
     {
-        Monster monster;
-        //자신을 제외한 일정 반경 내 몬스터 모두의 이속을 증가
-        for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
+        skillCoolTime1 += Time.deltaTime;
+        if (skillCoolTime1 >= 1.0f) //1초마다
         {
-            monster = BattleManager.instance.monsters[i];
-            if (monster.isInBattle && Vector2.Distance(transform.position, monster.transform.position) < 3.0f && monster != this)
-                monster.baseSPD = monster.baseMonster.baseSPD * 1.2f;
-            else monster.baseSPD = monster.baseMonster.baseSPD;
+            Monster monster;
+            //자신을 제외한 일정 반경 내 몬스터 모두의 이속을 증가
+            for (int i = BattleManager.instance.monsters.Count - 1; i >= 0; i--)
+            {
+                monster = BattleManager.instance.monsters[i];
+                if (monster.isInBattle && Vector2.Distance(transform.position, monster.transform.position) < 3.0f && monster != this)
+                {
+                    monster.devilCommanderEffect = true;
+                    monster.PlayParticleMonsterSkill(baseMonster.type, 1.0f);
+                }
+                else monster.devilCommanderEffect = false;
+            }
         }
     }
 
@@ -759,7 +769,7 @@ public class Monster : MonoBehaviour
     void Boss_Executer()
     {
         skillCoolTime1 += Time.deltaTime;
-        if (skillCoolTime1 >= 10.0f && DeckManager.instance.rings.Count > 0)    //10초마다
+        if (skillCoolTime1 >= 10.0f && DeckManager.instance.rings.Count > 1)    //10초마다
         {
             skillCoolTime1 = 0.0f;
             PlayParticleMonsterSkill(baseMonster.type, 0.0f);
@@ -767,6 +777,10 @@ public class Monster : MonoBehaviour
 
             //랜덤한 링을 제거한다.
             int ridx = Random.Range(0, DeckManager.instance.rings.Count);
+            DeckManager.instance.rings[ridx].PlayParticleMonsterSkill(baseMonster.type, 0.4f);
+            DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[ridx]);
+
+            ridx = Random.Range(0, DeckManager.instance.rings.Count);
             DeckManager.instance.rings[ridx].PlayParticleMonsterSkill(baseMonster.type, 0.4f);
             DeckManager.instance.RemoveRingFromBattle(DeckManager.instance.rings[ridx]);
         }
