@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -420,8 +421,10 @@ public class UIManager : MonoBehaviour
         else ringInfoRingUpgradeImage.sprite = GameManager.instance.ringInfoUpgradeSprites[baseRing.level];
         ringInfoRPText.text = ((int)baseRing.baseRP).ToString();
         ringInfoNameText.text = baseRing.name + " ¸µ";
-        ringInfoATKText.text = (Mathf.Round(baseRing.baseATK * 100) * 0.01f).ToString();
-        ringInfoSPDText.text = (Mathf.Round(baseRing.baseSPD * 100) * 0.01f).ToString();
+        ringInfoATKText.text = String.Format("{0:0.##}", baseRing.baseATK).ToString();
+        ringInfoSPDText.text = String.Format("{0:0.##}", baseRing.baseSPD).ToString();
+        //ringInfoATKText.text = (Mathf.Round(baseRing.baseATK * 100) * 0.01f).ToString();
+        //ringInfoSPDText.text = (Mathf.Round(baseRing.baseSPD * 100) * 0.01f).ToString();
         ringInfoRNGText.text = Mathf.Max(0, baseRing.range - 2).ToString();
         ringInfoTARText.text = baseRing.baseNumTarget.ToString();
         ringInfoBaseText.text = baseRing.description;
@@ -692,7 +695,7 @@ public class UIManager : MonoBehaviour
                 else curseProb = 0.5f;
             }
             curseProb -= GameManager.instance.spiritEnhanceLevel[6] * 0.02f;
-            if (Random.Range(0.0f, 1.0f) <= curseProb)
+            if (UnityEngine.Random.Range(0.0f, 1.0f) <= curseProb)
             {
                 isRelicPure = false;
             }
@@ -949,11 +952,8 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < lobbyMonsterCollectionMonsterDiamonds.Length; i++)
         {
             lobbyMonsterCollectionMonsterDiamonds[i].SetActive(false);
-            if (GameManager.instance.monsterCollectionProgress[i] == GameManager.instance.monsterCollectionMaxProgress[i])
-            {
+            if (GameManager.instance.monsterCollectionProgress[i] == GameManager.instance.monsterCollectionMaxProgress[i]) 
                 lobbyMonsterCollectionMonsterDiamonds[i].SetActive(true);
-                break;
-            }
         }
         ButtonMonsterCollectionSelectMonster(0);
         lobbyMonsterCollectionPanel.SetActive(true);

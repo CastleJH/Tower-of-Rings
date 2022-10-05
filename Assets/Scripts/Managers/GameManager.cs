@@ -265,8 +265,6 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1.0f;
 
-        playerMaxHP = 100 + spiritEnhanceLevel[2] * 4;
-        if (!isNormalMode) playerMaxHP /= 2;
         ChangePlayerCurHP(0);   //여기서 영혼강화로 인한 링 기본 공격력/공격 쿨타임도 변한다.
 
         ChangeGold(0);
@@ -678,13 +676,13 @@ public class GameManager : MonoBehaviour
                 if (baseRelics[id].isPure)
                 {
                     playerMaxHP += 20;
-                    if (isProgressUp) ChangePlayerCurHP(20);
+                    //if (isProgressUp) ChangePlayerCurHP(20);
                 }
                 else
                 {
                     playerMaxHP -= 20;
                     playerCurHP = Mathf.Min(playerCurHP, playerMaxHP);
-                    if (isProgressUp) ChangePlayerCurHP(0);
+                    //if (isProgressUp) ChangePlayerCurHP(0);
                 }
                 break;
             case 4:     //불멸자의 심장

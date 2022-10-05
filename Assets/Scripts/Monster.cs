@@ -887,6 +887,7 @@ public class Monster : MonoBehaviour
     //몬스터를 오브젝트 풀에 되돌릴 때 Invoke로 돌리는 경우 쓰인다.
     void InvokeReturnMonsterToPool()
     {
+        CancelInvoke();
         GameManager.instance.ReturnMonsterToPool(this);
     }
 }

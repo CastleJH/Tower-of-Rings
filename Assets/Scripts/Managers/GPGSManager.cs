@@ -15,8 +15,6 @@ public class GPGSManager : MonoBehaviour
 
     public bool useGPGS;
 
-    public string loadedData;
-
     void Awake()
     {
         instance = this;
@@ -182,8 +180,10 @@ public class GPGSManager : MonoBehaviour
                     FloorManager.instance.floor.floorNum = int.Parse(parseByCategory[7]);
                     UIManager.instance.debugText.text += "\n" + "Parse 7 done**********************************************************";
                     GameManager.instance.isNormalMode = parseByCategory[8] == "1" ? true : false;
-                    UIManager.instance.debugText.text += "\n" + "Parse 8 done**********************************************************";
                     GameManager.instance.ResetBases(GameManager.instance.isNormalMode);
+                    UIManager.instance.debugText.text += "\n" + "Parse 8 done**********************************************************";
+                    GameManager.instance.playerMaxHP = 100 + GameManager.instance.spiritEnhanceLevel[2] * 4;
+                    if (!GameManager.instance.isNormalMode) GameManager.instance.playerMaxHP /= 2;
                     GameManager.instance.playerCurHP = int.Parse(parseByCategory[9]);
                     UIManager.instance.debugText.text += "\n" + "Parse 9 done**********************************************************";
                     GameManager.instance.gold = int.Parse(parseByCategory[10]);

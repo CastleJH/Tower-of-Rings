@@ -318,7 +318,7 @@ public class BattleManager : MonoBehaviour
 
         //몬스터 정리
         for (int i = monsters.Count - 1; i >= 0; i--)
-            GameManager.instance.ReturnMonsterToPool(monsters[i]);
+            monsters[i].RemoveFromBattle(false);
         monsters.Clear();
 
         //몬스터 경로 끄기

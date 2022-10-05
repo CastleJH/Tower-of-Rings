@@ -4873,7 +4873,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useGPGS: 0
-  loadedData: 
 --- !u!4 &104883747
 Transform:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class DamageText : MonoBehaviour
@@ -42,7 +43,8 @@ public class DamageText : MonoBehaviour
     //인자 값으로 텍스트/최초 위치/색깔을 수정한다.
     public void InitializeDamageText(float dmg, Vector2 pos, Color32 color)
     {
-        text.text = (Mathf.Round(dmg * 100) * 0.01f).ToString();
+        text.text = String.Format("{0:0.##}", dmg);
+        //text.text = (Mathf.Round(dmg * 100) * 0.01f).ToString();
         text.color = color;
         transform.position = pos;
         transform.Translate(new Vector3(0.0f, 0.5f, -9.0f));
