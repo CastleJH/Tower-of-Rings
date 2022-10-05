@@ -318,7 +318,7 @@ public class Monster : MonoBehaviour
                 curHP -= dmg;
                 //데미지 미터기를 표시한다. 소수점 아래 둘째자리까지만 표현.
                 DamageText t = GameManager.instance.GetDamageTextFromPool();
-                t.InitializeDamageText((Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
+                t.InitializeDamageText(dmg, transform.position, color);
                 t.gameObject.SetActive(true);
             }
             else //즉사/처형인 경우
@@ -335,7 +335,7 @@ public class Monster : MonoBehaviour
             curHP -= dmg;
             if (curHP > maxHP) curHP = maxHP;
             DamageText t = GameManager.instance.GetDamageTextFromPool();
-            t.InitializeDamageText((-Mathf.Round(dmg * 100) * 0.01f).ToString(), transform.position, color);
+            t.InitializeDamageText(-dmg, transform.position, color);
             t.gameObject.SetActive(true);
         }
         SetHPText();

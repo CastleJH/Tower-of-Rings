@@ -137,7 +137,11 @@ public class BattleManager : MonoBehaviour
             if (wave == 3 && newMonsterID == 0)   //웨이브 3의 첫 몬스터는 반드시 엘리트/보스
             {
                 if (FloorManager.instance.curRoom.type == 1) monsterType = Random.Range(15, 22);
-                else monsterType = FloorManager.instance.floor.floorNum + 21;
+                else
+                {
+                    scale = 1.0f;
+                    monsterType = FloorManager.instance.floor.floorNum + 21;
+                }
             }
             else monsterType = Random.Range(0, 15);    //그외에는 일반 몬스터
 

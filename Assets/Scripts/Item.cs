@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Item : MonoBehaviour
 {
@@ -11,8 +12,9 @@ public class Item : MonoBehaviour
     public int itemType;    //아이템 타입
     public Vector3 pos;     //아이템 배치 위치
 
-    int costType;   //획득 시 소모할 재화 타입
-    int cost;       //획득 시 소모할 재화량
+    public int costType;   //획득 시 소모할 재화 타입
+    public int baseCost;       //기본 가격
+    int curCost;        //실제로 소모되는 가격
 
     void Update()
     {
@@ -34,7 +36,7 @@ public class Item : MonoBehaviour
         pos = _pos;
         itemType = _type;
         costType = _costType;
-        cost = _cost;
+        baseCost = _cost;
 
         if (itemType < 1000) spriteRenderer.sprite = GameManager.instance.itemSprites[itemType];                //일반 아이템
         else if (itemType < 2000) spriteRenderer.sprite = GameManager.instance.ringSprites[itemType - 1000];    //링
@@ -47,8 +49,18 @@ public class Item : MonoBehaviour
         }
         else  //골드/다이아몬드를 소모하도록 함
         {
+            float price = 1.0f;
+            if (GameManager.instance.baseRelics[11].have)
+            {
+                if (GameManager.instance.baseRelics[11].isPure) price = 0.5f;
+                else price = 1.3f;
+            }
+            if (itemType == 1 && GameManager.instance.baseRelics[13].have && GameManager.instance.baseRelics[13].isPure) price = 0.0f;
+            if (!GameManager.instance.isNormalMode) price *= 2.0f;
+
+            curCost = (int)(baseCost * price);
             costTypeImage.sprite = GameManager.instance.itemSprites[costType + 3];
-            costText.text = cost.ToString();
+            costText.text = curCost.ToString();
             costTypeImage.gameObject.SetActive(true);
             costText.gameObject.SetActive(true);
         }
@@ -59,8 +71,8 @@ public class Item : MonoBehaviour
     {
         if (itemType < 1000)    //일반 아이템인 경우 재화가 부족하면 false를 반환하고, 아니면 사용한다.
         {
-            if (costType == 1 && GameManager.instance.gold < cost) return;            //골드 지불의 경우, 재화가 부족하다면 false 반환.
-            else if (costType == 2 && GameManager.instance.diamond < cost) return;    //다이아 지불의 경우, 재화가 부족하다면 false 반환.
+            if (costType == 1 && GameManager.instance.gold < curCost) return;            //골드 지불의 경우, 재화가 부족하다면 false 반환.
+            else if (costType == 2 && GameManager.instance.diamond < curCost) return;    //다이아 지불의 경우, 재화가 부족하다면 false 반환.
 
             FloorManager.instance.lastTouchItem = this;
             switch (itemType)
@@ -73,7 +85,7 @@ public class Item : MonoBehaviour
                     break;
                 case 2:     //HP 회복
                     float healAmount = GameManager.instance.playerMaxHP * Random.Range(0.15f, 0.3f) * (1.0f + GameManager.instance.spiritEnhanceLevel[5] * 0.1f);
-                    if (GameManager.instance.baseRelics[9].have)    //유물 보유 여부에 따라 회복량을 조정한다.
+                    if (GameManager.instance.baseRelics[9].have && FloorManager.instance.curRoom.type == 7)    //유물 보유 여부에 따라 회복량을 조정한다.
                     {
                         if (GameManager.instance.baseRelics[9].isPure) healAmount *= 2;
                         else healAmount *= 0.5f;
@@ -110,15 +122,15 @@ public class Item : MonoBehaviour
         }
         else if (itemType < 2000)        //링인 경우 정보 패널을 연다.
         {
-            if (costType == 1 && GameManager.instance.gold < cost) UIManager.instance.ringInfoTakeText.text = "골드가 부족하다";
-            else if (costType == 2 && GameManager.instance.diamond < cost) UIManager.instance.ringInfoTakeText.text = "다이아몬드가 부족하다";
+            if (costType == 1 && GameManager.instance.gold < curCost) UIManager.instance.ringInfoTakeText.text = "골드가 부족하다";
+            else if (costType == 2 && GameManager.instance.diamond < curCost) UIManager.instance.ringInfoTakeText.text = "다이아몬드가 부족하다";
             else UIManager.instance.ringInfoTakeText.text = "이 링을 가져간다";
             UIManager.instance.OpenRingInfoPanel(itemType - 1000);
         }
         else if (itemType < 3000)   //유물인 경우 정보 패널을 연다.
         {
-            if (costType == 1 && GameManager.instance.gold < cost) UIManager.instance.relicInfoTakeText.text = "골드가 부족하다";
-            else if (costType == 2 && GameManager.instance.diamond < cost) UIManager.instance.relicInfoTakeText.text = "다이아몬드가 부족하다";
+            if (costType == 1 && GameManager.instance.gold < curCost) UIManager.instance.relicInfoTakeText.text = "골드가 부족하다";
+            else if (costType == 2 && GameManager.instance.diamond < curCost) UIManager.instance.relicInfoTakeText.text = "다이아몬드가 부족하다";
             else UIManager.instance.relicInfoTakeText.text = "이 유물을 가져간다";
             UIManager.instance.OpenRelicInfoPanel(itemType - 2000);
         }
@@ -127,8 +139,8 @@ public class Item : MonoBehaviour
     //아이템의 값을 지불한다.
     public void Pay()
     {
-        if (costType == 1) GameManager.instance.ChangeGold(-cost);
-        else if (costType == 2) GameManager.instance.ChangeDiamond(-cost);
+        if (costType == 1) GameManager.instance.ChangeGold(-curCost);
+        else if (costType == 2) GameManager.instance.ChangeDiamond(-curCost);
     }
 
     //FloorManager에서 아이템 획득 시 애니메이션 플레이 완료 후 오브젝트 풀에 이 아이템을 되돌릴 때(Invoke) 불린다.

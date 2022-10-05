@@ -422,7 +422,7 @@ public class UIManager : MonoBehaviour
         ringInfoNameText.text = baseRing.name + " ¸µ";
         ringInfoATKText.text = (Mathf.Round(baseRing.baseATK * 100) * 0.01f).ToString();
         ringInfoSPDText.text = (Mathf.Round(baseRing.baseSPD * 100) * 0.01f).ToString();
-        ringInfoRNGText.text = (baseRing.range - 2).ToString();
+        ringInfoRNGText.text = Mathf.Max(0, baseRing.range - 2).ToString();
         ringInfoTARText.text = baseRing.baseNumTarget.ToString();
         ringInfoBaseText.text = baseRing.description;
         ringInfoSameSynergyText.text = baseRing.toSame;

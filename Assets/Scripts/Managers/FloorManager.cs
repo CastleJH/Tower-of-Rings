@@ -262,13 +262,6 @@ public class FloorManager : MonoBehaviour
             case 8:
                 if (!curRoom.visited)
                 {
-                    float price = 1.0f;
-                    if (GameManager.instance.baseRelics[11].have)
-                    {
-                        if (GameManager.instance.baseRelics[11].isPure) price = 0.5f;
-                        else price = 1.3f;
-                    }
-                    if (!GameManager.instance.isNormalMode) price *= 2.0f;
                     Item item;
                     int itemID;
 
@@ -276,38 +269,36 @@ public class FloorManager : MonoBehaviour
                     item = GameManager.instance.GetItemFromPool();
                     do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
                     while (GameManager.instance.relics.Contains(itemID));
-                    item.InitializeItem(2000 + itemID, itemPos[2], 1, (int)(10 * price));
+                    item.InitializeItem(2000 + itemID, itemPos[2], 1, 10);
                     curRoom.AddItem(item);
 
                     //À¯¹° Á¤È­
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(6, itemPos[3], 1, (int)(10 * price));
+                    item.InitializeItem(6, itemPos[3], 1, 10);
                     curRoom.AddItem(item);
 
                     //¸µ
                     item = GameManager.instance.GetItemFromPool();
                     do itemID = Random.Range(0, GameManager.instance.baseRings.Count);
                     while (DeckManager.instance.deck.Contains(itemID));
-                    item.InitializeItem(1000 + itemID, itemPos[0], 1, (int)(5 * price));
+                    item.InitializeItem(1000 + itemID, itemPos[0], 1, 5);
                     curRoom.AddItem(item);
 
                     //È¸º¹
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(2, itemPos[1], 1, (int)(5 * price));
+                    item.InitializeItem(2, itemPos[1], 1, 5);
                     curRoom.AddItem(item);
 
                     //Á¦·Ã ¸ÁÄ¡
                     item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(0, itemPos[4], 1, (int)(5 * price));
+                    item.InitializeItem(0, itemPos[4], 1, 5);
                     curRoom.AddItem(item);
 
                     //ÆÄ±« ¸ÁÄ¡
                     if (!GameManager.instance.baseRelics[13].have || GameManager.instance.baseRelics[13].isPure)
                     {
                         item = GameManager.instance.GetItemFromPool();
-                        int itemPrice = (int)(5 * price);
-                        if (GameManager.instance.baseRelics[13].have) itemPrice = 0;
-                        item.InitializeItem(1, itemPos[5], 1, itemPrice);
+                        item.InitializeItem(1, itemPos[5], 1, 5);
                         curRoom.AddItem(item);
                     }
                 }

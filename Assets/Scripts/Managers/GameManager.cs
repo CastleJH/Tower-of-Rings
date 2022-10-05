@@ -694,6 +694,27 @@ public class GameManager : MonoBehaviour
                     for (int i = 0; i < baseMonsters.Count; i++)
                         if (baseMonsters[i].tier == 'n') baseMonsters[i].baseATK = 2;
                 break;
+            case 11:    //상인의 자루
+            case 13:    //고물상의 수레
+                if (!isProgressUp) break;
+                if (FloorManager.instance.floor != null)
+                    for (int i = 1; i <= 9; i++)
+                        for (int j = 1; j <= 9; j++)
+                        {
+                            if (FloorManager.instance.floor.rooms[i, j].type == 8)
+                            {
+                                Room storeRoom = FloorManager.instance.floor.rooms[i, j];
+
+                                for (int it = 0; it < storeRoom.items.Count; it++)
+                                {
+                                    if (storeRoom.items[it].itemType == 1 && id == 13 && !isPure) ReturnItemToPool(storeRoom.items[it]);
+                                    else storeRoom.items[it].InitializeItem(storeRoom.items[it].itemType, storeRoom.items[it].pos, storeRoom.items[it].costType, storeRoom.items[it].baseCost);
+                                }
+
+                                break;
+                            }
+                        }
+                break;
             case 12:    //소환사의 축복
                 if (baseRelics[id].isPure)
                     for (int i = 0; i < baseRings.Count; i++)
