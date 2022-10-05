@@ -2,10 +2,6 @@ using UnityEngine;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
-using System;
-using System.Net;
-using System.Linq;
-using TMPro;
 
 public class GPGSManager : MonoBehaviour
 {
