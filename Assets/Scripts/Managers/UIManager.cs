@@ -8,8 +8,6 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public ParticleSystem touchParticle;
-    public GameObject debugPanel;
-    public Text debugText;
 
     public GameObject gameStartPanel;
     public GameObject gameStartText;
@@ -61,8 +59,10 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI[] spiritEnhanceLevelText;
     public TextMeshProUGUI[] spiritEnhanceCostText;
 
-    public Image gameEndPanel;
-    public Sprite[] gameEndSprites;
+    public GameObject gameEndWinPanel;
+    public GameObject gameEndLosePanel;
+    public GameObject gameEndResultPanel;
+    public TextMeshProUGUI gameEndResultText;
     
     public GameObject mapPanel;
     public Image[] mapRow1, mapRow2, mapRow3, mapRow4, mapRow5, mapRow6, mapRow7, mapRow8, mapRow9;
@@ -72,6 +72,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI playerGoldText;
     public TextMeshProUGUI playerDiamondText;
     public TextMeshProUGUI playerHPText;
+    public TextMeshProUGUI floorText;
 
     public GameObject battleArrangeFail;
     public TextMeshProUGUI battleArrangeFailText;
@@ -151,16 +152,6 @@ public class UIManager : MonoBehaviour
 
         titleTextBlinkTime = 0.0f;
         gameStartPanel.SetActive(true);
-    }
-
-    public void ButtonOnOffDebugText(bool active)
-    {
-        debugPanel.gameObject.SetActive(active);
-    }
-
-    public void ButtonClearDebugText()
-    {
-        debugText.text = "";
     }
 
     public void ButtonDebugGPGS()
@@ -245,7 +236,6 @@ public class UIManager : MonoBehaviour
 
     public void ButtonBackToLobbyAgree()
     {
-        UIManager.instance.debugText.text = "ChangeScene ButtonBackToLobbyAgree";
         SceneChanger.instance.ChangeScene(GameManager.instance.OnGameOver, 0, 0);
     }
 
@@ -478,10 +468,38 @@ public class UIManager : MonoBehaviour
     public void OpenEndingPanel(int endingState)
     {
         Camera.main.transform.position = new Vector2(-100, -100);
-        gameEndPanel.sprite = gameEndSprites[endingState];
-        gameEndPanel.gameObject.SetActive(true);
+        
+        if (endingState == 0) gameEndLosePanel.SetActive(true);
+        else gameEndWinPanel.SetActive(true);
+        OpenGameEndResultPanel();
 
+        GameManager.instance.saveFloor = false;
         GPGSManager.instance.SaveGame();
+    }
+
+    void OpenGameEndResultPanel()
+    {
+        gameEndResultText.text = "<color=#FFFFFF>";
+        gameEndResultText.text += "최종 층:\n" + FloorManager.instance.floor.floorNum.ToString() + "F\n\n";
+        
+        gameEndResultText.text += "보유한 링:\n";
+        for (int i = 0; i < DeckManager.instance.deck.Count; i++)
+        {
+            BaseRing ring = GameManager.instance.baseRings[DeckManager.instance.deck[i]];
+            gameEndResultText.text += "[" + ring.name + "(" + (ring.level != ring.maxlvl ? ring.level.ToString() : "M") + ")] ";
+        }
+        gameEndResultText.text += "\n\n";
+
+
+        gameEndResultText.text += "보유한 유물:\n</color>";
+        for (int i = 0; i < GameManager.instance.relics.Count; i++)
+        {
+            BaseRelic relic = GameManager.instance.baseRelics[GameManager.instance.relics[i]];
+            if (relic.isPure) gameEndResultText.text += "<color=#FFFFFF>[" + relic.name + "] </color>";
+            else gameEndResultText.text += "<color=#A45F5F>[" + relic.name + "] </color>";
+        }
+
+        gameEndResultPanel.SetActive(true);
     }
 
     //패널을 닫는다.
@@ -750,7 +768,6 @@ public class UIManager : MonoBehaviour
     public void ButtonOpenLobby()
     {
         GameManager.instance.ChangeDiamond(0);
-        UIManager.instance.debugText.text = "ChangeScene ButtonOpenLobby";
         SceneChanger.instance.ChangeScene(ChangeSceneToLobby, 0, 0);
     }
 
@@ -1066,7 +1083,9 @@ public class UIManager : MonoBehaviour
         lobbyHardModeToggleButton.gameObject.SetActive(GameManager.instance.hardModeOpen == 1);
         lobbyAccountSettingPanel.SetActive(false);
         lobbyAccountSettingAskDeletePanel.SetActive(false);
-        gameEndPanel.gameObject.SetActive(false);
+        gameEndWinPanel.SetActive(false);
+        gameEndLosePanel.SetActive(false);
+        gameEndResultPanel.SetActive(false);
     }
 
     void InvokeReloadAndCloseRingSelectionPanel()

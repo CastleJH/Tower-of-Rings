@@ -206,6 +206,7 @@ public class GameManager : MonoBehaviour
             monsterCollectionProgress[i] = 0;
         gold = 0;
         diamond = 0;
+        saveFloor = false;
     }
 
     //게임을 시작한다.
@@ -222,11 +223,9 @@ public class GameManager : MonoBehaviour
     public void GameStartSaved()
     {
         saveFloor = false;
-        UIManager.instance.debugText.text += "\nInit Try";
         InitializeGameSaved();
         UIManager.instance.mapPanel.SetActive(true);
         FloorManager.instance.endPortal.SetActive(false);
-        UIManager.instance.debugText.text += "\nInit Finish";
         FloorManager.instance.CreateAndMoveToFloor(FloorManager.instance.floor.floorNum);
     }
 
@@ -625,7 +624,6 @@ public class GameManager : MonoBehaviour
             {
                 BattleManager.instance.isBattlePlaying = false;
                 Time.timeScale = 0.0f;
-                UIManager.instance.debugText.text += "\nChangeScene ChangePlayerCurHP";
                 SceneChanger.instance.ChangeScene(OnGameOver, 0, 0);
             }
         }

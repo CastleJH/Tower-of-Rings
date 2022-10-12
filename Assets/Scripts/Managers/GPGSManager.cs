@@ -170,20 +170,13 @@ public class GPGSManager : MonoBehaviour
                 GameManager.instance.hardModeOpen = int.Parse(parseByCategory[5]);
                 if (parseByCategory.Length > 6 && int.Parse(parseByCategory[6]) == 1) //탑에 입장한 상태였다면
                 {
-                    UIManager.instance.debugText.text += "Reload....";
-
-                    UIManager.instance.debugText.text += "\n" + "Continue*********************************************************************************";
                     FloorManager.instance.floor.floorNum = int.Parse(parseByCategory[7]);
-                    UIManager.instance.debugText.text += "\n" + "Parse 7 done**********************************************************";
                     GameManager.instance.isNormalMode = parseByCategory[8] == "1" ? true : false;
                     GameManager.instance.ResetBases(GameManager.instance.isNormalMode);
-                    UIManager.instance.debugText.text += "\n" + "Parse 8 done**********************************************************";
                     GameManager.instance.playerMaxHP = 100 + GameManager.instance.spiritEnhanceLevel[2] * 4;
                     if (!GameManager.instance.isNormalMode) GameManager.instance.playerMaxHP /= 2;
                     GameManager.instance.playerCurHP = int.Parse(parseByCategory[9]);
-                    UIManager.instance.debugText.text += "\n" + "Parse 9 done**********************************************************";
                     GameManager.instance.gold = int.Parse(parseByCategory[10]);
-                    UIManager.instance.debugText.text += "\n" + "Parse 10 done**********************************************************";
                     DeckManager.instance.RemoveRingFromDeck(0);
                     DeckManager.instance.RemoveRingFromDeck(0);
                     DeckManager.instance.RemoveRingFromDeck(0);
@@ -191,29 +184,23 @@ public class GPGSManager : MonoBehaviour
                     DeckManager.instance.RemoveRingFromDeck(0);
                     DeckManager.instance.RemoveRingFromDeck(0);
                     parseById = parseByCategory[11].Split('|');
-                    UIManager.instance.debugText.text += "\nLen: " + parseById.Length.ToString();
                     for (int i = 0; i < parseById.Length; i += 2)
                     {
                         if (parseById[i] == ".") break;
                         int id = int.Parse(parseById[i]);
                         int lvl = int.Parse(parseById[i + 1]);
-                        UIManager.instance.debugText.text += "\n" + "id: " + id.ToString() + " lvl: " + lvl.ToString();
                         DeckManager.instance.AddRingToDeck(id, false);
                         while (GameManager.instance.baseRings[id].level < lvl) GameManager.instance.baseRings[id].Upgrade(2.0f);
                     }
-                    UIManager.instance.debugText.text += "\n" + "Parse 11 done**********************************************************";
                     parseById = parseByCategory[12].Split('|');
                     for (int i = 0; i < parseById.Length; i += 2)
                     {
                         if (parseById[i] == ".") break;
                         int id = int.Parse(parseById[i]);
                         bool isPure = parseById[i + 1] == "1" ? true : false;
-                        UIManager.instance.debugText.text += "\n" + "id: " + id.ToString() + " isPure: " + isPure.ToString();
                         GameManager.instance.AddRelicToPlayer(id, isPure, false);
                     }
-                    UIManager.instance.debugText.text += "\n" + "Parse 12 done**********************************************************";
                     GameManager.instance.revivable = parseByCategory[13] == "1" ? true : false;
-                    UIManager.instance.debugText.text += "\n" + "Parse 13 done**********************************************************";
 
                     //층 하드모드여부 HP 골드 덱(아이디|강화) 유물(아이디|저주) 
                     UIManager.instance.gameStartPanelSignInButton.SetActive(false);

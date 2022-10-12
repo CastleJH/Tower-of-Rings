@@ -170,7 +170,6 @@ public class BattleManager : MonoBehaviour
                 if (GameManager.instance.playerCurHP > 0) Time.timeScale = 1;
 
                 //현재 있는 방을 다시 로드한다.
-                UIManager.instance.debugText.text = "ChangeScene CheckWaveOver";
                 SceneChanger.instance.ChangeScene(ReloadBattleRoom, FloorManager.instance.playerX, FloorManager.instance.playerY); 
             }
             else //다음 웨이브를 바로 시작한다.

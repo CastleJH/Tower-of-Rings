@@ -82,36 +82,25 @@ public class FloorManager : MonoBehaviour
     //해당 층을 새로 생성하고 이동한다.
     public void CreateAndMoveToFloor(int f)
     {
-        UIManager.instance.debugText.text += "1..";
         GPGSManager.instance.SaveGame();
-        UIManager.instance.debugText.text += "2..";
         ResetFloor();
-        UIManager.instance.debugText.text += "3..";
         floor.Generate(f);
-        UIManager.instance.debugText.text += "4..";
         UIManager.instance.InitializeMap();
-        UIManager.instance.debugText.text += "5..";
+        UIManager.instance.floorText.text = f.ToString() + "F";
 
         for (int i = 1; i <= 9; i++)
             for (int j = 1; j <= 9; j++)
                 floor.rooms[i, j].visited = false;
 
-        UIManager.instance.debugText.text += "6..";
-
-        UIManager.instance.debugText.text = "ChangeScene CreateAndMoveToFloor";
         SceneChanger.instance.ChangeScene(MoveToRoom, floor.startX, floor.startY);
-        UIManager.instance.debugText.text += "7..";
         if (GameManager.instance.baseRelics[0].have)
         {
             if (GameManager.instance.baseRelics[0].isPure) GameManager.instance.ChangePlayerCurHP(10); 
             else GameManager.instance.ChangePlayerCurHP(-10);
-            UIManager.instance.debugText.text += "8..";
         }
         if (f == 1)
         {
-            UIManager.instance.debugText.text += "9..";
             floor.rooms[floor.startX, floor.startY].visited = true;
-            UIManager.instance.debugText.text += "10..";
             if (GameManager.instance.spiritEnhanceLevel[9] == 1)
             {
                 Item item = GameManager.instance.GetItemFromPool();
@@ -135,7 +124,6 @@ public class FloorManager : MonoBehaviour
                 floor.rooms[floor.startX, floor.startY].type = 6;
             }
         }
-        UIManager.instance.debugText.text += "15..";
     }
 
     public void ResetFloor()
@@ -392,7 +380,6 @@ public class FloorManager : MonoBehaviour
             {
                 if (hit.collider.tag != "Portal" || Time.timeScale == 0) return;
                 int dir = hit.collider.name[hit.collider.name.Length - 1] - '0';
-                UIManager.instance.debugText.text = "ChangeScene FloorManager GetInput";
                 if (hit.collider.gameObject != portals[4].gameObject && hit.collider.gameObject != endPortal) SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir]);
                 else
                 {
