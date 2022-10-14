@@ -27,7 +27,7 @@ public class BattleManager : MonoBehaviour
     private int newMonsterID;       //새로 생성할 몬스터의 아이디
 
     //기타
-    AudioSource audioSource;
+    public AudioSource audioSource;
 
     void Awake()
     {

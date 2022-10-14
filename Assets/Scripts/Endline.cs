@@ -28,6 +28,7 @@ public class Endline : MonoBehaviour
                 Monster monster = collision.GetComponent<Monster>();
                 GameManager.instance.ChangePlayerCurHP(-monster.baseMonster.baseATK);
                 anim.SetTrigger("isAttacked");
+                BattleManager.instance.audioSource.PlayOneShot(GameManager.instance.specialAudios[5]);
                 monster.RemoveFromBattle(false);
             }
         }

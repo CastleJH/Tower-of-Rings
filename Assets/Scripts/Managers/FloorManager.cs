@@ -34,11 +34,16 @@ public class FloorManager : MonoBehaviour
         new Vector3(-2, -3, 1), new Vector3(2, -5, 1)
     };
 
+    //±‚≈∏
+    AudioSource audioSource;
+
     void Awake()
     {
         instance = this;
         floor = new Floor();
         portalScale = 0;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -391,6 +396,7 @@ public class FloorManager : MonoBehaviour
                         for (int i = 0; i < GameManager.instance.relics.Count; i++) GameManager.instance.RelicCollectionProgressUp(GameManager.instance.relics[i], 4);
                     }
                 }
+                audioSource.Play();
             }
         }
     }

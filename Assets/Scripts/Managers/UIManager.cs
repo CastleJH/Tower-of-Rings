@@ -671,6 +671,7 @@ public class UIManager : MonoBehaviour
                 DeckManager.instance.RemoveRingFromDeck(deckIdx);
                 FloorManager.instance.RemoveItem(FloorManager.instance.lastTouchItem, true);
                 ringSelectionEffectImage.sprite = GameManager.instance.itemSprites[1];
+                audioSource.PlayOneShot(GameManager.instance.specialAudios[1]);
             }
             else
             {
@@ -838,7 +839,7 @@ public class UIManager : MonoBehaviour
 
         GPGSManager.instance.SaveGame();
 
-        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[1]);
     }
 
     //로비의 링 콜렉션(탑의 지식) 오픈 버튼이 눌렸을 때 불린다.

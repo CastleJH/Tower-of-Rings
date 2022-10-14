@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip[] bgms;
     public AudioClip[] ringAttackAudios;
-    public AudioClip[] specialAudios;   //버튼 해머 겟 적등장
+    public AudioClip[] specialAudios;   //버튼 해머 겟 적등장 포탈
     
     //몬스터 이동 경로 & 맵 구성
     public PathCreator[] monsterPaths;
