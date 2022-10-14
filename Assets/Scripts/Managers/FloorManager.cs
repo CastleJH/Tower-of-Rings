@@ -92,7 +92,7 @@ public class FloorManager : MonoBehaviour
             for (int j = 1; j <= 9; j++)
                 floor.rooms[i, j].visited = false;
 
-        SceneChanger.instance.ChangeScene(MoveToRoom, floor.startX, floor.startY);
+        SceneChanger.instance.ChangeScene(MoveToRoom, floor.startX, floor.startY, 3);
         if (GameManager.instance.baseRelics[0].have)
         {
             if (GameManager.instance.baseRelics[0].isPure) GameManager.instance.ChangePlayerCurHP(10); 
@@ -380,13 +380,13 @@ public class FloorManager : MonoBehaviour
             {
                 if (hit.collider.tag != "Portal" || Time.timeScale == 0) return;
                 int dir = hit.collider.name[hit.collider.name.Length - 1] - '0';
-                if (hit.collider.gameObject != portals[4].gameObject && hit.collider.gameObject != endPortal) SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir]);
+                if (hit.collider.gameObject != portals[4].gameObject && hit.collider.gameObject != endPortal) SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir], -1);
                 else
                 {
                     if (floor.floorNum < 7) CreateAndMoveToFloor(floor.floorNum + 1);
                     else
                     {
-                        SceneChanger.instance.ChangeScene(GameManager.instance.OnGameClear, 0, 0);
+                        SceneChanger.instance.ChangeScene(GameManager.instance.OnGameClear, 0, 0, 0);
                         for (int i = 0; i < DeckManager.instance.deck.Count; i++) GameManager.instance.RingCollectionProgressUp(DeckManager.instance.deck[i], 4);
                         for (int i = 0; i < GameManager.instance.relics.Count; i++) GameManager.instance.RelicCollectionProgressUp(GameManager.instance.relics[i], 4);
                     }

@@ -33,11 +33,14 @@ public class GameManager : MonoBehaviour
     public Sprite[] ringInfoUpgradeSprites;
     public Sprite[] buttonSprites;
     public Sprite[] speedSprites;
-    public Sprite emptyRingSprite; 
+    public Sprite emptyRingSprite;
 
     //사운드
+    public AudioSource audioSource;
+    public AudioClip[] bgms;
     public AudioClip[] ringAttackAudios;
-
+    public AudioClip[] specialAudios;   //버튼 해머 겟 적등장
+    
     //몬스터 이동 경로 & 맵 구성
     public PathCreator[] monsterPaths;
     public SpriteRenderer[] monsterPathImages;
@@ -624,7 +627,7 @@ public class GameManager : MonoBehaviour
             {
                 BattleManager.instance.isBattlePlaying = false;
                 Time.timeScale = 0.0f;
-                SceneChanger.instance.ChangeScene(OnGameOver, 0, 0);
+                SceneChanger.instance.ChangeScene(OnGameOver, 0, 0, 0);
             }
         }
 

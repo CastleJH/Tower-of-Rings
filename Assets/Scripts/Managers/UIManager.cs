@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public ParticleSystem touchParticle;
+    public AudioSource audioSource;
 
     public GameObject gameStartPanel;
     public GameObject gameStartText;
@@ -150,6 +151,8 @@ public class UIManager : MonoBehaviour
         maps[8] = mapRow8;
         maps[9] = mapRow9;
 
+        audioSource = GetComponent<AudioSource>();
+
         titleTextBlinkTime = 0.0f;
         gameStartPanel.SetActive(true);
     }
@@ -189,6 +192,8 @@ public class UIManager : MonoBehaviour
     {
         GPGSManager.instance.SignOut();
         GPGSManager.instance.SignIn();
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //로그아웃 버튼이 눌렸을 때 불린다.
@@ -199,17 +204,23 @@ public class UIManager : MonoBehaviour
         gameStartPanelMoveToGameButton.SetActive(false);
         gameStartPanelSignInButton.SetActive(true);
         gameStartPanel.SetActive(true);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     public void ButtonAccountSettingOpen()
     {
         lobbyAccountSettingPanel.SetActive(true);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //GPGS 저장 데이터를 지울지 물어보는 버튼이 눌렸을 때 불린다.
     public void ButtonAskDeleteSave()
     {
         lobbyAccountSettingAskDeletePanel.SetActive(true);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     public void ButtonDeleteSaveAgree()
@@ -217,31 +228,43 @@ public class UIManager : MonoBehaviour
         GameManager.instance.InitializeUserData();
         GPGSManager.instance.SaveGame();
         ButtonSignOut();
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     public void ButtonDeleteSaveCancel()
     {
         lobbyAccountSettingAskDeletePanel.SetActive(false);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     public void ButtonOpenAccountSettingPanel()
     {
         lobbyAccountSettingPanel.SetActive(true);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     public void ButtonAskBackToLobby()
     {
         playerStatusPanelAskBackToLobby.SetActive(true);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     public void ButtonBackToLobbyAgree()
     {
-        SceneChanger.instance.ChangeScene(GameManager.instance.OnGameOver, 0, 0);
+        SceneChanger.instance.ChangeScene(GameManager.instance.OnGameOver, 0, 0, 0);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     public void ButtonBackToLobbyCancel()
     {
         playerStatusPanelAskBackToLobby.SetActive(false);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //전투에서 링 생성 버튼이 눌린 경우에 불린다.
@@ -610,6 +633,8 @@ public class UIManager : MonoBehaviour
             playerStatusRelicImage[i].gameObject.SetActive(false);
 
         playerStatusPanel.SetActive(true);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //로비의 링 콜렉션 창을 제외한 곳에서 링 정보창 버튼이 눌렸을 때 불린다.
@@ -618,6 +643,8 @@ public class UIManager : MonoBehaviour
         if (deckIdx < DeckManager.instance.deck.Count)
         {
             OpenRingInfoPanel(DeckManager.instance.deck[deckIdx]);
+
+            audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
         }
     }
 
@@ -627,6 +654,8 @@ public class UIManager : MonoBehaviour
         if (listIdx < GameManager.instance.relics.Count)
         {
             OpenRelicInfoPanel(GameManager.instance.relics[listIdx]);
+
+            audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
         }
     }
 
@@ -648,6 +677,7 @@ public class UIManager : MonoBehaviour
                 if (GameManager.instance.baseRelics[6].have && !GameManager.instance.baseRelics[6].isPure)
                     GameManager.instance.baseRings[ringID].Upgrade(0.8f);
                 else GameManager.instance.baseRings[ringID].Upgrade(2.0f);
+                audioSource.PlayOneShot(GameManager.instance.specialAudios[1]);
                 if (GameManager.instance.baseRings[ringID].level == GameManager.instance.baseRings[ringID].maxlvl) GameManager.instance.RingCollectionProgressUp(ringID, 2);
                 FloorManager.instance.RemoveItem(FloorManager.instance.lastTouchItem, true);
                 ringSelectionEffectImage.sprite = GameManager.instance.itemSprites[0];
@@ -681,6 +711,8 @@ public class UIManager : MonoBehaviour
                 FloorManager.instance.RemoveItem(FloorManager.instance.curRoom.items[i], false);
                 break;
             }
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
         ClosePanel(3);
     }
 
@@ -728,6 +760,7 @@ public class UIManager : MonoBehaviour
                 break;
             }
 
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
         ClosePanel(4);
     }
 
@@ -739,6 +772,8 @@ public class UIManager : MonoBehaviour
             if (Time.timeScale < 7.5) Time.timeScale += Time.timeScale;
             else Time.timeScale = 1;
             battleDeckSpeedButtonImage.sprite = GameManager.instance.speedSprites[(int)Mathf.Round(Time.timeScale) / 2];
+
+            audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
         }
     }
 
@@ -749,6 +784,8 @@ public class UIManager : MonoBehaviour
         {
             battleDeckSpeedButtonImage.sprite = GameManager.instance.speedSprites[0];
             Time.timeScale = 1;
+
+            audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
         }
     }
 
@@ -756,19 +793,25 @@ public class UIManager : MonoBehaviour
     public void ButtonStartGame()
     {
         GameManager.instance.GameStart();
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //게임 시작(시작화면에서 저장게임으로 이동) 버튼이 눌렸을 때 불린다.
     public void ButtonStartGameSaved()
     {
         GameManager.instance.GameStartSaved();
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //로비로 가는 버튼이 눌렸을 때 불린다.
     public void ButtonOpenLobby()
     {
         GameManager.instance.ChangeDiamond(0);
-        SceneChanger.instance.ChangeScene(ChangeSceneToLobby, 0, 0);
+        SceneChanger.instance.ChangeScene(ChangeSceneToLobby, 0, 0, 0);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //로비의 영혼 강화창 오픈 버튼이 눌렸을 때 불린다.
@@ -781,6 +824,8 @@ public class UIManager : MonoBehaviour
             else spiritEnhanceCostText[i].text = ((int)(Mathf.Pow(1.2f, GameManager.instance.spiritEnhanceLevel[i]) * GameManager.instance.spiritBaseEnhanceCost[i])).ToString();
         }
         spiritEnhancePanel.SetActive(true);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //로비의 영혼 강화창에서 강화 버튼이 눌렸을 때 불린다.
@@ -792,6 +837,8 @@ public class UIManager : MonoBehaviour
         ButtonSpiritEnhancePanelOpen();
 
         GPGSManager.instance.SaveGame();
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //로비의 링 콜렉션(탑의 지식) 오픈 버튼이 눌렸을 때 불린다.
@@ -831,6 +878,7 @@ public class UIManager : MonoBehaviour
             lobbyRingCollectionProgressText[i].text = string.Format("{0}/{1}", progress, maxProgress);
             lobbyRingCollectionProgressBar[i].sizeDelta = new Vector2(400 * (float)progress / maxProgress, lobbyRingCollectionProgressBar[i].rect.height);
         }
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //로비의 링 콜렉션 창에서 링 정보를 오픈하는 버튼이 눌렸을 때 불린다.
@@ -844,6 +892,8 @@ public class UIManager : MonoBehaviour
                 break;
             }
         OpenRingInfoPanel(tarRingID);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
     
     //로비의 링 콜렉션 창에서 리워드를 획득하는 버튼이 눌렸을 때 불린다.
@@ -876,6 +926,8 @@ public class UIManager : MonoBehaviour
                 lobbyRingCollectionRingDiamonds[tarRingID].SetActive(true);
                 break;
             }
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
     }
 
     //로비의 유물 콜렉션(탑의 지식) 오픈 버튼이 눌렸을 때 불린다.
@@ -915,6 +967,8 @@ public class UIManager : MonoBehaviour
             lobbyRelicCollectionProgressText[i].text = string.Format("{0}/{1}", progress, maxProgress);
             lobbyRelicCollectionProgressBar[i].sizeDelta = new Vector2(400 * (float)progress / maxProgress, lobbyRelicCollectionProgressBar[i].rect.height);
         }
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
 
@@ -929,6 +983,8 @@ public class UIManager : MonoBehaviour
                 break;
             }
         OpenRelicInfoPanel(tarRelicID);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //로비의 유물 콜렉션 창에서 리워드를 획득하는 버튼이 눌렸을 때 불린다.
@@ -961,6 +1017,8 @@ public class UIManager : MonoBehaviour
                 lobbyRelicCollectionRelicDiamonds[tarRelicID].SetActive(true);
                 break;
             }
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
     }
 
     //로비의 적 콜렉션(탑의 지식) 오픈 버튼이 눌렸을 때 불린다.
@@ -1010,6 +1068,8 @@ public class UIManager : MonoBehaviour
         else lobbyMonsterCollectionQuestDiamondsAmountText.text = "10";
         lobbyMonsterCollectionProgressText.text = string.Format("{0}/{1}", progress, maxProgress);
         lobbyMonsterCollectionProgressBar.sizeDelta = new Vector2(400 * (float)progress / maxProgress, lobbyMonsterCollectionProgressBar.rect.height);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
     //로비의 적 콜렉션 창에서 리워드를 획득하는 버튼이 눌렸을 때 불린다.
@@ -1036,6 +1096,8 @@ public class UIManager : MonoBehaviour
 
         //더 이상 현재 적에서 다이아몬드를 획득할 일이 없으므로 획득 가능 표시를 없앤다.
         lobbyMonsterCollectionMonsterDiamonds[tarMonsterID].SetActive(false);
+
+        audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
     }
 
 
@@ -1068,7 +1130,7 @@ public class UIManager : MonoBehaviour
                 lobbyCollectionDiamonds[2].SetActive(true);
                 break;
             }
-
+        
         lobbyPanel.SetActive(true);
         lobbyHardModeToggleButton.isOn = false;
 

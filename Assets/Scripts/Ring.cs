@@ -69,11 +69,13 @@ public class Ring : MonoBehaviour
                     {
                         case 7:     //RP 생산
                             GenerateRP(curATK);
+                            audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
                             anim.SetTrigger("isShoot");
                             shootCoolTime = 0.0f;
                             break;
                         case 10:    //HP 회복
                             GameManager.instance.ChangePlayerCurHP(1);
+                            audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
                             PlayParticle(10);
                             anim.SetTrigger("isShoot");
                             shootCoolTime = 0.0f;
@@ -83,6 +85,7 @@ public class Ring : MonoBehaviour
                         case 23:
                             break;
                         case 22:    //제자리에서 폭발
+                            audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
                             BombardAttack();
                             shootCoolTime = -100.0f;
                             break;
@@ -198,7 +201,6 @@ public class Ring : MonoBehaviour
         int numTarget = Mathf.Min(targets.Count, (int)curNumTarget);    //범위 내 몬스터 수 or 나의 최대 타겟 수 중 더 작은 것
         if (numTarget != 0)
         {
-            if (baseRing.id != 19) audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
             Bullet bullet;
             switch (baseRing.id)
             {
@@ -221,6 +223,7 @@ public class Ring : MonoBehaviour
                         bullet.InitializeBullet(this, targets[i]);
                         bullet.gameObject.SetActive(true);
                     }
+                    audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
                     break;
                 case 1: //리스트의 가장 앞쪽 한 개만 쏨
                 case 4:
@@ -236,6 +239,7 @@ public class Ring : MonoBehaviour
                     bullet = GameManager.instance.GetBulletFromPool(baseRing.id);
                     bullet.InitializeBullet(this, targets[mIdx]);
                     bullet.gameObject.SetActive(true);
+                    audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
                     break;
                 case 2: //산화 링의 소멸 카운팅
                     if (oxyRemoveCount-- == 0)
@@ -250,6 +254,7 @@ public class Ring : MonoBehaviour
                         bullet.InitializeBullet(this, targets[i]);
                         bullet.gameObject.SetActive(true);
                     }
+                    audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
                     break;
                 case 5: //랜덤한 갯수만큼 공격
                 case 14:
@@ -275,6 +280,7 @@ public class Ring : MonoBehaviour
                         bullet.gameObject.SetActive(true);
                         targets.RemoveAt(tar);
                     }
+                    audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
                     break;
                 case 12: //HP 높은 순으로 타겟만큼 공격
                 case 21:
@@ -285,6 +291,7 @@ public class Ring : MonoBehaviour
                         bullet.InitializeBullet(this, targets[i]);
                         bullet.gameObject.SetActive(true);
                     }
+                    audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
                     break;
                 case 15: //엘리트/보스 먼저 공격
                     targets = targets.OrderByDescending(x => x.movedDistance).ToList();
@@ -304,6 +311,7 @@ public class Ring : MonoBehaviour
                         bullet.gameObject.SetActive(true);
                         numTarget--;
                     }
+                    audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
                     break;
                 case 18: //랜덤한 갯수만큼 결계 생성
                     Barrier barrier;
@@ -355,6 +363,7 @@ public class Ring : MonoBehaviour
                     bullet = GameManager.instance.GetBulletFromPool(baseRing.id);
                     bullet.InitializeBullet(this, targets[maxID]);
                     bullet.gameObject.SetActive(true);
+                    audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[baseRing.id]);
                     break;
                 case 7: //발사 안함
                 case 10:

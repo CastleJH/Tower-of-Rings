@@ -26,6 +26,7 @@ public class DeckManager : MonoBehaviour
     public int necroIdx;            //네크로 링의 덱에서의 인덱스
 
     //기타
+    public AudioSource audioSource;     //사운드
     int ringLayerMask;  //링 레이어마스크
 
     void Awake()

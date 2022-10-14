@@ -49,6 +49,7 @@ public class DropRP : MonoBehaviour
     //RP를 주고 게임에서 제거한다.
     void GiveRP()
     {
+        DeckManager.instance.audioSource.PlayOneShot(GameManager.instance.ringAttackAudios[7]);
         BattleManager.instance.ChangePlayerRP(Random.Range(3, 6));
         BattleManager.instance.dropRPs.Remove(this);
         GameManager.instance.ReturnDropRPToPool(this);

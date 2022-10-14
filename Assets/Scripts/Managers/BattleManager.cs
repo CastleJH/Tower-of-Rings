@@ -26,12 +26,16 @@ public class BattleManager : MonoBehaviour
     private int numGenMonster;      //생성할 몬스터 수
     private int newMonsterID;       //새로 생성할 몬스터의 아이디
 
+    //기타
+    AudioSource audioSource;
+
     void Awake()
     {
         instance = this;
         monsters = new List<Monster>();
         dropRPs = new List<DropRP>();
         ringDowngrade = new List<int>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -121,6 +125,7 @@ public class BattleManager : MonoBehaviour
 
         //첫번째 몬스터부터 생성 ID를 0으로 생성 시작한다.
         newMonsterID = 0;
+        audioSource.Play();
         StartCoroutine(GenerateMonster());
     }
 
@@ -170,7 +175,7 @@ public class BattleManager : MonoBehaviour
                 if (GameManager.instance.playerCurHP > 0) Time.timeScale = 1;
 
                 //현재 있는 방을 다시 로드한다.
-                SceneChanger.instance.ChangeScene(ReloadBattleRoom, FloorManager.instance.playerX, FloorManager.instance.playerY); 
+                SceneChanger.instance.ChangeScene(ReloadBattleRoom, FloorManager.instance.playerX, FloorManager.instance.playerY, 3); 
             }
             else //다음 웨이브를 바로 시작한다.
             {

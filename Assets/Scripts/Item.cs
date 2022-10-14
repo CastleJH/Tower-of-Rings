@@ -88,6 +88,7 @@ public class Item : MonoBehaviour
                     {
                         if (GameManager.instance.baseRelics[9].isPure) healAmount *= 2;
                         else healAmount *= 0.5f;
+                        UIManager.instance.audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
                     }
                     if (GameManager.instance.ChangePlayerCurHP((int)healAmount)) FloorManager.instance.RemoveItem(this, false); //풀피가 아닌 경우만 회복 & 아이템 제거한다.
                     else return;      //풀피였으면 사용 불가로 false 반환한다.
@@ -96,15 +97,18 @@ public class Item : MonoBehaviour
                     if (GameManager.instance.baseRelics[7].have && GameManager.instance.baseRelics[7].isPure) GameManager.instance.ChangeGold(6);   //유물 보유 여부에 따라 획득량을 조정한다.
                     else GameManager.instance.ChangeGold(5);
                     FloorManager.instance.RemoveItem(this, false);
+                    UIManager.instance.audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
                     break;
                 case 4:     //1골드 획득
                     if (GameManager.instance.baseRelics[7].have && GameManager.instance.baseRelics[7].isPure) GameManager.instance.ChangeGold(2);   //유물 보유 여부에 따라 획득량을 조정한다.
                     else GameManager.instance.ChangeGold(1);
                     FloorManager.instance.RemoveItem(this, false);
+                    UIManager.instance.audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
                     break;
                 case 5:     //1다이아몬드 획득
                     GameManager.instance.ChangeDiamond(1 + GameManager.instance.spiritEnhanceLevel[8]);
                     FloorManager.instance.RemoveItem(this, false);
+                    UIManager.instance.audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
                     break;
                 case 6:     //유물 정화
                     if (GameManager.instance.cursedRelics.Count != 0)   //정화할 유물이 있는 경우 랜덤하게 하나를 택해 정화한다.
@@ -114,6 +118,7 @@ public class Item : MonoBehaviour
                         GameManager.instance.RelicCollectionProgressUp(GameManager.instance.cursedRelics[targetIdx], 3);
                         GameManager.instance.cursedRelics.RemoveAt(targetIdx);
                         FloorManager.instance.RemoveItem(this, false);
+                        UIManager.instance.audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
                     }
                     else return;      //정화할 유물이 없으면 사용 불가로 false 반환한다.
                     break;
