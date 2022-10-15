@@ -71,7 +71,8 @@ public class Floor
 	//알맞은 형태의 층을 생성한다.
 	public void Generate(int _floorNum)
 	{
-		floorNum = _floorNum;	//층 수를 저장한다.
+		FloorManager.instance.isNotTutorial = true;
+        floorNum = _floorNum;	//층 수를 저장한다.
 
 		int[] dr = { 0, 0, -1, 1 };		//인접한 방을 확인하기 위한 좌표이다.
 		int[] dc = { -1, 1, 0, 0 };
@@ -181,4 +182,23 @@ public class Floor
 				if (rooms[i, j].type == 1 || rooms[i, j].type == 9) 
 					rooms[i, j].pathID = Random.Range(0, GameManager.instance.monsterPaths.Length);
 	}
+
+	public void GenerateTutorial()
+	{
+		FloorManager.instance.isNotTutorial = false;
+        floorNum = 0;
+
+		startX = 6;
+		startY = 5;
+
+        for (int i = 1; i <= 9; i++)
+            for (int j = 1; j <= 9; j++)
+                rooms[i, j].type = -1;
+        
+		rooms[6, 5].type = 0;
+		rooms[5, 5].type = rooms[4, 5].type = 1;
+		rooms[5, 6].type = 3;
+		rooms[4, 4].type = 2;
+		rooms[3, 5].type = 9;
+    }
 }

@@ -1,31 +1,37 @@
 fileFormatVersion: 2
-guid: 42f171758950d4f43a54ee5f98c3be87
+guid: dd90ab0c714627247a079efeaf95ec47
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5239061032520490920
-    second: On_Ring_In_Description_UI_0
+      213: 645411862609229670
+    second: Map_0
   - first:
-      213: 1965652691735544425
-    second: On_Ring_In_Description_UI_1
+      213: -3276122099754389042
+    second: Map_1
   - first:
-      213: -2631497816180711568
-    second: On_Ring_In_Description_UI_2
+      213: -135665275369439952
+    second: Map_2
   - first:
-      213: 725368783391164908
-    second: On_Ring_In_Description_UI_3
+      213: 6732742066884364779
+    second: Map_3
   - first:
-      213: -5467578304134842146
-    second: On_Ring_In_Description_UI_4
+      213: -7324858090283886608
+    second: Map_4
   - first:
-      213: -3981610580286046535
-    second: On_Ring_In_Description_UI_5
+      213: 4945718543514210754
+    second: Map_5
   - first:
-      213: -3723908576714225571
-    second: On_Ring_In_Description_UI_6
+      213: -7516791614127822498
+    second: Map_6
   - first:
-      213: -3026169001316295035
-    second: On_Ring_In_Description_UI_7
+      213: -172109923268554218
+    second: Map_7
+  - first:
+      213: -7902874161665819209
+    second: Map_8
+  - first:
+      213: -1382599404536372767
+    second: Map_9
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -48,7 +54,6 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -161,38 +166,50 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: On_Ring_In_Description_UI_0
+      name: Map_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 103
-        width: 80
-        height: 45
+        x: 8
+        y: 6
+        width: 96
+        height: 96
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 20, y: 20, z: 20, w: 20}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8506608afbd1b47b0800000000000000
-      internalID: -5239061032520490920
+      spriteID: 66775a46ba6f4f800800000000000000
+      internalID: 645411862609229670
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: On_Ring_In_Description_UI_1
+      name: Map_1
       rect:
         serializedVersion: 2
-        x: 84
-        y: 93
+        x: 108
+        y: 61
         width: 40
-        height: 55
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -200,20 +217,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 96200ba65b6674b10800000000000000
-      internalID: 1965652691735544425
+      spriteID: ec13553de40e882d0800000000000000
+      internalID: -3276122099754389042
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: On_Ring_In_Description_UI_2
+      name: Map_2
       rect:
         serializedVersion: 2
-        x: 128
-        y: 93
+        x: 150
+        y: 61
         width: 40
-        height: 55
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -221,20 +238,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 07f155fadaa0b7bd0800000000000000
-      internalID: -2631497816180711568
+      spriteID: 03dbf3d96250e1ef0800000000000000
+      internalID: -135665275369439952
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: On_Ring_In_Description_UI_3
+      name: Map_3
       rect:
         serializedVersion: 2
-        x: 172
-        y: 93
+        x: 192
+        y: 61
         width: 40
-        height: 55
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -242,62 +259,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ce90039b017011a00800000000000000
-      internalID: 725368783391164908
+      spriteID: be9c8fcfc318f6d50800000000000000
+      internalID: 6732742066884364779
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: On_Ring_In_Description_UI_4
+      name: Map_4
       rect:
         serializedVersion: 2
-        x: 5
-        y: 45
-        width: 54
-        height: 47
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ed8f86830824f14b0800000000000000
-      internalID: -5467578304134842146
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: On_Ring_In_Description_UI_5
-      rect:
-        serializedVersion: 2
-        x: 79
-        y: 37
-        width: 44
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9befc10d54a7eb8c0800000000000000
-      internalID: -3981610580286046535
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: On_Ring_In_Description_UI_6
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 33
+        x: 234
+        y: 61
         width: 40
-        height: 55
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -305,20 +280,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d580bec21e4025cc0800000000000000
-      internalID: -3723908576714225571
+      spriteID: 0f79b7a2060e85a90800000000000000
+      internalID: -7324858090283886608
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: On_Ring_In_Description_UI_7
+      name: Map_5
       rect:
         serializedVersion: 2
-        x: 172
-        y: 33
+        x: 276
+        y: 61
         width: 40
-        height: 55
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -326,8 +301,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 58e5e3e9353e006d0800000000000000
-      internalID: -3026169001316295035
+      spriteID: 2c11a31dfc8b2a440800000000000000
+      internalID: 4945718543514210754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Map_6
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 61
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e59a6454addfea790800000000000000
+      internalID: -7516791614127822498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Map_7
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 17
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6121249cfea8c9df0800000000000000
+      internalID: -172109923268554218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Map_8
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 17
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bdbb4932d9535290800000000000000
+      internalID: -7902874161665819209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Map_9
+      rect:
+        serializedVersion: 2
+        x: 277
+        y: 17
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e161f9ba2500dce0800000000000000
+      internalID: -1382599404536372767
       vertices: []
       indices: 
       edges: []
@@ -342,15 +401,6 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      On_Ring_In_Description_UI_6: -3723908576714225571
-      On_Ring_In_Description_UI_5: -3981610580286046535
-      On_Ring_In_Description_UI_0: -5239061032520490920
-      On_Ring_In_Description_UI_1: 1965652691735544425
-      On_Ring_In_Description_UI_3: 725368783391164908
-      On_Ring_In_Description_UI_4: -5467578304134842146
-      On_Ring_In_Description_UI_2: -2631497816180711568
-      On_Ring_In_Description_UI_7: -3026169001316295035
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

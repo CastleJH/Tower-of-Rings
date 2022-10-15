@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class BattleManager : MonoBehaviour
 {
@@ -115,14 +116,17 @@ public class BattleManager : MonoBehaviour
     void StartWave()
     {
         //생성할 몬스터 수를 결정한다.
-        if (wave == 2) numGenMonster = 20;
-        else numGenMonster = 15;
-        if (GameManager.instance.baseRelics[5].have)
+        if (FloorManager.instance.isNotTutorial)
         {
-            if (GameManager.instance.baseRelics[5].isPure) numGenMonster = (int)(numGenMonster * 0.9f);
-            else numGenMonster = (int)(numGenMonster * 1.1f);
+            if (wave == 2) numGenMonster = 20;
+            else numGenMonster = 15;
+            if (GameManager.instance.baseRelics[5].have)
+            {
+                if (GameManager.instance.baseRelics[5].isPure) numGenMonster = (int)(numGenMonster * 0.9f);
+                else numGenMonster = (int)(numGenMonster * 1.1f);
+            }
         }
-
+        else numGenMonster = 5;
         //첫번째 몬스터부터 생성 ID를 0으로 생성 시작한다.
         newMonsterID = 0;
         audioSource.Play();
@@ -136,6 +140,7 @@ public class BattleManager : MonoBehaviour
         {
             //몬스터 능력치 배율을 조정한다.
             float scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) * (1.0f + 0.5f * (wave - 1));
+            if (!FloorManager.instance.isNotTutorial) scale = 0.5f;
 
             //몬스터 타입을 결정한다.
             int monsterType;
@@ -146,6 +151,11 @@ public class BattleManager : MonoBehaviour
                 {
                     scale = 1.0f;
                     monsterType = FloorManager.instance.floor.floorNum + 21;
+                    if (!FloorManager.instance.isNotTutorial)
+                    {
+                        scale = 0.1f;
+                        monsterType = 22;
+                    }
                 }
             }
             else monsterType = Random.Range(0, 15);    //그외에는 일반 몬스터
@@ -218,79 +228,117 @@ public class BattleManager : MonoBehaviour
         bool isItemDrop = false;
         if (FloorManager.instance.curRoom.type != 9)    //일반 전투방인 경우
         {
-            //재화와 링 중 어느 것을 획득할지 결정한다. 이 확률은 유물 보유 여부에 의해 조정한다.
-            float goldProb = 0.9f;
-            if (GameManager.instance.baseRelics[10].have)
+            if (FloorManager.instance.isNotTutorial)
             {
-                if (GameManager.instance.baseRelics[10].isPure) goldProb = 0.8f;
-                else goldProb = 2.0f;
-            }
-            goldProb -= GameManager.instance.spiritEnhanceLevel[7] * 0.02f;
-            if (Random.Range(0.0f, 1.0f) < goldProb)    //재화 획득인 경우
-            {
-                //골드 드랍(0~2개)
-                int goldGet = Random.Range(0, 3);
-                if (goldGet != 0) isItemDrop = true;
-                for (int i = 0; i < goldGet; i++)
+                //재화와 링 중 어느 것을 획득할지 결정한다. 이 확률은 유물 보유 여부에 의해 조정한다.
+                float goldProb = 0.9f;
+                if (GameManager.instance.baseRelics[10].have)
                 {
-                    Item item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(4, FloorManager.instance.itemPos[i], 0, 0);
-                    FloorManager.instance.curRoom.AddItem(item);
+                    if (GameManager.instance.baseRelics[10].isPure) goldProb = 0.8f;
+                    else goldProb = 2.0f;
                 }
-
-                //다이아몬드 드랍(0~2개)
-                float diamondProb = -1.0f;
-                int diamondGet = 0;
-                for (int i = 0; i < DeckManager.instance.rings.Count; i++)
-                    if (DeckManager.instance.rings[i].baseRing.id == 17)
+                goldProb -= GameManager.instance.spiritEnhanceLevel[7] * 0.02f;
+                if (Random.Range(0.0f, 1.0f) < goldProb)    //재화 획득인 경우
+                {
+                    //골드 드랍(0~2개)
+                    int goldGet = Random.Range(0, 3);
+                    if (goldGet != 0) isItemDrop = true;
+                    for (int i = 0; i < goldGet; i++)
                     {
-                        diamondProb = DeckManager.instance.rings[i].curATK * 0.01f + DeckManager.instance.rings[i].curEFF;
-                        break;
+                        Item item = GameManager.instance.GetItemFromPool();
+                        item.InitializeItem(4, FloorManager.instance.itemPos[i], 0, 0);
+                        FloorManager.instance.curRoom.AddItem(item);
                     }
-                if (Random.Range(0.0f, 1.0f) <= diamondProb) diamondGet++;
-                if (GameManager.instance.baseRelics[15].have && GameManager.instance.baseRelics[15].isPure && Random.Range(0.0f, 1.0f) <= 0.33f) diamondGet++;
-                if (diamondGet != 0) isItemDrop = true;
-                for (int i = 0; i < diamondGet; i++)
+
+                    //다이아몬드 드랍(0~2개)
+                    float diamondProb = -1.0f;
+                    int diamondGet = 0;
+                    for (int i = 0; i < DeckManager.instance.rings.Count; i++)
+                        if (DeckManager.instance.rings[i].baseRing.id == 17)
+                        {
+                            diamondProb = DeckManager.instance.rings[i].curATK * 0.01f + DeckManager.instance.rings[i].curEFF;
+                            break;
+                        }
+                    if (Random.Range(0.0f, 1.0f) <= diamondProb) diamondGet++;
+                    if (GameManager.instance.baseRelics[15].have && GameManager.instance.baseRelics[15].isPure && Random.Range(0.0f, 1.0f) <= 0.33f) diamondGet++;
+                    if (diamondGet != 0) isItemDrop = true;
+                    for (int i = 0; i < diamondGet; i++)
+                    {
+                        Item item = GameManager.instance.GetItemFromPool();
+                        item.InitializeItem(5, FloorManager.instance.itemPos[i + 3], 0, 0);
+                        FloorManager.instance.curRoom.AddItem(item);
+                    }
+                }
+                else    //링 획득인 경우
                 {
+                    int itemID;
                     Item item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(5, FloorManager.instance.itemPos[i + 3], 0, 0);
+                    do itemID = Random.Range(0, GameManager.instance.baseRings.Count);
+                    while (DeckManager.instance.deck.Contains(itemID));
+                    item.InitializeItem(1000 + itemID, Vector3.forward, 0, 0);
                     FloorManager.instance.curRoom.AddItem(item);
+                    isItemDrop = true;
                 }
             }
-            else    //링 획득인 경우
+            else
             {
-                int itemID;
-                Item item = GameManager.instance.GetItemFromPool();
-                do itemID = Random.Range(0, GameManager.instance.baseRings.Count);
-                while (DeckManager.instance.deck.Contains(itemID));
-                item.InitializeItem(1000 + itemID, Vector3.forward, 0, 0);
-                FloorManager.instance.curRoom.AddItem(item);
-                isItemDrop = true;
+                if (FloorManager.instance.playerX == 5)
+                {
+                    //골드 드랍(0~2개)
+                    isItemDrop = true;
+                    for (int i = 0; i < 2; i++)
+                    {
+                        Item item = GameManager.instance.GetItemFromPool();
+                        item.InitializeItem(4, FloorManager.instance.itemPos[i], 0, 0);
+                        FloorManager.instance.curRoom.AddItem(item);
+                    }
+                }
+                else
+                {
+                    isItemDrop = true;
+                    Item item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(1003, Vector3.forward, 0, 0);
+                    FloorManager.instance.curRoom.AddItem(item);
+                }
             }
         }
         else  //보스방인 경우
         {
-            if (isBossKilled && (!GameManager.instance.baseRelics[15].have || GameManager.instance.baseRelics[15].isPure))    //보스를 처치했고 유물에 의한 유물 드랍 불가 상태가 아니면
+            if (FloorManager.instance.isNotTutorial)
             {
-                int itemID;
+                if (isBossKilled && (!GameManager.instance.baseRelics[15].have || GameManager.instance.baseRelics[15].isPure))    //보스를 처치했고 유물에 의한 유물 드랍 불가 상태가 아니면
+                {
+                    int itemID;
+                    Item item = GameManager.instance.GetItemFromPool();
+                    do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
+                    while (GameManager.instance.relics.Contains(itemID));
+                    item.InitializeItem(2000 + itemID, FloorManager.instance.itemPos[3], 0, 0);
+                    FloorManager.instance.curRoom.AddItem(item);
+
+                    item = GameManager.instance.GetItemFromPool();
+                    item.InitializeItem(5, FloorManager.instance.itemPos[2], 0, 0);
+                    FloorManager.instance.curRoom.AddItem(item);
+
+                    int diamondGet = 4 + Random.Range(0, 3);
+                    for (int i = 4; i < diamondGet; i++)
+                    {
+                        item = GameManager.instance.GetItemFromPool();
+                        item.InitializeItem(5, FloorManager.instance.itemPos[i], 0, 0);
+                        FloorManager.instance.curRoom.AddItem(item);
+                    }
+                    isItemDrop = true;
+                }
+            }
+            else
+            {
                 Item item = GameManager.instance.GetItemFromPool();
-                do itemID = Random.Range(0, GameManager.instance.baseRelics.Count);
-                while (GameManager.instance.relics.Contains(itemID));
-                item.InitializeItem(2000 + itemID, FloorManager.instance.itemPos[3], 0, 0);
+                item.InitializeItem(2000, FloorManager.instance.itemPos[3], 0, 0);
                 FloorManager.instance.curRoom.AddItem(item);
                 isItemDrop = true;
 
                 item = GameManager.instance.GetItemFromPool();
                 item.InitializeItem(5, FloorManager.instance.itemPos[2], 0, 0);
                 FloorManager.instance.curRoom.AddItem(item);
-
-                int diamondGet = 4 + Random.Range(0, 3);
-                for (int i = 4; i < diamondGet; i++)
-                {
-                    item = GameManager.instance.GetItemFromPool();
-                    item.InitializeItem(5, FloorManager.instance.itemPos[i], 0, 0);
-                    FloorManager.instance.curRoom.AddItem(item);
-                }
             }
         }
         return isItemDrop;

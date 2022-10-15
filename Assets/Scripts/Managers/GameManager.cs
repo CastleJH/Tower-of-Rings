@@ -215,11 +215,20 @@ public class GameManager : MonoBehaviour
     //게임을 시작한다.
     public void GameStart()
     {
+        int startFloor = 0;
+        for (int i = 0; i < baseRelics.Count; i++)
+            if (ringCollectionProgress[i, 0] != 0)
+            {
+                startFloor = 1;
+                break;
+            }
+
         saveFloor = true;
         InitializeGame();
         UIManager.instance.mapPanel.SetActive(true);
         FloorManager.instance.endPortal.SetActive(false);
-        FloorManager.instance.CreateAndMoveToFloor(1);
+        
+        FloorManager.instance.CreateAndMoveToFloor(startFloor);
     }
 
     //저장된 게임을 시작한다(1층이 아닌 곳에서 시작).
@@ -765,6 +774,7 @@ public class GameManager : MonoBehaviour
     //적 콜렉션 진행상황을 하나 올린다.
     public void MonsterCollectionProgressUp(int monsterID)
     {
+        if (!FloorManager.instance.isNotTutorial) return;
         if (monsterCollectionProgress[monsterID] != -1) monsterCollectionProgress[monsterID] = Mathf.Clamp(monsterCollectionProgress[monsterID] + 1, 0, monsterCollectionMaxProgress[monsterID]);
     }
 }

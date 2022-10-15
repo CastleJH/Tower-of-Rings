@@ -4658,7 +4658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2d73fd1cd05d2f4983f5ae7031fe768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useGPGS: 1
+  useGPGS: 0
 --- !u!4 &104883747
 Transform:
   m_ObjectHideFlags: 0
@@ -23264,6 +23264,7 @@ MonoBehaviour:
   playerX: 0
   playerY: 0
   lastTouchItem: {fileID: 0}
+  isNotTutorial: 0
   itemPos:
   - {x: -2, y: 1, z: 1}
   - {x: 2, y: -1, z: 1}

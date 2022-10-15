@@ -21,6 +21,7 @@ public class FloorManager : MonoBehaviour
     public Room curRoom;
     public int playerX, playerY;
     public Item lastTouchItem;
+    public bool isNotTutorial;
 
     //상하좌우 체크용
     int[] dx = { 0, 0, -1, 1 };
@@ -89,9 +90,19 @@ public class FloorManager : MonoBehaviour
     {
         GPGSManager.instance.SaveGame();
         ResetFloor();
-        floor.Generate(f);
+        if (f > 0)
+        {
+            Random.InitState((int)(Time.time * 1000));
+            floor.Generate(f);
+        }
+        else
+        {
+            Random.InitState(0);
+            floor.GenerateTutorial();
+        }
         UIManager.instance.InitializeMap();
-        UIManager.instance.floorText.text = f.ToString() + "F";
+        if (f != 0) UIManager.instance.floorText.text = f.ToString() + "F";
+        else UIManager.instance.floorText.text = "튜토리얼";
 
         for (int i = 1; i <= 9; i++)
             for (int j = 1; j <= 9; j++)
@@ -194,6 +205,7 @@ public class FloorManager : MonoBehaviour
                     int ringID;
                     do ringID = Random.Range(0, GameManager.instance.baseRings.Count);
                     while (DeckManager.instance.deck.Contains(ringID));
+                    if (!isNotTutorial) ringID = 1;
                     item.InitializeItem(1000 + ringID, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
@@ -388,12 +400,19 @@ public class FloorManager : MonoBehaviour
                 if (hit.collider.gameObject != portals[4].gameObject && hit.collider.gameObject != endPortal) SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir], -1);
                 else
                 {
-                    if (floor.floorNum < 7) CreateAndMoveToFloor(floor.floorNum + 1);
+                    if (isNotTutorial)
+                    {
+                        if (floor.floorNum < 7) CreateAndMoveToFloor(floor.floorNum + 1);
+                        else
+                        {
+                            SceneChanger.instance.ChangeScene(GameManager.instance.OnGameClear, 0, 0, 0);
+                            for (int i = 0; i < DeckManager.instance.deck.Count; i++) GameManager.instance.RingCollectionProgressUp(DeckManager.instance.deck[i], 4);
+                            for (int i = 0; i < GameManager.instance.relics.Count; i++) GameManager.instance.RelicCollectionProgressUp(GameManager.instance.relics[i], 4);
+                        }
+                    }
                     else
                     {
-                        SceneChanger.instance.ChangeScene(GameManager.instance.OnGameClear, 0, 0, 0);
-                        for (int i = 0; i < DeckManager.instance.deck.Count; i++) GameManager.instance.RingCollectionProgressUp(DeckManager.instance.deck[i], 4);
-                        for (int i = 0; i < GameManager.instance.relics.Count; i++) GameManager.instance.RelicCollectionProgressUp(GameManager.instance.relics[i], 4);
+                        SceneChanger.instance.ChangeScene(GameManager.instance.OnGameOver, 0, 0, 0);
                     }
                 }
                 audioSource.Play();

@@ -180,7 +180,6 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -283,6 +282,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1188,49 +1199,6 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      UI_31: 1925608543531601625
-      UI_36: 6546827368892410583
-      UI_11: 9094600903545770030
-      UI_38: 1001184207971911622
-      UI_39: 568254257420953003
-      UI_1: 82707731993968007
-      UI_4: 8586885197115800619
-      UI_25: -7543061489181569089
-      UI_27: -7867266084347359734
-      UI_28: 3787343402263556702
-      UI_19: 228940821244427079
-      UI_33: 2950200755348404279
-      UI_40: 7823209138725740554
-      UI_21: -256003546741158619
-      UI_2: 1080825480604336155
-      UI_3: -9136572144232859775
-      UI_30: 5732017358795156118
-      UI_34: -4657114132291979715
-      UI_9: -273060469431498887
-      UI_32: -2625263914096795121
-      UI_13: -8346291274449466048
-      UI_22: 238177201661318622
-      UI_23: 9084407170249120912
-      UI_24: -4464969597253999955
-      UI_12: -4532114073746202998
-      UI_0: -1557013538026691241
-      UI_7: 7843416716369364892
-      UI_16: 1652299931923453484
-      UI_26: -3947773304791079134
-      UI_15: 7301787903208175943
-      UI_29: 1360550569445208017
-      UI_17: 388057999756033245
-      UI_35: -5079178053783169288
-      UI_14: -343943630576144839
-      UI_41: 6499865249175746193
-      UI_10: 8391660652416901024
-      UI_8: -6595680761151332689
-      UI_6: 7448113381798972013
-      UI_20: 6620621745411573659
-      UI_37: -5527499082827161287
-      UI_18: -5481780447360278658
-      UI_5: 8160775752198118580
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
