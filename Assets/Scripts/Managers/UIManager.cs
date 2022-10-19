@@ -271,7 +271,27 @@ public class UIManager : MonoBehaviour
     public void ButtonGenerateRing(int index)
     {
         if (Input.touchCount > 1) return;
-        if (BattleManager.instance.isBattlePlaying && Time.timeScale != 0)
+        if (!TutorialManager.instance.isTutorial)
+        {
+            if (BattleManager.instance.isBattlePlaying && Time.timeScale != 0)
+            {
+                if (battleDeckRPNotEnoughCover[index].activeSelf) return;
+                DeckManager.instance.isEditRing = true;
+                if (index == DeckManager.instance.maxDeckLength) //제거 버튼이라면
+                {
+                    return;
+                }
+                else if (index < DeckManager.instance.deck.Count) //빈 링이 아니라면
+                {
+                    Ring tmpRing = GameManager.instance.GetRingFromPool();
+                    tmpRing.InitializeRing(DeckManager.instance.deck[index]);
+                    DeckManager.instance.genRing = tmpRing;
+                    DeckManager.instance.genRing.gameObject.SetActive(true);
+                }
+                else DeckManager.instance.isEditRing = false;
+            }
+        }
+        else
         {
             if (battleDeckRPNotEnoughCover[index].activeSelf) return;
             DeckManager.instance.isEditRing = true;
@@ -285,10 +305,12 @@ public class UIManager : MonoBehaviour
                 tmpRing.InitializeRing(DeckManager.instance.deck[index]);
                 DeckManager.instance.genRing = tmpRing;
                 DeckManager.instance.genRing.gameObject.SetActive(true);
-                //battleRingDetailLongClickTime = 0.0f;
-                //checkBattleRingDetailOn = true;
             }
             else DeckManager.instance.isEditRing = false;
+
+            if (TutorialManager.instance.step == 9 ||
+                TutorialManager.instance.step == 13) TutorialManager.instance.PlayNextTutorialStep();
+
         }
     }
 

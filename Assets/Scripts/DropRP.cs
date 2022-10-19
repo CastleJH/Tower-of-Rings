@@ -46,6 +46,13 @@ public class DropRP : MonoBehaviour
         else vel = new Vector3(0, -2.0f, 0);
     }
 
+    //튜토리얼 용으로 수정한다.
+    public void InitializeDropRPForTutorial()
+    {
+        transform.position = Camera.main.transform.position + new Vector3(2.8f, 16, 2);
+        vel = new Vector3(0, -2.0f, 0);
+    }
+
     //RP를 주고 게임에서 제거한다.
     void GiveRP()
     {

@@ -206,6 +206,13 @@ public class DeckManager : MonoBehaviour
             GetCommanderNearestForAllRings();
         }
         else GameManager.instance.ReturnRingToPool(genRing);
+
+        if (TutorialManager.instance.isTutorial)
+        {
+            if (TutorialManager.instance.step == 7 ||
+                TutorialManager.instance.step == 10)
+                TutorialManager.instance.PlayNextTutorialStep();
+        }
         BattleManager.instance.ChangePlayerRP(0);
     }
 

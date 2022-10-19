@@ -64,8 +64,11 @@ public class BattleManager : MonoBehaviour
 
                     DropRP dropRP = GameManager.instance.GetDropRPFromPool();
                     dropRP.InitializeDropRP();
+                    if (TutorialManager.instance.isTutorial && TutorialManager.instance.step == 14)
+                        dropRP.InitializeDropRPForTutorial();
                     dropRPs.Add(dropRP);
                     dropRP.gameObject.SetActive(true);
+
 
                     //정수의 요람 유물 보유 여부에 따라 다음 링의 정수 생산까지 걸리는 시간을 결정한다.
                     if (GameManager.instance.baseRelics[18].have)   
@@ -96,9 +99,10 @@ public class BattleManager : MonoBehaviour
             if (GameManager.instance.baseRelics[19].isPure) rp *= 1.1f;
             else rp *= 0.9f;
         }
+        if (TutorialManager.instance.isTutorial) rp = 45;
 
-        //전장을 키고 UI를 셋팅한다.
-        GameManager.instance.monsterPathImages[FloorManager.instance.curRoom.pathID].color = new Color(255, 255, 255, 0);
+            //전장을 키고 UI를 셋팅한다.
+            GameManager.instance.monsterPathImages[FloorManager.instance.curRoom.pathID].color = new Color(255, 255, 255, 0);
         GameManager.instance.monsterPaths[FloorManager.instance.curRoom.pathID].gameObject.SetActive(true);
         UIManager.instance.TurnMapOnOff(false);
         UIManager.instance.OpenBattleDeckPanel();
@@ -116,7 +120,7 @@ public class BattleManager : MonoBehaviour
     void StartWave()
     {
         //생성할 몬스터 수를 결정한다.
-        if (FloorManager.instance.isNotTutorial)
+        if (!TutorialManager.instance.isTutorial)
         {
             if (wave == 2) numGenMonster = 20;
             else numGenMonster = 15;
@@ -126,7 +130,15 @@ public class BattleManager : MonoBehaviour
                 else numGenMonster = (int)(numGenMonster * 1.1f);
             }
         }
-        else numGenMonster = 5;
+        else
+        {
+            numGenMonster = 5;
+            if (TutorialManager.instance.step == 16 ||
+                TutorialManager.instance.step == 18)
+            {
+                TutorialManager.instance.PlayNextTutorialStep();
+            }
+        }
         //첫번째 몬스터부터 생성 ID를 0으로 생성 시작한다.
         newMonsterID = 0;
         audioSource.Play();
@@ -138,27 +150,41 @@ public class BattleManager : MonoBehaviour
     {
         while (newMonsterID < numGenMonster && isBattlePlaying) //전투중이고 아직 목표 몬스터 수만큼 생성하지 못했다면
         {
-            //몬스터 능력치 배율을 조정한다.
-            float scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) * (1.0f + 0.5f * (wave - 1));
-            if (!FloorManager.instance.isNotTutorial) scale = 0.5f;
-
-            //몬스터 타입을 결정한다.
+            //몬스터 능력치 배율 및 타입을 결정한다.
+            float scale;
             int monsterType;
-            if (wave == 3 && newMonsterID == 0)   //웨이브 3의 첫 몬스터는 반드시 엘리트/보스
+
+            if (!TutorialManager.instance.isTutorial)
             {
-                if (FloorManager.instance.curRoom.type == 1) monsterType = Random.Range(15, 22);
-                else
+                scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) * (1.0f + 0.5f * (wave - 1));
+
+                if (wave == 3 && newMonsterID == 0)   //웨이브 3의 첫 몬스터는 반드시 엘리트/보스
                 {
-                    scale = 1.0f;
-                    monsterType = FloorManager.instance.floor.floorNum + 21;
-                    if (!FloorManager.instance.isNotTutorial)
+                    if (FloorManager.instance.curRoom.type == 1) monsterType = Random.Range(15, 22);
+                    else
+                    {
+                        scale = 1.0f;
+                        monsterType = FloorManager.instance.floor.floorNum + 21;
+                    }
+                }
+                else monsterType = Random.Range(0, 15);    //그외에는 일반 몬스터
+            }
+            else
+            {
+                scale = 0.5f * (1.0f + 0.2f * (wave - 1));
+
+                if (wave == 3 && newMonsterID == 0)   //웨이브 3의 첫 몬스터는 반드시 엘리트/보스
+                {
+                    if (FloorManager.instance.curRoom.type == 1) monsterType = Random.Range(15, 22);
+                    else
                     {
                         scale = 0.1f;
                         monsterType = 22;
                     }
                 }
+                else monsterType = Random.Range(10, 15);    //그외에는 일반 몬스터
             }
-            else monsterType = Random.Range(0, 15);    //그외에는 일반 몬스터
+
 
             //생성한다.
             Monster monster = GameManager.instance.GetMonsterFromPool(monsterType);
@@ -228,7 +254,7 @@ public class BattleManager : MonoBehaviour
         bool isItemDrop = false;
         if (FloorManager.instance.curRoom.type != 9)    //일반 전투방인 경우
         {
-            if (FloorManager.instance.isNotTutorial)
+            if (!TutorialManager.instance.isTutorial)
             {
                 //재화와 링 중 어느 것을 획득할지 결정한다. 이 확률은 유물 보유 여부에 의해 조정한다.
                 float goldProb = 0.9f;
@@ -300,11 +326,12 @@ public class BattleManager : MonoBehaviour
                     item.InitializeItem(1003, Vector3.forward, 0, 0);
                     FloorManager.instance.curRoom.AddItem(item);
                 }
+                TutorialManager.instance.PlayNextTutorialStep();
             }
         }
         else  //보스방인 경우
         {
-            if (FloorManager.instance.isNotTutorial)
+            if (!TutorialManager.instance.isTutorial)
             {
                 if (isBossKilled && (!GameManager.instance.baseRelics[15].have || GameManager.instance.baseRelics[15].isPure))    //보스를 처치했고 유물에 의한 유물 드랍 불가 상태가 아니면
                 {

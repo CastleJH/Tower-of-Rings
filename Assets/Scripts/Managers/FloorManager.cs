@@ -21,7 +21,6 @@ public class FloorManager : MonoBehaviour
     public Room curRoom;
     public int playerX, playerY;
     public Item lastTouchItem;
-    public bool isNotTutorial;
 
     //상하좌우 체크용
     int[] dx = { 0, 0, -1, 1 };
@@ -90,11 +89,7 @@ public class FloorManager : MonoBehaviour
     {
         GPGSManager.instance.SaveGame();
         ResetFloor();
-        if (f > 0)
-        {
-            Random.InitState((int)(Time.time * 1000));
-            floor.Generate(f);
-        }
+        if (f > 0) floor.Generate(f);
         else
         {
             Random.InitState(0);
@@ -153,6 +148,13 @@ public class FloorManager : MonoBehaviour
     //해당 방으로 이동한다.
     public void MoveToRoom(int x, int y)
     {
+        if (TutorialManager.instance.isTutorial)
+        {
+            if (TutorialManager.instance.step == 0 ||
+                TutorialManager.instance.step == 2) 
+            TutorialManager.instance.PlayNextTutorialStep();
+        }
+
         UIManager.instance.gameStartPanel.SetActive(false);
         UIManager.instance.lobbyPanel.SetActive(false);
 
@@ -205,7 +207,7 @@ public class FloorManager : MonoBehaviour
                     int ringID;
                     do ringID = Random.Range(0, GameManager.instance.baseRings.Count);
                     while (DeckManager.instance.deck.Contains(ringID));
-                    if (!isNotTutorial) ringID = 1;
+                    if (TutorialManager.instance.isTutorial) ringID = 1;
                     item.InitializeItem(1000 + ringID, Vector3.forward, 0, 0);
                     curRoom.AddItem(item);
                 }
@@ -389,18 +391,25 @@ public class FloorManager : MonoBehaviour
 
             if (Input.touchCount > 0) touchPos = Input.touches[0].position;
             else touchPos = Input.mousePosition;
+            
             touchPos = Camera.main.ScreenToWorldPoint(touchPos);
 
             RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.zero, 0f);
 
             if (hit.collider != null)
             {
+                if (TutorialManager.instance.isTutorial)
+                {
+                    if (TutorialManager.instance.step != 2 &&
+                        TutorialManager.instance.step != 24) return;
+                    if (TutorialManager.instance.step == 24 && hit.collider.gameObject != portals[1].gameObject) return;
+                }
                 if (hit.collider.tag != "Portal" || Time.timeScale == 0) return;
                 int dir = hit.collider.name[hit.collider.name.Length - 1] - '0';
                 if (hit.collider.gameObject != portals[4].gameObject && hit.collider.gameObject != endPortal) SceneChanger.instance.ChangeScene(MoveToRoom, playerX + dx[dir], playerY + dy[dir], -1);
                 else
                 {
-                    if (isNotTutorial)
+                    if (!TutorialManager.instance.isTutorial)
                     {
                         if (floor.floorNum < 7) CreateAndMoveToFloor(floor.floorNum + 1);
                         else

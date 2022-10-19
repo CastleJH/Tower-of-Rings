@@ -138,6 +138,10 @@ public class Item : MonoBehaviour
             else UIManager.instance.relicInfoTakeText.text = "이 유물을 가져간다";
             UIManager.instance.OpenRelicInfoPanel(itemType - 2000);
         }
+        if (TutorialManager.instance.isTutorial)
+        {
+            TutorialManager.instance.PlayNextTutorialStep();
+        }
     }
 
     //아이템의 값을 지불한다.

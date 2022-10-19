@@ -6,9 +6,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public bool debugFlag;
-    public int debugInt;
-
     //프리팹
     public GameObject ringPrefab;
     public SPUM_Prefabs[] spum_prefabs;
@@ -92,7 +89,6 @@ public class GameManager : MonoBehaviour
     public List<int> cursedRelics;
     public bool revivable;
     public bool saveFloor;
-
 
     void Awake()
     {
@@ -180,18 +176,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (debugFlag)
-        {
-            debugFlag = false;
-            UIManager.instance.gameStartPanel.SetActive(false);
-            BattleManager.instance.StopBattleSystem();
-            GameStart();
-            DeckManager.instance.AddRingToDeck(debugInt, true);
-        }
-    }
-
     public void InitializeUserData()
     {
         //영혼 강화 정보 초기화
@@ -224,6 +208,8 @@ public class GameManager : MonoBehaviour
             }
 
         saveFloor = true;
+
+        if (startFloor == 0) TutorialManager.instance.isTutorial = true;
         InitializeGame();
         UIManager.instance.mapPanel.SetActive(true);
         FloorManager.instance.endPortal.SetActive(false);
@@ -257,6 +243,7 @@ public class GameManager : MonoBehaviour
         //플레이어 시작 HP값을 정한다.
         playerMaxHP = 100 + spiritEnhanceLevel[2] * 4;
         if (!isNormalMode) playerMaxHP /= 2;
+        if (TutorialManager.instance.isTutorial) playerMaxHP = 999;
         playerCurHP = playerMaxHP;
         ChangePlayerCurHP(0);   //여기서 영혼강화로 인한 링 기본 공격력/공격 쿨타임도 변한다.
 
@@ -774,7 +761,7 @@ public class GameManager : MonoBehaviour
     //적 콜렉션 진행상황을 하나 올린다.
     public void MonsterCollectionProgressUp(int monsterID)
     {
-        if (!FloorManager.instance.isNotTutorial) return;
+        if (TutorialManager.instance.isTutorial) return;
         if (monsterCollectionProgress[monsterID] != -1) monsterCollectionProgress[monsterID] = Mathf.Clamp(monsterCollectionProgress[monsterID] + 1, 0, monsterCollectionMaxProgress[monsterID]);
     }
 }

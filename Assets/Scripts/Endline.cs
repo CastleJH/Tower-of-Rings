@@ -26,12 +26,8 @@ public class Endline : MonoBehaviour
             else    //그렇지 않다면 HP를 몬스터의 공격력만큼 감소시키고 애니메이션을 적용한 뒤 몬스터를 제거한다.
             {
                 Monster monster = collision.GetComponent<Monster>();
-                if (FloorManager.instance.isNotTutorial) GameManager.instance.ChangePlayerCurHP(-monster.baseMonster.baseATK);
-                else
-                {
-                    if (monster.baseMonster.tier == 'n' || monster.baseMonster.tier == 's') GameManager.instance.ChangePlayerCurHP(-1);
-                    else GameManager.instance.ChangePlayerCurHP(-10);
-                }
+                if (monster.baseMonster.tier == 'n' || monster.baseMonster.tier == 's') GameManager.instance.ChangePlayerCurHP(-1);
+                else GameManager.instance.ChangePlayerCurHP(-10);
                 anim.SetTrigger("isAttacked");
                 BattleManager.instance.audioSource.PlayOneShot(GameManager.instance.specialAudios[5]);
                 monster.RemoveFromBattle(false);

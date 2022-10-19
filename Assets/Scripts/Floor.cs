@@ -71,7 +71,7 @@ public class Floor
 	//알맞은 형태의 층을 생성한다.
 	public void Generate(int _floorNum)
 	{
-		FloorManager.instance.isNotTutorial = true;
+		TutorialManager.instance.isTutorial = false;
         floorNum = _floorNum;	//층 수를 저장한다.
 
 		int[] dr = { 0, 0, -1, 1 };		//인접한 방을 확인하기 위한 좌표이다.
@@ -185,7 +185,7 @@ public class Floor
 
 	public void GenerateTutorial()
 	{
-		FloorManager.instance.isNotTutorial = false;
+		TutorialManager.instance.isTutorial = true;
         floorNum = 0;
 
 		startX = 6;
