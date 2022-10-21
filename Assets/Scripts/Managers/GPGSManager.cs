@@ -2,7 +2,7 @@ using UnityEngine;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
-
+using UnityEngine.UI;
 public class GPGSManager : MonoBehaviour
 {
     public static GPGSManager instance;
@@ -132,9 +132,9 @@ public class GPGSManager : MonoBehaviour
         }
         else
         {
-            UIManager.instance.gameStartPanelSignInButton.SetActive(true);
+            UIManager.instance.gameStartPanelSignInButton.SetActive(false);
             UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
-            UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
+            UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(false);
             GameManager.instance.InitializeUserData();
         }
     }
@@ -144,12 +144,12 @@ public class GPGSManager : MonoBehaviour
         if (status == SavedGameRequestStatus.Success)
         {
             GameManager.instance.InitializeUserData();
-            if (loadedData.Length > 10)
-            {
-                string tmpData = System.Text.ASCIIEncoding.ASCII.GetString(loadedData);
-                //UIManager.instance.debugText.text += "\n" + tmpData;
-                string[] parseByCategory = tmpData.Split('\n');
+            
+            string tmpData = System.Text.ASCIIEncoding.ASCII.GetString(loadedData);
+            string[] parseByCategory = tmpData.Split('\n');
 
+            if (parseByCategory.Length >= 7)
+            {
                 string[] parseById = parseByCategory[0].Split('|');
                 for (int i = 0; i < GameManager.instance.spiritEnhanceLevel.Length; i++) GameManager.instance.spiritEnhanceLevel[i] = int.Parse(parseById[i]);
 
@@ -214,13 +214,22 @@ public class GPGSManager : MonoBehaviour
                     UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
                 }
             }
+            else
+            {
+                UIManager.instance.gameStartPanelSignInButton.SetActive(false);
+                UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
+                UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
+                GameManager.instance.InitializeUserData();
+                SaveGame();
+            }
         }
         else
         {
             UIManager.instance.gameStartPanelSignInButton.SetActive(true);
-            UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(false);
+            UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
             UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
             GameManager.instance.InitializeUserData();
+            SaveGame();
         }
     }
 }

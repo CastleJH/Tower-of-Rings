@@ -78,7 +78,9 @@ public class TutorialManager : MonoBehaviour
     {
         Time.timeScale = 1;
         textBox.anchoredPosition = new Vector2(0, 535);
-        tutorialText.text = "포탈을 통해서 다음 방으로 이동할 수 있습니다.\n포탈을 눌러 이동하세요.";
+        tutorialText.text = 
+            "포탈을 통해서 다음 방으로 이동할 수 있습니다.\n" +
+            "포탈을 눌러 이동하세요.";
         textBoxButton.gameObject.SetActive(false);
         MoveHighlightBox(0, 860, 180, 300);
     }
@@ -86,7 +88,9 @@ public class TutorialManager : MonoBehaviour
     void Step3()
     {
         Time.timeScale = 0;
-        tutorialText.text = "전투방에 진입했습니다. 3번의 웨이브에 걸쳐 적이 등장합니다.";
+        tutorialText.text = 
+            "전투방에 진입했습니다.\n" +
+            "3번의 웨이브에 걸쳐 적이 등장합니다.";
         textBoxButton.gameObject.SetActive(true);
 
         MoveHighlightBox(0, 0, 0, 0);
@@ -139,7 +143,8 @@ public class TutorialManager : MonoBehaviour
         tutorialText.text =
             "이 링은 공격 링입니다.\n" +
             "이 링을 전장에 소환하는 RP 비용은 10입니다.\n" +
-            "공격 링은 쿨타임마다 사정거리 안에 있는 적을 자동으로 공격합니다.";
+            "공격 링은 쿨타임마다 사정거리 안에 있는 적을\n" +
+            "자동으로 공격합니다.";
         MoveHighlightBox(-446, -1023, 140, 150);
         highlightArrow[0].SetActive(false);
         highlightBox.raycastTarget = true;
@@ -165,7 +170,7 @@ public class TutorialManager : MonoBehaviour
     void Step11()
     {
         tutorialText.text = 
-            "대부분의 링은 사정거리 안의 다른 링들에게 시너지 효과를 줍니다.\n" +
+            "링은 사정거리 안의 다른 링들에게 시너지 효과를 줍니다.\n" +
             "사정거리는 원을 배치할 때 주위에 표시되는 초록색 원입니다.";
         textBoxButton.gameObject.SetActive(true);
 
@@ -228,7 +233,7 @@ public class TutorialManager : MonoBehaviour
         Time.timeScale = 0.0f;
         textBox.anchoredPosition = new Vector2(0, 535);
         tutorialText.text = "두번째 적 웨이브가 시작되었습니다.\n" +
-            "적 웨이브는 3번까지 있으며, 매 웨이브마다 적의 HP가 증가합니다.\n" +
+            "매 웨이브마다 적의 HP가 증가합니다.\n" +
             "링을 배치하여 더 강력해진 적을 막으세요.";
         MoveHighlightBox(0, 0, 0, 0);
         tutorialPanel.SetActive(true);
@@ -245,7 +250,7 @@ public class TutorialManager : MonoBehaviour
         Time.timeScale = 0.0f;
 
         tutorialText.text = "세번째 적 웨이브가 시작되었습니다.\n" +
-            "세번째 웨이브에서는 특수 능력을 가진 엘리트 적이 등장합니다.\n" +
+            "특수 능력을 가진 엘리트 적이 등장합니다.\n" +
             "링을 배치하여 엘리트 적을 막으세요.";
         tutorialPanel.SetActive(true);
     }
@@ -260,7 +265,8 @@ public class TutorialManager : MonoBehaviour
     {
         Time.timeScale = 0.0f;
 
-        tutorialText.text = "모든 적이 사라지면 전투가 끝나고 일정 확률로 보상을 받을 수 있습니다.";
+        tutorialText.text = "모든 적이 사라지면 전투가 끝나고\n" +
+            "일정 확률로 보상을 받을 수 있습니다.";
         tutorialPanel.SetActive(true);
     }
 
@@ -320,7 +326,8 @@ public class TutorialManager : MonoBehaviour
     {
         tutorialText.text =
             "링은 동시에 최대 6개만 가질 수 있습니다.\n" +
-            "한번 가져간 링은 탑에서 발견할 수 있는 [파괴 망치]를 사용해야만 제거할 수 있습니다.\n" +
+            "한번 가져간 링은 탑에서 발견할 수 있는\n" +
+            "[파괴 망치]를 사용해야만 제거할 수 있습니다.\n" +
             "신중하게 링을 가져가세요.";
         textBoxButton.gameObject.SetActive(true);
         MoveHighlightBox(0, 0, 0, 0);
@@ -329,7 +336,8 @@ public class TutorialManager : MonoBehaviour
     void Step29()
     {
         tutorialText.text =
-            "이 버튼을 누르면 현재 플레이어가 가지고 있는 링들의 정보를 볼 수 있습니다.\n" +
+            "이 버튼을 누르면 현재 플레이어가 가지고 있는\n" +
+            "링들의 정보를 볼 수 있습니다.\n" +
             "진행 상황이 궁금할 때 누르면 도움이 될 수 있습니다.";
         MoveHighlightBox(-441, 1073, 115, 115);
         textBoxButton.gameObject.SetActive(true);
@@ -380,7 +388,8 @@ public class TutorialManager : MonoBehaviour
         textBox.anchoredPosition = new Vector2(0, 791);
         tutorialText.text =
             "가져가거나 창을 닫고 넘어가세요.\n" +
-            "링을 지금 가져가지 않더라도 다시 이 방에 오면 가져갈 수 있습니다.";
+            "링을 지금 가져가지 않더라도 다시 이 방에 오면\n" +
+            "가져갈 수 있습니다.";
         MoveHighlightBox(0, 123, 730, 970);
         highlightBox.raycastTarget = false;
     }
@@ -430,7 +439,7 @@ public class TutorialManager : MonoBehaviour
     {
         textBox.anchoredPosition = new Vector2(0, 535);
         tutorialText.text =
-            "검은 색 보탈은 보스방입니다.\n" +
+            "검은 색 포탈은 보스방입니다.\n" +
             "포탈을 눌러 보스방으로 이동하세요.";
         MoveHighlightBox(0, 860, 180, 300);
     }
@@ -440,7 +449,7 @@ public class TutorialManager : MonoBehaviour
         Time.timeScale = 0.0f;
         tutorialText.text =
             "보스방에 진입했습니다.\n" +
-            "보스방에서는 마지막 3번째 웨이브에서 강력한 보스가 등장합니다.\n" +
+            "보스방은 마지막 웨이브에서 강력한 보스가 등장합니다.\n" +
             "보스방을 클리어하세요.";
         textBoxButton.gameObject.SetActive(true);
         MoveHighlightBox(0, 0, 0, 0);
@@ -507,7 +516,8 @@ public class TutorialManager : MonoBehaviour
     void Step50()
     {
         tutorialText.text =
-            "[성수]는 보유한 저주받은 유물 중 하나의 저주를 랜덤하게 풉니다.\n" +
+            "[성수]는 보유한 저주받은 유물 중 하나의 저주를\n" +
+            "랜덤하게 해제합니다.\n" +
             "저주가 풀린 유물은 다시 이로운 효과를 줍니다.";
     }
 
@@ -524,20 +534,23 @@ public class TutorialManager : MonoBehaviour
     {
         textBoxButton.gameObject.SetActive(true);
         tutorialText.text =
-            "보스방을 클리어하면 중앙에 다음층으로 이동하는 포탈이 생성됩니다.";
+            "보스방을 클리어하면 중앙에 다음층으로 이동하는\n" +
+            "포탈이 생성됩니다.";
         MoveHighlightBox(0, 75, 180, 300);
     }
 
     void Step53()
     {
         tutorialText.text =
-            "7층의 보스방을 클리어 하면 엔딩을 볼 수 있는 포탈이 생성됩니다.";
+            "7층의 보스방을 클리어 하면\n" +
+            "엔딩을 볼 수 있는 포탈이 생성됩니다.";
     }
 
     void Step54()
     {
         tutorialText.text =
-            "만일 7층에 도달하지 못하고 HP가 0이 된다면 탑 밖으로 추방되고,\n" +
+            "만일 7층 보스방을 클리어하기 전에 HP가 0이 된다면," +
+            "탑 밖으로 추방되고\n" +
             "그동안 탑에서 모은 모든 링과 유물이 사라집니다.";
     }
 
@@ -545,7 +558,8 @@ public class TutorialManager : MonoBehaviour
     {
         textBoxButton.gameObject.SetActive(false);
         tutorialText.text =
-            "지금은 튜토리얼 중이므로 다음층으로 이동하지 않고 로비로 돌아가겠습니다.\n" +
+            "지금은 튜토리얼 중이므로 다음층으로 이동하지 않고\n" +
+            "로비로 돌아가겠습니다.\n" +
             "포탈을 터치하여 게임오버하세요.";
     }
 
@@ -556,9 +570,15 @@ public class TutorialManager : MonoBehaviour
     
     void Step57()
     {
+        Invoke("PlayNextTutorialStep", 0.8f);
+    }
+
+    void Step58()
+    {
         textBox.anchoredPosition = new Vector2(0, -775);
         tutorialText.text =
-            "영혼강화 창에서는 다이아몬드를 사용하여 영혼 강화를 할 수 있습니다.\n" +
+            "영혼강화 창에서는 다이아몬드를 사용하여\n" +
+            "영혼 강화를 할 수 있습니다.\n" +
             "영혼강화의 효과는 영구적이며, 모든 게임에 적용됩니다.";
         MoveHighlightBox(-338, -1031, 337, 163);
         textBoxButton.gameObject.SetActive(true);
@@ -566,24 +586,26 @@ public class TutorialManager : MonoBehaviour
         tutorialPanel.SetActive(true);
     }
     
-    void Step58()
+    void Step59()
     {
         textBox.anchoredPosition = new Vector2(0, -472);
         tutorialText.text =
-            "탑의 지식 창에서는 탑에서 발견한 링, 유물 몬스터에 대한 정보를 볼 수 있습니다.\n" +
+            "탑의 지식 창에서는 탑에서 발견한\n" +
+            "링, 유물 몬스터에 대한 정보를 볼 수 있습니다.\n" +
             "또한, 관련된 임무를 완료하고 다이아몬드를 획득할 수 있습니다.";
         MoveHighlightBox(366, -899, 283, 500);
     }
 
-    void Step59()
+    void Step60()
     {
         textBox.anchoredPosition = new Vector2(0, 295);
         tutorialText.text =
             "이상으로 튜토리얼을 종료하겠습니다.\n" +
-            "7층의 [타락한 왕]을 무찌르고 탑의 꼭대기에 오르시길 바랍니다.";
+            "7층의 [타락한 왕]을 무찌르고\n" +
+            "탑의 꼭대기에 오르시길 바랍니다.";
     }
 
-    void Step60()
+    void Step61()
     {
         tutorialPanel.SetActive(false);
         isTutorial = false;
