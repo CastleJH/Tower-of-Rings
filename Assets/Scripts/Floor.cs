@@ -200,5 +200,6 @@ public class Floor
 		rooms[5, 6].type = 3;
 		rooms[4, 4].type = 2;
 		rooms[3, 5].type = 9;
+        rooms[5, 5].pathID = rooms[4, 5].pathID = rooms[3, 5].pathID = 0;
     }
 }
