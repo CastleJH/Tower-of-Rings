@@ -88,7 +88,11 @@ public class FloorManager : MonoBehaviour
         GPGSManager.instance.SaveGame();
         ResetFloor();
         if (f > 0) floor.Generate(f);
-        else floor.GenerateTutorial();
+        else
+        {
+            Random.InitState(0);
+            floor.GenerateTutorial();
+        }
         UIManager.instance.InitializeMap();
         if (f != 0) UIManager.instance.floorText.text = f.ToString() + "F";
         else UIManager.instance.floorText.text = "Æ©Åä¸®¾ó";
