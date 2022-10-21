@@ -249,6 +249,7 @@ public class DeckManager : MonoBehaviour
             if (GameManager.instance.baseRings[ringID].maxlvl == 1)
                 GameManager.instance.RingCollectionProgressUp(ringID, 2);
         }
+
         return true;
     }
 

@@ -291,4 +291,305 @@ public class TutorialManager : MonoBehaviour
             "포탈을 눌러서 다음 방으로 이동하세요.";
         MoveHighlightBox(388, 75, 180, 300);
     }
+
+    void Step25()
+    {
+        tutorialText.text =
+            "새로운 링을 발견했습니다.\n" +
+            "탑을 올라가며 여러 링을 발견할 수 있습니다.\n" +
+            "링을 터치하여 정보를 보세요.";
+        MoveHighlightBox(0, 52, 280, 280);
+    }
+
+    void Step26()
+    {
+        textBox.anchoredPosition = new Vector2(0, 781);
+        tutorialText.text =
+            "각 링은 저마다 고유한 능력을 가지고 있습니다.";
+        textBoxButton.gameObject.SetActive(true);
+        highlightBox.raycastTarget = true;
+        MoveHighlightBox(0, 170, 720, 850);
+    }
+
+    void Step27()
+    {
+        tutorialText.text =
+            "버튼을 클릭하여 링을 가져가세요.";
+        textBoxButton.gameObject.SetActive(false);
+        highlightBox.raycastTarget = false;
+        MoveHighlightBox(0, -308, 358, 109);
+    }
+
+    void Step28()
+    {
+        tutorialText.text =
+            "링은 동시에 최대 6개만 가질 수 있습니다.\n" +
+            "한번 가져간 링은 탑에서 발견할 수 있는 [파괴 망치]를 사용해야만 제거할 수 있습니다.\n" +
+            "신중하게 링을 가져가세요.";
+        textBoxButton.gameObject.SetActive(true);
+        MoveHighlightBox(0, 0, 0, 0);
+    }
+
+    void Step29()
+    {
+        tutorialText.text =
+            "이 버튼을 누르면 현재 플레이어가 가지고 있는 링들의 정보를 볼 수 있습니다.\n" +
+            "진행 상황이 궁금할 때 누르면 도움이 될 수 있습니다.";
+        MoveHighlightBox(-441, 1073, 115, 115);
+        textBoxButton.gameObject.SetActive(true);
+        highlightBox.raycastTarget = true;
+    }
+
+    void Step30()
+    {
+        tutorialText.text =
+            "포탈을 눌러서 이전 방으로 돌아가세요.";
+        textBoxButton.gameObject.SetActive(false);
+        MoveHighlightBox(-388, 75, 180, 300);
+    }
+
+    void Step31()
+    {
+        textBox.anchoredPosition = new Vector2(0, 535);
+        tutorialText.text =
+            "포탈을 눌러서 다음 방으로 이동하세요.";
+        MoveHighlightBox(0, 860, 180, 300);
+    }
+
+    void Step32()
+    {
+        Time.timeScale = 0;
+        tutorialText.text =
+            "전투방에 진입했습니다. 3번의 웨이브를 막으세요.";
+        textBoxButton.gameObject.SetActive(true);
+        MoveHighlightBox(0, 0, 0, 0);
+    }
+    void Step33()
+    {
+        tutorialPanel.SetActive(false);
+        Time.timeScale = 1.0f;
+    }
+    void Step34()
+    {
+        tutorialText.text = 
+            "일정 확률로 골드 대신 링이 드랍될 수 있습니다.\n" +
+            "터치하여 정보를 보세요.";
+        MoveHighlightBox(0, 52, 280, 280);
+        textBoxButton.gameObject.SetActive(false);
+        tutorialPanel.SetActive(true);
+    }
+
+    void Step35()
+    {
+        textBox.anchoredPosition = new Vector2(0, 791);
+        tutorialText.text =
+            "가져가거나 창을 닫고 넘어가세요.\n" +
+            "링을 지금 가져가지 않더라도 다시 이 방에 오면 가져갈 수 있습니다.";
+        MoveHighlightBox(0, 123, 730, 970);
+        highlightBox.raycastTarget = false;
+    }
+
+    void Step36()
+    {
+        tutorialText.text =
+            "포탈을 눌러서 다음 방으로 이동하세요.";
+        textBoxButton.gameObject.SetActive(false);
+        MoveHighlightBox(-388, 75, 180, 300);
+    }
+
+    void Step37()
+    {
+        textBox.anchoredPosition = new Vector2(0, 401);
+        tutorialText.text =
+            "[제련 망치]를 발견했습니다.\n" +
+            "터치하여 사용하세요.";
+        MoveHighlightBox(0, 52, 280, 280);
+    }
+
+    void Step38()
+    {
+        textBox.anchoredPosition = new Vector2(0, 590);
+        tutorialText.text =
+            "제련한 링은 공격력이 증가하고 공격 쿨타임이 감소합니다.\n" +
+            "링에 따라 최대 5레벨 까지 제련할 수 있습니다.\n" +
+            "제련할 링을 선택하세요.";
+        MoveHighlightBox(0, 71, 962, 81);
+    }
+
+    void Step39()
+    {
+        tutorialPanel.SetActive(false);
+        Invoke("PlayNextTutorialStep", 1.3f);
+    }
+
+    void Step40()
+    {
+        tutorialPanel.SetActive(true);
+        tutorialText.text =
+            "포탈을 눌러서 이전 방으로 돌아가세요.";
+        MoveHighlightBox(388, 75, 180, 300);
+    }
+
+    void Step41()
+    {
+        textBox.anchoredPosition = new Vector2(0, 535);
+        tutorialText.text =
+            "검은 색 보탈은 보스방입니다.\n" +
+            "포탈을 눌러 보스방으로 이동하세요.";
+        MoveHighlightBox(0, 860, 180, 300);
+    }
+
+    void Step42()
+    {
+        Time.timeScale = 0.0f;
+        tutorialText.text =
+            "보스방에 진입했습니다.\n" +
+            "보스방에서는 마지막 3번째 웨이브에서 강력한 보스가 등장합니다.\n" +
+            "보스방을 클리어하세요.";
+        textBoxButton.gameObject.SetActive(true);
+        MoveHighlightBox(0, 0, 0, 0);
+    }
+
+    void Step43()
+    {
+        tutorialPanel.SetActive(false);
+        Time.timeScale = 1.0f;
+    }
+
+    void Step44()
+    {
+        textBox.anchoredPosition = new Vector2(0, 794);
+        tutorialText.text =
+            "보스방을 '클리어'하면 다이아몬드가 드랍됩니다.\n" +
+            "다이아몬드는 로비에서 영혼을 강화할 때 사용합니다.";
+        MoveHighlightBox(-155, 457, 280, 280);
+        textBoxButton.gameObject.SetActive(true);
+        tutorialPanel.SetActive(true);
+    }
+
+    void Step45()
+    {
+        tutorialText.text =
+            "터치하여 획득하세요.";
+        textBoxButton.gameObject.SetActive(false);
+    }
+
+    void Step46()
+    {
+        tutorialText.text =
+            "보스방에서 보스를 '처치'하면 유물이 드랍됩니다.\n" +
+            "(튜토리얼에서는 처치 여부에 상관 없이 드랍하였습니다)\n" +
+            "터치하여 유물의 정보를 확인하세요.";
+        highlightBox.raycastTarget = true;
+        MoveHighlightBox(165, 295, 280, 280);
+    }
+
+    void Step47()
+    {
+        textBox.anchoredPosition = new Vector2(0, 649);
+        textBoxButton.gameObject.SetActive(true);
+        tutorialText.text =
+            "유물은 게임에 도움이 되는 효과를 가지고 있습니다.\n" +
+            "탑을 오르며 여러 유물을 발견할 수 있습니다.";
+        MoveHighlightBox(0, 172, 725, 577);
+    }
+            
+    void Step48()
+    {
+        tutorialText.text =
+            "보스 처치 외에도 유물방에서 유물을 획득할 수 있습니다.\n" +
+            "다만 유물방에서 획득하는 유물은 일정 확률로 저주받습니다.";
+    }
+
+    void Step49()
+    {
+        tutorialText.text =
+            "저주받은 유물은 해로운 효과를 가지지만,\n" +
+            "상점에서 구매하는 [성수]로 저주를 풀 수 있습니다.";
+    }
+
+    void Step50()
+    {
+        tutorialText.text =
+            "[성수]는 보유한 저주받은 유물 중 하나의 저주를 랜덤하게 풉니다.\n" +
+            "저주가 풀린 유물은 다시 이로운 효과를 줍니다.";
+    }
+
+    void Step51()
+    {
+        highlightBox.raycastTarget = false;
+        textBoxButton.gameObject.SetActive(false);
+        tutorialText.text =
+            "버튼을 눌러 유물을 획득하세요.";
+        MoveHighlightBox(0, -161, 357, 107);
+    }
+
+    void Step52()
+    {
+        textBoxButton.gameObject.SetActive(true);
+        tutorialText.text =
+            "보스방을 클리어하면 중앙에 다음층으로 이동하는 포탈이 생성됩니다.";
+        MoveHighlightBox(0, 75, 180, 300);
+    }
+
+    void Step53()
+    {
+        tutorialText.text =
+            "7층의 보스방을 클리어 하면 엔딩을 볼 수 있는 포탈이 생성됩니다.";
+    }
+
+    void Step54()
+    {
+        tutorialText.text =
+            "만일 7층에 도달하지 못하고 HP가 0이 된다면 탑 밖으로 추방되고,\n" +
+            "그동안 탑에서 모은 모든 링과 유물이 사라집니다.";
+    }
+
+    void Step55()
+    {
+        textBoxButton.gameObject.SetActive(false);
+        tutorialText.text =
+            "지금은 튜토리얼 중이므로 다음층으로 이동하지 않고 로비로 돌아가겠습니다.\n" +
+            "포탈을 터치하여 게임오버하세요.";
+    }
+
+    void Step56()
+    {
+        tutorialPanel.SetActive(false);
+    }
+    
+    void Step57()
+    {
+        textBox.anchoredPosition = new Vector2(0, -775);
+        tutorialText.text =
+            "영혼강화 창에서는 다이아몬드를 사용하여 영혼 강화를 할 수 있습니다.\n" +
+            "영혼강화의 효과는 영구적이며, 모든 게임에 적용됩니다.";
+        MoveHighlightBox(-338, -1031, 337, 163);
+        textBoxButton.gameObject.SetActive(true);
+        highlightBox.raycastTarget = true;
+        tutorialPanel.SetActive(true);
+    }
+    
+    void Step58()
+    {
+        textBox.anchoredPosition = new Vector2(0, -472);
+        tutorialText.text =
+            "탑의 지식 창에서는 탑에서 발견한 링, 유물 몬스터에 대한 정보를 볼 수 있습니다.\n" +
+            "또한, 관련된 임무를 완료하고 다이아몬드를 획득할 수 있습니다.";
+        MoveHighlightBox(366, -899, 283, 500);
+    }
+
+    void Step59()
+    {
+        textBox.anchoredPosition = new Vector2(0, 295);
+        tutorialText.text =
+            "이상으로 튜토리얼을 종료하겠습니다.\n" +
+            "7층의 [타락한 왕]을 무찌르고 탑의 꼭대기에 오르시길 바랍니다.";
+    }
+
+    void Step60()
+    {
+        tutorialPanel.SetActive(false);
+        isTutorial = false;
+    }
 }

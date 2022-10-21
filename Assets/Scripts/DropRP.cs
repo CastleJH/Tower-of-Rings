@@ -16,6 +16,11 @@ public class DropRP : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))    //터치 지점에 자신이 있다면 RP를 준다.
         {
+            if (TutorialManager.instance.isTutorial)
+            {
+                if (TutorialManager.instance.step < 16) return;
+            }
+
             Vector2 touchPos;
             if (Input.touchCount > 0) touchPos = Input.touches[0].position;
             else touchPos = Input.mousePosition;

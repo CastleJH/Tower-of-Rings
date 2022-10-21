@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject lobbyAccountSettingPanel;
     public GameObject lobbyAccountSettingAskDeletePanel;
+    public GameObject lobbyAccountSettingAskDeleteButtonHide;
 
     public GameObject lobbyRingCollectionPanel;
     public GameObject[] lobbyRingCollectionSelectCircle;
@@ -206,6 +207,8 @@ public class UIManager : MonoBehaviour
         gameStartPanel.SetActive(true);
 
         audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
+
+        lobbyAccountSettingAskDeleteButtonHide.SetActive(false);
     }
 
     public void ButtonAccountSettingOpen()
@@ -227,8 +230,8 @@ public class UIManager : MonoBehaviour
     {
         GameManager.instance.InitializeUserData();
         GPGSManager.instance.SaveGame();
-        ButtonSignOut();
-
+        lobbyAccountSettingAskDeleteButtonHide.SetActive(true);
+        Invoke("ButtonSignOut", 3.0f);
         audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
 
@@ -520,6 +523,7 @@ public class UIManager : MonoBehaviour
 
         GameManager.instance.saveFloor = false;
         GPGSManager.instance.SaveGame();
+
     }
 
     void OpenGameEndResultPanel()
@@ -574,6 +578,10 @@ public class UIManager : MonoBehaviour
                 break;
             case 3:
                 ringInfoPanel.SetActive(false);
+                if (TutorialManager.instance.isTutorial)
+                {
+                    if (TutorialManager.instance.step == 35) TutorialManager.instance.PlayNextTutorialStep();
+                }
                 break;
             case 4:
                 relicInfoPanel.SetActive(false);
@@ -711,6 +719,7 @@ public class UIManager : MonoBehaviour
             ringSelectionEffectAnimation.Play();
             Invoke("InvokeReloadAndCloseRingSelectionPanel", 1.0f);
         }
+        if (TutorialManager.instance.isTutorial) TutorialManager.instance.PlayNextTutorialStep();
     }
 
     //링 획득 버튼이 눌렸을 때 불린다. 재화를 소모해야 하면 소모한다. 재화가 부족한 경우거나 이미 있는 링이거나 이미 덱이 다 차있다면 획득하지 않는다.
@@ -736,6 +745,11 @@ public class UIManager : MonoBehaviour
             }
 
         audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
+        if (TutorialManager.instance.isTutorial)
+        {
+            if (TutorialManager.instance.step == 27 ||
+                TutorialManager.instance.step == 35) TutorialManager.instance.PlayNextTutorialStep();
+        }
         ClosePanel(3);
     }
 
@@ -784,6 +798,10 @@ public class UIManager : MonoBehaviour
             }
 
         audioSource.PlayOneShot(GameManager.instance.specialAudios[2]);
+        if (TutorialManager.instance.isTutorial)
+        {
+            if (TutorialManager.instance.step == 51) TutorialManager.instance.PlayNextTutorialStep();
+        }
         ClosePanel(4);
     }
 
@@ -835,6 +853,8 @@ public class UIManager : MonoBehaviour
         SceneChanger.instance.ChangeScene(ChangeSceneToLobby, 0, 0, 0);
 
         audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
+
+        if (TutorialManager.instance.isTutorial) TutorialManager.instance.PlayNextTutorialStep();
     }
 
     //로비의 영혼 강화창 오픈 버튼이 눌렸을 때 불린다.

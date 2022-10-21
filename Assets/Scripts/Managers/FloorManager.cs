@@ -151,7 +151,13 @@ public class FloorManager : MonoBehaviour
         if (TutorialManager.instance.isTutorial)
         {
             if (TutorialManager.instance.step == 0 ||
-                TutorialManager.instance.step == 2) 
+                TutorialManager.instance.step == 2 ||
+                TutorialManager.instance.step == 24 ||
+                TutorialManager.instance.step == 30 ||
+                TutorialManager.instance.step == 31 ||
+                TutorialManager.instance.step == 36 ||
+                TutorialManager.instance.step == 40 ||
+                TutorialManager.instance.step == 41) 
             TutorialManager.instance.PlayNextTutorialStep();
         }
 
@@ -401,8 +407,18 @@ public class FloorManager : MonoBehaviour
                 if (TutorialManager.instance.isTutorial)
                 {
                     if (TutorialManager.instance.step != 2 &&
-                        TutorialManager.instance.step != 24) return;
+                        TutorialManager.instance.step != 24 &&
+                        TutorialManager.instance.step != 30 &&
+                        TutorialManager.instance.step != 31 &&
+                        TutorialManager.instance.step != 36 &&
+                        TutorialManager.instance.step != 40 &&
+                        TutorialManager.instance.step != 41 &&
+                        TutorialManager.instance.step != 55) return;
                     if (TutorialManager.instance.step == 24 && hit.collider.gameObject != portals[1].gameObject) return;
+                    if (TutorialManager.instance.step == 31 && hit.collider.gameObject != portals[2].gameObject) return;
+                    if (TutorialManager.instance.step == 36 && hit.collider.gameObject != portals[0].gameObject) return;
+                    if (TutorialManager.instance.step == 41 && hit.collider.gameObject != portals[2].gameObject) return;
+                    if (TutorialManager.instance.step == 55 && hit.collider.gameObject != portals[4].gameObject) return;
                 }
                 if (hit.collider.tag != "Portal" || Time.timeScale == 0) return;
                 int dir = hit.collider.name[hit.collider.name.Length - 1] - '0';
@@ -422,6 +438,7 @@ public class FloorManager : MonoBehaviour
                     else
                     {
                         SceneChanger.instance.ChangeScene(GameManager.instance.OnGameOver, 0, 0, 0);
+                        TutorialManager.instance.PlayNextTutorialStep();
                     }
                 }
                 audioSource.Play();

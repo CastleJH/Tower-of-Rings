@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
     public int[,] relicCollectionProgress;      //GPGS 저장(-1이면 이미 보상을 획득하였다는 뜻임)
     public int[] monsterCollectionMaxProgress;  
     public int[] monsterCollectionProgress;     //GPGS 저장(-1이면 이미 보상을 획득하였다는 뜻임)
+    bool tutorialDone;
 
     //개별 게임 관련 변수
     public bool isNormalMode;
@@ -174,6 +175,8 @@ public class GameManager : MonoBehaviour
             UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
             UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
         }
+
+        tutorialDone = false;
     }
 
     public void InitializeUserData()
@@ -199,15 +202,18 @@ public class GameManager : MonoBehaviour
     //게임을 시작한다.
     public void GameStart()
     {
-        int startFloor = 0;
         for (int i = 0; i < baseRelics.Count; i++)
             if (ringCollectionProgress[i, 0] != 0)
             {
-                startFloor = 1;
+                tutorialDone = true;
                 break;
             }
 
         saveFloor = true;
+
+        int startFloor = 0;
+        if (tutorialDone) startFloor = 1;
+        tutorialDone = true;
 
         if (startFloor == 0) TutorialManager.instance.isTutorial = true;
         InitializeGame();
@@ -749,12 +755,14 @@ public class GameManager : MonoBehaviour
     //링 콜렉션 진행상황을 하나 올린다.
     public void RingCollectionProgressUp(int ringID, int questID)
     {
+        if (TutorialManager.instance.isTutorial) return;
         if (ringCollectionProgress[ringID, questID] != -1) ringCollectionProgress[ringID, questID] = Mathf.Clamp(ringCollectionProgress[ringID, questID] + 1, 0, ringCollectionMaxProgress[ringID, questID]);
     }
 
     //유물 콜렉션 진행상황을 하나 올린다.
     public void RelicCollectionProgressUp(int relicID, int questID)
     {
+        if (TutorialManager.instance.isTutorial) return;
         if (relicCollectionProgress[relicID, questID] != -1) relicCollectionProgress[relicID, questID] = Mathf.Clamp(relicCollectionProgress[relicID, questID] + 1, 0, relicCollectionMaxProgress[relicID, questID]);
     }
 

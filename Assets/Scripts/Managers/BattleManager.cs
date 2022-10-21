@@ -366,6 +366,7 @@ public class BattleManager : MonoBehaviour
                 item = GameManager.instance.GetItemFromPool();
                 item.InitializeItem(5, FloorManager.instance.itemPos[2], 0, 0);
                 FloorManager.instance.curRoom.AddItem(item);
+                TutorialManager.instance.PlayNextTutorialStep();
             }
         }
         return isItemDrop;

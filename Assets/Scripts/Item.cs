@@ -18,14 +18,34 @@ public class Item : MonoBehaviour
     void Update()
     {
         //터치 지점에 자신이 있다면 아이템을 준다.
-        if (Input.GetMouseButtonUp(0) && !UIManager.instance.playerStatusPanel.activeSelf && !UIManager.instance.relicInfoPanel.activeSelf && !UIManager.instance.ringInfoPanel.activeSelf && !UIManager.instance.ringSelectionPanel.activeSelf && FloorManager.instance.curRoom.items.Contains(this))
+        if (Input.GetMouseButtonUp(0) && Time.timeScale != 0 && !UIManager.instance.playerStatusPanel.activeSelf && !UIManager.instance.relicInfoPanel.activeSelf && !UIManager.instance.ringInfoPanel.activeSelf && !UIManager.instance.ringSelectionPanel.activeSelf && FloorManager.instance.curRoom.items.Contains(this))
         {
             Vector2 touchPos;
             if (Input.touchCount > 0) touchPos = Input.touches[0].position;
             else touchPos = Input.mousePosition;
 
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(touchPos), Vector2.zero, 0f);
-            if (hit.collider != null && hit.collider.gameObject == gameObject) GiveThisToPlayer();
+            if (hit.collider != null && hit.collider.gameObject == gameObject)
+            {
+                if (TutorialManager.instance.isTutorial)
+                {
+                    if (TutorialManager.instance.step == 36 ||
+                        TutorialManager.instance.step == 41 ||
+                        TutorialManager.instance.step == 44) return;
+                    if (TutorialManager.instance.step == 45 && itemType >= 2000) return;
+                    if (TutorialManager.instance.step == 22 ||
+                        TutorialManager.instance.step == 23 ||
+                        TutorialManager.instance.step == 25 ||
+                        TutorialManager.instance.step == 27 ||
+                        TutorialManager.instance.step == 34 ||
+                        TutorialManager.instance.step == 37 ||
+                        TutorialManager.instance.step == 45 ||
+                        TutorialManager.instance.step == 46 ||
+                        TutorialManager.instance.step == 56)
+                        TutorialManager.instance.PlayNextTutorialStep();
+                }
+                GiveThisToPlayer();
+            }
         }
     }
 
@@ -137,10 +157,6 @@ public class Item : MonoBehaviour
             else if (costType == 2 && GameManager.instance.diamond < curCost) UIManager.instance.relicInfoTakeText.text = "다이아몬드가 부족하다";
             else UIManager.instance.relicInfoTakeText.text = "이 유물을 가져간다";
             UIManager.instance.OpenRelicInfoPanel(itemType - 2000);
-        }
-        if (TutorialManager.instance.isTutorial)
-        {
-            TutorialManager.instance.PlayNextTutorialStep();
         }
     }
 
