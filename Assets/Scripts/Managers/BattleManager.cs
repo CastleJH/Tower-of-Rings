@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using static UnityEditor.Progress;
 
 public class BattleManager : MonoBehaviour
@@ -158,7 +159,8 @@ public class BattleManager : MonoBehaviour
             {
                 scale = 0.5f * (FloorManager.instance.floor.floorNum + 1) * (1.0f + 0.5f * (wave - 1));
 
-                if (wave == 3 && newMonsterID == 0)   //웨이브 3의 첫 몬스터는 반드시 엘리트/보스
+                if (wave == 1) monsterType = Random.Range(0, 15);    //웨이브 1은 무조건 일반 몬스터
+                else if (wave == 3 && newMonsterID == 0)   //웨이브 3의 첫 몬스터는 반드시 엘리트/보스
                 {
                     if (FloorManager.instance.curRoom.type == 1) monsterType = Random.Range(15, 22);
                     else
@@ -167,7 +169,13 @@ public class BattleManager : MonoBehaviour
                         monsterType = FloorManager.instance.floor.floorNum + 21;
                     }
                 }
-                else monsterType = Random.Range(0, 15);    //그외에는 일반 몬스터
+                else
+                {
+                    float rate = FloorManager.instance.floor.floorNum != 7 ? (FloorManager.instance.floor.floorNum - 1) * 0.1f : 0.8f;
+                    if (wave == 2) rate *= 0.33333f;
+                    if (Random.Range(0.0f, 1.0f) < rate) monsterType = Random.Range(15, 22);   //엘리트 몬스터
+                    else monsterType = Random.Range(0, 15);    //그외에는 일반 몬스터
+                }
             }
             else
             {

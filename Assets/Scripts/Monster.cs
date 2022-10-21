@@ -379,8 +379,8 @@ public class Monster : MonoBehaviour
     public void AE_Paralyze(float dmg, float time)
     {
         AE_DecreaseHP(dmg, new Color32(150, 150, 0, 255));
-        //이미 받고있는 마비 링의 마비 효과가 더 오래 간다면 적용 취소
-        if (paralyzeEndTime - paralyzeTime > time) return;
+        //이미 마비중이면 마비 효과를 추가로 주지 않음
+        if (paralyzeTime < paralyzeEndTime) return;
         paralyzeEndTime = time;
         paralyzeTime = 0;
     }
@@ -389,6 +389,7 @@ public class Monster : MonoBehaviour
     public void AE_Teleport(float dmg, float prob)
     {
         AE_DecreaseHP(dmg, new Color32(255, 0, 200, 255));
+        if (immuneInterrupt) return;
         if (Random.Range(0.0f, 1.0f) < prob) //일정 확률로 이동 거리를 0으로 만들어버림
         {
             movedDistance = 0.0f;
