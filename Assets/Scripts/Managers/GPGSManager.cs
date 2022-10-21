@@ -134,7 +134,7 @@ public class GPGSManager : MonoBehaviour
         {
             UIManager.instance.gameStartPanelSignInButton.SetActive(true);
             UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
-            UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(false);
+            UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
             GameManager.instance.InitializeUserData();
         }
     }
