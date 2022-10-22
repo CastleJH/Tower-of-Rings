@@ -39,6 +39,8 @@ public class GPGSManager : MonoBehaviour
                 UIManager.instance.gameStartPanelInternetConnectionCheck.SetActive(true);
             }
         });
+
+        UIManager.instance.gameStartPanelSignInButton.interactable = true;
     }
 
     //로그아웃
@@ -132,7 +134,7 @@ public class GPGSManager : MonoBehaviour
         }
         else
         {
-            UIManager.instance.gameStartPanelSignInButton.SetActive(false);
+            UIManager.instance.gameStartPanelSignInButton.gameObject.SetActive(false);
             UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
             UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(false);
             GameManager.instance.InitializeUserData();
@@ -203,20 +205,20 @@ public class GPGSManager : MonoBehaviour
                     GameManager.instance.revivable = parseByCategory[13] == "1" ? true : false;
 
                     //층 하드모드여부 HP 골드 덱(아이디|강화) 유물(아이디|저주) 
-                    UIManager.instance.gameStartPanelSignInButton.SetActive(false);
+                    UIManager.instance.gameStartPanelSignInButton.gameObject.SetActive(false);
                     UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(false);
                     UIManager.instance.gameStartPanelMoveToGameButton.SetActive(true);
                 }
                 else
                 {
-                    UIManager.instance.gameStartPanelSignInButton.SetActive(false);
+                    UIManager.instance.gameStartPanelSignInButton.gameObject.SetActive(false);
                     UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
                     UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
                 }
             }
             else
             {
-                UIManager.instance.gameStartPanelSignInButton.SetActive(false);
+                UIManager.instance.gameStartPanelSignInButton.gameObject.SetActive(false);
                 UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
                 UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
                 GameManager.instance.InitializeUserData();
@@ -225,7 +227,7 @@ public class GPGSManager : MonoBehaviour
         }
         else
         {
-            UIManager.instance.gameStartPanelSignInButton.SetActive(true);
+            UIManager.instance.gameStartPanelSignInButton.gameObject.SetActive(true);
             UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
             UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
             GameManager.instance.InitializeUserData();

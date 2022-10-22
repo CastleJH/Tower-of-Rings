@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject gameStartPanel;
     public GameObject gameStartText;
-    public GameObject gameStartPanelSignInButton;
+    public Button gameStartPanelSignInButton;
     public GameObject gameStartPanelMoveToLobbyButton;
     public GameObject gameStartPanelMoveToGameButton;
     public GameObject gameStartPanelInternetConnectionCheck;
@@ -191,6 +191,7 @@ public class UIManager : MonoBehaviour
     //로그인 버튼이 눌렸을 때 불린다.
     public void ButtonSignIn()
     {
+        gameStartPanelSignInButton.interactable = false;
         GPGSManager.instance.SignOut();
         GPGSManager.instance.SignIn();
 
@@ -203,7 +204,7 @@ public class UIManager : MonoBehaviour
         GPGSManager.instance.SignOut();
         gameStartPanelMoveToLobbyButton.SetActive(false);
         gameStartPanelMoveToGameButton.SetActive(false);
-        gameStartPanelSignInButton.SetActive(true);
+        gameStartPanelSignInButton.gameObject.SetActive(true);
         gameStartPanel.SetActive(true);
 
         audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
