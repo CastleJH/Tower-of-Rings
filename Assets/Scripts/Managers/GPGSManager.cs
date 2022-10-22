@@ -39,8 +39,6 @@ public class GPGSManager : MonoBehaviour
                 UIManager.instance.gameStartPanelInternetConnectionCheck.SetActive(true);
             }
         });
-
-        UIManager.instance.gameStartPanelSignInButton.interactable = true;
     }
 
     //·Î±×¾Æ¿ô

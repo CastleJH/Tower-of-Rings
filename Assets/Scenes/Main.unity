@@ -14763,7 +14763,7 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   gameStartPanel: {fileID: 337004339}
   gameStartText: {fileID: 1804739339}
-  gameStartPanelSignInButton: {fileID: 1153716036}
+  gameStartPanelSignInButton: {fileID: 1153716038}
   gameStartPanelMoveToLobbyButton: {fileID: 1396802593}
   gameStartPanelMoveToGameButton: {fileID: 1223264670}
   gameStartPanelInternetConnectionCheck: {fileID: 1611975931}
