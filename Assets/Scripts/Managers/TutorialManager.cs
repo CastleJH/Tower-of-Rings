@@ -102,7 +102,7 @@ public class TutorialManager : MonoBehaviour
         tutorialText.text = 
             "적은 빨간 길을 따라 이동하며,\n" +
             "적이 길 끝의 하트에 도달하면 플레이어는 HP를 잃습니다.\n" +
-            "HP가 0이 되면 게임 오버이니 주의하세요.";
+            "HP가 0이 되면 탑 밖으로 추방됩니다.";
         MoveHighlightBox(8, 70, 830, 1540);
     }
 
@@ -110,7 +110,7 @@ public class TutorialManager : MonoBehaviour
     {
         textBox.anchoredPosition = new Vector2(0, -650);
         tutorialText.text = 
-            "플레이어는 RP를 소모하여 링을 전장에 소환할 수 있습니다.\n" +
+            "플레이어는 RP를 소모하여 링을 전장에 소환해야 합니다.\n" +
             "각 링마다 필요한 RP 값이 다릅니다.";
         MoveHighlightBox(392, -912, 294, 128);
     }
@@ -305,12 +305,12 @@ public class TutorialManager : MonoBehaviour
 
     void Step26()
     {
-        textBox.anchoredPosition = new Vector2(0, 781);
+        textBox.anchoredPosition = new Vector2(0, 891);
         tutorialText.text =
             "각 링은 저마다 고유한 능력을 가지고 있습니다.";
         textBoxButton.gameObject.SetActive(true);
         highlightBox.raycastTarget = true;
-        MoveHighlightBox(0, 170, 720, 850);
+        MoveHighlightBox(0, 169, 936, 1101);
     }
 
     void Step27()
@@ -319,7 +319,7 @@ public class TutorialManager : MonoBehaviour
             "버튼을 클릭하여 링을 가져가세요.";
         textBoxButton.gameObject.SetActive(false);
         highlightBox.raycastTarget = false;
-        MoveHighlightBox(0, -308, 358, 109);
+        MoveHighlightBox(0, -450, 460, 138);
     }
 
     void Step28()
@@ -328,7 +328,7 @@ public class TutorialManager : MonoBehaviour
             "링은 동시에 최대 6개만 가질 수 있습니다.\n" +
             "한번 가져간 링은 탑에서 발견할 수 있는\n" +
             "[파괴 망치]를 사용해야만 제거할 수 있습니다.\n" +
-            "신중하게 링을 가져가세요.";
+            "신중하게 선택하세요.";
         textBoxButton.gameObject.SetActive(true);
         MoveHighlightBox(0, 0, 0, 0);
     }
@@ -377,7 +377,7 @@ public class TutorialManager : MonoBehaviour
     {
         tutorialText.text = 
             "일정 확률로 골드 대신 링이 드랍될 수 있습니다.\n" +
-            "터치하여 정보를 보세요.";
+            "터치하여 정보를 확인하세요.";
         MoveHighlightBox(0, 52, 280, 280);
         textBoxButton.gameObject.SetActive(false);
         tutorialPanel.SetActive(true);
@@ -385,12 +385,12 @@ public class TutorialManager : MonoBehaviour
 
     void Step35()
     {
-        textBox.anchoredPosition = new Vector2(0, 791);
+        textBox.anchoredPosition = new Vector2(0, 891);
         tutorialText.text =
             "가져가거나 창을 닫고 넘어가세요.\n" +
             "링을 지금 가져가지 않더라도 다시 이 방에 오면\n" +
             "가져갈 수 있습니다.";
-        MoveHighlightBox(0, 123, 730, 970);
+        MoveHighlightBox(0, 98, 920, 1238);
         highlightBox.raycastTarget = false;
     }
 
@@ -491,19 +491,19 @@ public class TutorialManager : MonoBehaviour
 
     void Step47()
     {
-        textBox.anchoredPosition = new Vector2(0, 649);
+        textBox.anchoredPosition = new Vector2(0, 724);
         textBoxButton.gameObject.SetActive(true);
         tutorialText.text =
             "유물은 게임에 도움이 되는 효과를 가지고 있습니다.\n" +
             "탑을 오르며 여러 유물을 발견할 수 있습니다.";
-        MoveHighlightBox(0, 172, 725, 577);
+        MoveHighlightBox(0, 173, 924, 725);
     }
             
     void Step48()
     {
         tutorialText.text =
             "보스 처치 외에도 유물방에서 유물을 획득할 수 있습니다.\n" +
-            "다만 유물방에서 획득하는 유물은 일정 확률로 저주받습니다.";
+            "다만 유물방에서 획득한 유물은 일정 확률로 저주받습니다.";
     }
 
     void Step49()
@@ -527,7 +527,7 @@ public class TutorialManager : MonoBehaviour
         textBoxButton.gameObject.SetActive(false);
         tutorialText.text =
             "버튼을 눌러 유물을 획득하세요.";
-        MoveHighlightBox(0, -161, 357, 107);
+        MoveHighlightBox(0, -261, 468, 140);
     }
 
     void Step52()
@@ -592,7 +592,7 @@ public class TutorialManager : MonoBehaviour
         tutorialText.text =
             "탑의 지식 창에서는 탑에서 발견한\n" +
             "링, 유물 몬스터에 대한 정보를 볼 수 있습니다.\n" +
-            "또한, 관련된 임무를 완료하고 다이아몬드를 획득할 수 있습니다.";
+            "또한, 관련 임무를 완료하고 다이아몬드를 획득할 수 있습니다.";
         MoveHighlightBox(366, -899, 283, 500);
     }
 
