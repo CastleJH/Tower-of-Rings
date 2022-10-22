@@ -21,6 +21,11 @@ public class GPGSManager : MonoBehaviour
         }
     }
 
+    void InvokeSignInButtonInteractable()
+    {
+        UIManager.instance.gameStartPanelSignInButton.interactable = true;
+    }
+
     //로그인(저장된 게임을 불러온다)
     public void SignIn()
     {
@@ -39,6 +44,7 @@ public class GPGSManager : MonoBehaviour
                 UIManager.instance.gameStartPanelInternetConnectionCheck.SetActive(true);
             }
         });
+        Invoke("InvokeSignInButtonInteractable", 5.0f);
     }
 
     //로그아웃

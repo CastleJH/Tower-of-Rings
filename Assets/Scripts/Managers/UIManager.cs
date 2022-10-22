@@ -192,16 +192,10 @@ public class UIManager : MonoBehaviour
     public void ButtonSignIn()
     {
         gameStartPanelSignInButton.interactable = false;
-        Invoke("InvokeSignInButtonInteractable", 3.0f);
         GPGSManager.instance.SignOut();
         GPGSManager.instance.SignIn();
 
         audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
-    }
-
-    void InvokeSignInButtonInteractable()
-    {
-        gameStartPanelSignInButton.interactable = true;
     }
 
     //로그아웃 버튼이 눌렸을 때 불린다.
