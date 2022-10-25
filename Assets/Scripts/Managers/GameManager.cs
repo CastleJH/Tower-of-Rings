@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+
+    //public Text debugText;
 
     //ÇÁ¸®ÆÕ
     public GameObject ringPrefab;

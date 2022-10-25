@@ -36,11 +36,13 @@ public class GPGSManager : MonoBehaviour
         {
             if (code == SignInStatus.Success)
             {
+                //GameManager.instance.debugText.text += "AuthSuccess\n";
                 LoadGame();
                 UIManager.instance.gameStartPanelInternetConnectionCheck.SetActive(false);
             }
             else
             {
+                //GameManager.instance.debugText.text += "AuthFail\n";
                 UIManager.instance.gameStartPanelInternetConnectionCheck.SetActive(true);
             }
         });
