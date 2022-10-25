@@ -7,12 +7,10 @@ public class AdManager : MonoBehaviour
     public static AdManager instance;
 
     RewardedAd diamondAd;
-    RewardedAd floorFinishAd;
     RewardedAd startBoostAd;
 
     char lastCalledAd;
     string diamondAdUnitId = "ca-app-pub-3940256099942544/5224354917";
-    string floorFinishedAdUnitId = "ca-app-pub-3940256099942544/5224354917";
     string startBoostAdUnitId = "ca-app-pub-3940256099942544/5224354917";
 
     void Awake()
@@ -24,7 +22,6 @@ public class AdManager : MonoBehaviour
     {
         MobileAds.Initialize(status => { });
         diamondAd = CreateAndLoadRewardedAd(diamondAdUnitId);
-        floorFinishAd = CreateAndLoadRewardedAd(floorFinishedAdUnitId);
         startBoostAd = CreateAndLoadRewardedAd(startBoostAdUnitId);
     }
 
@@ -41,8 +38,7 @@ public class AdManager : MonoBehaviour
     public void HandleRewardedAdClosed(object sender, EventArgs args)
     {
         if (lastCalledAd == 'd') diamondAd = CreateAndLoadRewardedAd(diamondAdUnitId);
-        else if (lastCalledAd == 'f') floorFinishAd = CreateAndLoadRewardedAd(startBoostAdUnitId);
-        else startBoostAd = CreateAndLoadRewardedAd(floorFinishedAdUnitId);
+        else startBoostAd = CreateAndLoadRewardedAd(startBoostAdUnitId);
     }
 
     public void HandleUserEarnedReward(object sender, Reward args)
@@ -93,15 +89,6 @@ public class AdManager : MonoBehaviour
         {
             lastCalledAd = 's';
             startBoostAd.Show();
-        }
-    }
-
-    public void ShowFloorFinishAd()
-    {
-        if (floorFinishAd.IsLoaded())
-        {
-            lastCalledAd = 'f';
-            floorFinishAd.Show();
         }
     }
 }
