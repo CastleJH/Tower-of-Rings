@@ -84,6 +84,9 @@ public class GameManager : MonoBehaviour
     public int[] monsterCollectionProgress;     //GPGS 저장(-1이면 이미 보상을 획득하였다는 뜻임)
     bool tutorialDone;
 
+    //광고 보상
+    public int boostLeft;
+
     //개별 게임 관련 변수
     public bool isNormalMode;
     public int playerMaxHP;
@@ -224,6 +227,7 @@ public class GameManager : MonoBehaviour
         FloorManager.instance.endPortal.SetActive(false);
         
         FloorManager.instance.CreateAndMoveToFloor(startFloor);
+        boostLeft = 0;
     }
 
     //저장된 게임을 시작한다(1층이 아닌 곳에서 시작).
@@ -234,6 +238,7 @@ public class GameManager : MonoBehaviour
         UIManager.instance.mapPanel.SetActive(true);
         FloorManager.instance.endPortal.SetActive(false);
         FloorManager.instance.CreateAndMoveToFloor(FloorManager.instance.floor.floorNum);
+        boostLeft = 0;
     }
 
     //게임을 초기화한다.

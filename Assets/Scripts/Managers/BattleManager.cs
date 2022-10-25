@@ -253,6 +253,9 @@ public class BattleManager : MonoBehaviour
 
         //현재 방을 다시 로드한다(포탈을 킨다).
         FloorManager.instance.MoveToRoom(x, y);
+
+        //시작 부스터 사용 횟수를 감소시킨다.
+        if (GameManager.instance.boostLeft > 0) GameManager.instance.boostLeft--;
     }
 
     //전투 보상으로 아이템을 드롭한다. 뭐라도 드롭하면 true, 아무것도 드롭하지 않으면 false를 반환한다.

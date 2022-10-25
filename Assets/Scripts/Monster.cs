@@ -124,6 +124,7 @@ public class Monster : MonoBehaviour
 
         //½ºÅÈ
         maxHP = baseMonster.baseMaxHP * scale;
+        if (GameManager.instance.boostLeft > 0) maxHP = 1;
         curHP = maxHP;
         baseSPD = baseMonster.baseSPD;
         SetHPText();
