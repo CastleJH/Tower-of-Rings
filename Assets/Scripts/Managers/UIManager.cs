@@ -18,12 +18,18 @@ public class UIManager : MonoBehaviour
     public GameObject gameStartPanelInternetConnectionCheck;
 
     public GameObject lobbyPanel;
+    public GameObject lobbyHideButtonTouch;
     public Toggle lobbyHardModeToggleButton;
     public GameObject[] lobbyCollectionDiamonds;
 
     public GameObject lobbyAccountSettingPanel;
     public GameObject lobbyAccountSettingAskDeletePanel;
-    public GameObject lobbyAccountSettingAskDeleteButtonHide;
+
+    public TextMeshProUGUI lobbyAdDiamondText;
+    public GameObject lobbyAdDiamondAskPanel;
+    public TextMeshProUGUI lobbyAdBoostText;
+    public GameObject lobbyAdBoostAskPanel;
+    public GameObject lobbyAdNotEnoughPanel;
 
     public GameObject lobbyRingCollectionPanel;
     public GameObject[] lobbyRingCollectionSelectCircle;
@@ -137,7 +143,6 @@ public class UIManager : MonoBehaviour
     public GameObject relicInfoCannotTake;
 
     float titleTextBlinkTime;
-
     void Awake()
     {
         instance = this;
@@ -186,6 +191,30 @@ public class UIManager : MonoBehaviour
                 gameStartText.SetActive(!gameStartText.activeSelf);
             }
         }
+
+        if (lobbyPanel.activeSelf)
+        {
+            if (GameManager.instance.diamondRewardTakeNum < 6)
+            {
+                float diamondAdTimeLeft = 600.0f - Mathf.Clamp((float)(DateTime.Now - GameManager.instance.diamondAdLastTookTime).TotalSeconds, -1.0f, 3600.0f);
+                if (diamondAdTimeLeft >= 60.0f)
+                    lobbyAdDiamondText.text = ((int)(diamondAdTimeLeft / 60.0f)).ToString() + "m ÈÄ È¹µæ\n" + GameManager.instance.diamondRewardTakeNum.ToString() + "/5";
+                else if (diamondAdTimeLeft > 0.0f)
+                    lobbyAdDiamondText.text = ((int)diamondAdTimeLeft).ToString() + "s ÈÄ È¹µæ\n" + GameManager.instance.diamondRewardTakeNum.ToString() + "/5";
+                else if (diamondAdTimeLeft <= 0.0f) lobbyAdDiamondText.text = "È¹µæ °¡´É!\n" + GameManager.instance.diamondRewardTakeNum.ToString() + "/5";
+            }
+            else lobbyAdDiamondText.text = "È¹µæ ¿Ï·á\n5/5";
+            if (GameManager.instance.boostRewardTakeNum < 6)
+            {
+                float boostAdTimeLeft = 600.0f - Mathf.Clamp((float)(DateTime.Now - GameManager.instance.boostAdLastTookTime).TotalSeconds, -1.0f, 3600.0f);
+                if (boostAdTimeLeft >= 60.0f)
+                    lobbyAdBoostText.text = ((int)(boostAdTimeLeft / 60.0f)).ToString() + "m ÈÄ È¹µæ\n" + GameManager.instance.boostRewardTakeNum.ToString() + "/5";
+                else if (boostAdTimeLeft > 0.0f)
+                    lobbyAdBoostText.text = ((int)boostAdTimeLeft).ToString() + "s ÈÄ È¹µæ\n" + GameManager.instance.boostRewardTakeNum.ToString() + "/5";
+                else if (boostAdTimeLeft <= 0.0f) lobbyAdBoostText.text = "È¹µæ °¡´É!\n" + GameManager.instance.boostRewardTakeNum.ToString() + "/5";
+            }
+            else lobbyAdBoostText.text = "È¹µæ ¿Ï·á\n5/5";
+        }
     }
 
     //·Î±×ÀÎ ¹öÆ°ÀÌ ´­·ÈÀ» ¶§ ºÒ¸°´Ù.
@@ -209,7 +238,7 @@ public class UIManager : MonoBehaviour
 
         audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
 
-        lobbyAccountSettingAskDeleteButtonHide.SetActive(false);
+        lobbyHideButtonTouch.SetActive(false);
     }
 
     public void ButtonAccountSettingOpen()
@@ -231,7 +260,7 @@ public class UIManager : MonoBehaviour
     {
         GameManager.instance.InitializeUserData();
         GPGSManager.instance.SaveGame();
-        lobbyAccountSettingAskDeleteButtonHide.SetActive(true);
+        lobbyHideButtonTouch.SetActive(true);
         Invoke("ButtonSignOut", 3.0f);
         audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
     }
@@ -269,6 +298,26 @@ public class UIManager : MonoBehaviour
         playerStatusPanelAskBackToLobby.SetActive(false);
 
         audioSource.PlayOneShot(GameManager.instance.specialAudios[0]);
+    }
+
+    public void ButtonOpenAskWatchDiamondAds()
+    {
+        if (lobbyAdDiamondText.text[3] == '°¡') lobbyAdDiamondAskPanel.SetActive(true);
+    }
+
+    public void ButtonWatchDiamondAds()
+    {
+        AdManager.instance.ShowDiamondAd();
+    }
+
+    public void ButtonOpenAskWatchBoostAds()
+    {
+        if (lobbyAdBoostText.text[3] == '°¡') lobbyAdBoostAskPanel.SetActive(true);
+    }
+
+    public void ButtonWatchBoostAds()
+    {
+        AdManager.instance.ShowStartBoostAd();
     }
 
     //ÀüÅõ¿¡¼­ ¸µ »ý¼º ¹öÆ°ÀÌ ´­¸° °æ¿ì¿¡ ºÒ¸°´Ù.
@@ -627,6 +676,16 @@ public class UIManager : MonoBehaviour
             case 9:
                 lobbyAccountSettingAskDeletePanel.SetActive(false);
                 lobbyAccountSettingPanel.SetActive(false);
+                break;
+            case 10:
+                lobbyAdNotEnoughPanel.SetActive(false);
+                lobbyHideButtonTouch.SetActive(false);
+                lobbyAdDiamondAskPanel.SetActive(false);
+                break;
+            case 11:
+                lobbyAdNotEnoughPanel.SetActive(false);
+                lobbyHideButtonTouch.SetActive(false);
+                lobbyAdBoostAskPanel.SetActive(false);
                 break;
         }
     }

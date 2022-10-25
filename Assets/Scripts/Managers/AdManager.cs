@@ -6,6 +6,8 @@ public class AdManager : MonoBehaviour
 {
     public GameManager manager;
 
+    public static AdManager instance;
+
     RewardedAd diamondAd;
     RewardedAd floorFinishAd;
     RewardedAd startBoostAd;
@@ -14,6 +16,11 @@ public class AdManager : MonoBehaviour
     string diamondAdUnitId = "ca-app-pub-3940256099942544/5224354917";
     string floorFinishedAdUnitId = "ca-app-pub-3940256099942544/5224354917";
     string startBoostAdUnitId = "ca-app-pub-3940256099942544/5224354917";
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -30,7 +37,7 @@ public class AdManager : MonoBehaviour
 
     public void HandleRewardedAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
-
+        UIManager.instance.lobbyAdNotEnoughPanel.SetActive(true);
     }
 
     public void HandleRewardedAdClosed(object sender, EventArgs args)
@@ -45,12 +52,16 @@ public class AdManager : MonoBehaviour
         string type = args.Type;
         if (type == "Diamond")
         {
+            GameManager.instance.diamondRewardTakeNum++;
             GameManager.instance.ChangeDiamond(5);
             GPGSManager.instance.SaveGame();
+            UIManager.instance.ClosePanel(10);
         }
         else if (type == "StartBoost")
         {
-            GameManager.instance.boostLeft = 3;   
+            GameManager.instance.diamondRewardTakeNum++;
+            GameManager.instance.boostLeft = 3;
+            UIManager.instance.ClosePanel(11);
         }
     }
 
@@ -75,7 +86,7 @@ public class AdManager : MonoBehaviour
             diamondAd.Show();
         }
     }
-    public void ShowRingRelicAd()
+    public void ShowStartBoostAd()
     {
         if (startBoostAd.IsLoaded())
         {

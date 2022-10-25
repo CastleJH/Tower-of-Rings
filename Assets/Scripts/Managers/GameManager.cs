@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
 using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -84,7 +85,11 @@ public class GameManager : MonoBehaviour
     public int[] monsterCollectionProgress;     //GPGS 저장(-1이면 이미 보상을 획득하였다는 뜻임)
     bool tutorialDone;
 
-    //광고 보상
+    //광고 보상(일부는 GPGS에 저장됨)
+    public int diamondRewardTakeNum;
+    public DateTime diamondAdLastTookTime;
+    public int boostRewardTakeNum;
+    public DateTime boostAdLastTookTime;
     public int boostLeft;
 
     //개별 게임 관련 변수
