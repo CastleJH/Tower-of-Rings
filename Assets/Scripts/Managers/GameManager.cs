@@ -208,7 +208,12 @@ public class GameManager : MonoBehaviour
         gold = 0;
         diamond = 0;
         saveFloor = false;
-    }
+
+        diamondRewardTakeNum = 1;
+        diamondAdLastTookTime = new DateTime(2022, 10, 26, 0, 44, 0);
+        boostRewardTakeNum = 1;
+        boostAdLastTookTime = new DateTime(2022, 10, 26, 0, 44, 0);
+}
 
     //게임을 시작한다.
     public void GameStart()
