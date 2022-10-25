@@ -3,6 +3,8 @@ using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
 using UnityEngine.UI;
+using System;
+
 public class GPGSManager : MonoBehaviour
 {
     public static GPGSManager instance;
@@ -98,14 +100,21 @@ public class GPGSManager : MonoBehaviour
                 tmpData += GameManager.instance.gold.ToString() + "\n";
                 for (int i = 0; i < DeckManager.instance.deck.Count; i++) tmpData += DeckManager.instance.deck[i].ToString() + "|" + GameManager.instance.baseRings[DeckManager.instance.deck[i]].level.ToString() + "|";
                 tmpData += ".\n";
-                for (int i = 0; i < GameManager.instance.relics.Count; i++) {
+                for (int i = 0; i < GameManager.instance.relics.Count; i++)
+                {
                     int pure = GameManager.instance.baseRelics[GameManager.instance.relics[i]].isPure == true ? 1 : 0;
                     tmpData += GameManager.instance.relics[i].ToString() + "|" + pure.ToString() + "|";
                 }
                 tmpData += ".\n";
-                tmpData += GameManager.instance.revivable == true ? "1" : "0";
+                tmpData += GameManager.instance.revivable == true ? "1\n" : "0\n";
             }
-            else tmpData += "0";
+            else
+            {
+                tmpData += "0\n";
+                tmpData += ".\n.\n.\n.\n.\n.\n.\n";
+            }
+            tmpData += GameManager.instance.diamondRewardTakeNum.ToString() + "|" + GameManager.instance.diamondAdLastTookTime.ToString() + '\n';
+            tmpData += GameManager.instance.boostRewardTakeNum.ToString() + "|" + GameManager.instance.boostAdLastTookTime.ToString() + '\n';
 
             //UIManager.instance.debugText.text += "\n" + tmpData;
             byte[] saveData = System.Text.ASCIIEncoding.ASCII.GetBytes(tmpData);
@@ -156,7 +165,7 @@ public class GPGSManager : MonoBehaviour
             string tmpData = System.Text.ASCIIEncoding.ASCII.GetString(loadedData);
             string[] parseByCategory = tmpData.Split('\n');
 
-            if (parseByCategory.Length >= 7)
+            if (parseByCategory.Length >= 16)
             {
                 string[] parseById = parseByCategory[0].Split('|');
                 for (int i = 0; i < GameManager.instance.spiritEnhanceLevel.Length; i++) GameManager.instance.spiritEnhanceLevel[i] = int.Parse(parseById[i]);
@@ -176,7 +185,7 @@ public class GPGSManager : MonoBehaviour
 
                 GameManager.instance.diamond = int.Parse(parseByCategory[4]);
                 GameManager.instance.hardModeOpen = int.Parse(parseByCategory[5]);
-                if (parseByCategory.Length > 6 && int.Parse(parseByCategory[6]) == 1) //탑에 입장한 상태였다면
+                if (int.Parse(parseByCategory[6]) == 1) //탑에 입장한 상태였다면
                 {
                     FloorManager.instance.floor.floorNum = int.Parse(parseByCategory[7]);
                     GameManager.instance.isNormalMode = parseByCategory[8] == "1" ? true : false;
@@ -221,6 +230,15 @@ public class GPGSManager : MonoBehaviour
                     UIManager.instance.gameStartPanelMoveToGameButton.SetActive(false);
                     UIManager.instance.gameStartPanelMoveToLobbyButton.SetActive(true);
                 }
+
+                parseById = parseByCategory[14].Split('|');
+                GameManager.instance.diamondRewardTakeNum = int.Parse(parseById[0]);
+                GameManager.instance.diamondAdLastTookTime = Convert.ToDateTime(parseById[1]);
+                parseById = parseByCategory[15].Split('|');
+                GameManager.instance.boostRewardTakeNum = int.Parse(parseById[0]);
+                GameManager.instance.boostAdLastTookTime = Convert.ToDateTime(parseById[1]);
+                if (GameManager.instance.diamondAdLastTookTime.DayOfYear != DateTime.Now.DayOfYear) GameManager.instance.diamondRewardTakeNum = 1;
+                if (GameManager.instance.boostAdLastTookTime.DayOfYear != DateTime.Now.DayOfYear) GameManager.instance.boostRewardTakeNum = 1;
             }
             else
             {

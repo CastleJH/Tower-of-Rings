@@ -194,6 +194,9 @@ public class UIManager : MonoBehaviour
 
         if (lobbyPanel.activeSelf)
         {
+            if (GameManager.instance.diamondAdLastTookTime.DayOfYear != DateTime.Now.DayOfYear) GameManager.instance.diamondRewardTakeNum = 1;
+            if (GameManager.instance.boostAdLastTookTime.DayOfYear != DateTime.Now.DayOfYear) GameManager.instance.boostRewardTakeNum = 1;
+
             if (GameManager.instance.diamondRewardTakeNum < 6)
             {
                 float diamondAdTimeLeft = 600.0f - Mathf.Clamp((float)(DateTime.Now - GameManager.instance.diamondAdLastTookTime).TotalSeconds, -1.0f, 3600.0f);

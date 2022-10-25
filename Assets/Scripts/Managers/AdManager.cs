@@ -4,8 +4,6 @@ using GoogleMobileAds.Api;
 
 public class AdManager : MonoBehaviour
 {
-    public GameManager manager;
-
     public static AdManager instance;
 
     RewardedAd diamondAd;
@@ -53,14 +51,17 @@ public class AdManager : MonoBehaviour
         if (type == "Diamond")
         {
             GameManager.instance.diamondRewardTakeNum++;
+            GameManager.instance.diamondAdLastTookTime = DateTime.Now;
             GameManager.instance.ChangeDiamond(5);
             GPGSManager.instance.SaveGame();
             UIManager.instance.ClosePanel(10);
         }
         else if (type == "StartBoost")
         {
-            GameManager.instance.diamondRewardTakeNum++;
+            GameManager.instance.boostRewardTakeNum++;
+            GameManager.instance.boostAdLastTookTime = DateTime.Now;
             GameManager.instance.boostLeft = 3;
+            GPGSManager.instance.SaveGame();
             UIManager.instance.ClosePanel(11);
         }
     }
